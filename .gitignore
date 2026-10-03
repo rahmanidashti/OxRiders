@@ -1,0 +1,10 @@
+# Source parquet files are excluded: FigQA (216MB) and TableQA (101MB) exceed
+# GitHub's 100MB per-file hard limit and git-lfs is not available here.
+# Re-fetch with:  huggingface_hub.snapshot_download("futurehouse/lab-bench", repo_type="dataset")
+*/*.parquet
+.cache/
+*/.cache/
+__pycache__/
+.DS_Store
+FigQA/
+TableQA/
