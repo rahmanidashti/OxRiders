@@ -9,7 +9,7 @@ import pyarrow as pa
 import pyarrow.parquet as pq
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "datasets/lab-bench-text/Lab-Bench2"
+SOURCE = ROOT / "labbench/lab-bench-text/Lab-Bench2"
 OUTPUT = SOURCE / "exports"
 
 

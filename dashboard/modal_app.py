@@ -19,7 +19,10 @@ GPU = "A10G"
 # ---------------------------------------------------------------------------
 
 image = modal.Image.debian_slim(python_version="3.12").pip_install(
-    "vllm==0.9.1", "huggingface_hub[hf_transfer]"
+    "vllm==0.9.1",
+    # transformers 4.54+ registers "aimv2", which crashes vllm 0.9.1 on startup.
+    "transformers>=4.51.1,<4.54",
+    "huggingface_hub[hf_transfer]",
 ).env({"HF_HUB_ENABLE_HF_TRANSFER": "1"})
 
 hf_cache = modal.Volume.from_name("hf-cache", create_if_missing=True)

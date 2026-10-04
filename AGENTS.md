@@ -404,6 +404,7 @@ runs / the endpoint / the volumes. Tests: `tests/test_skill_scripts.py`.
                      `freeze_{semif,calibration_audit}.py`, `{build,label,freeze}_documents_v*.py`, `calibration_audit.py`, `review_calibration_screen.py`,
                      `compare_{q35,night2}.py`, `temperature_groups.py`, `base_mmlu_probe.py`, `plot_*.py` + `chartstyle.py`, `publish_space.sh`
 - `tests/test_api.py` conformance against the docs' example requests + official SDK
+- `labbench/`        LAB-Bench "I don't know" adversarial data (CSVs, `lab-bench-text/`); its pipeline scripts (`to_csv.py`, `build_splits.py`, `audit_shortcuts.py`, `manual_*`, `reauthor_part1_batch*`, ...) are in `scripts/` and read/write `labbench/`
 
 ## Notes
 - All JSON/JSONL is UTF-8 with LF endings regardless of platform locale: read/write through `kev.suite.read_json/read_jsonl/write_json/write_jsonl`

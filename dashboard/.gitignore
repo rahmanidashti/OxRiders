@@ -2,3 +2,5 @@ __pycache__/
 .venv/
 .env
 .streamlit/secrets.toml
+# feedback collected by the running app
+feedback/

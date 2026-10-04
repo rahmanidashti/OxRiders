@@ -12,7 +12,7 @@ model:
   max_retries: 5
 
 run:
-  csv: lab-bench-adv-eval.csv   # relative to the repo root
+  csv: labbench/lab-bench-adv-eval.csv   # relative to the repo root
   results_dir: eval/results     # relative to the repo root
   workers: 8
   limit: null                   # evaluate only the first N rows; null = all
