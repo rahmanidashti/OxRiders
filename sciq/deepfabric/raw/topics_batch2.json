@@ -1,0 +1,3178 @@
+{
+  "nodes": {
+    "0": {
+      "id": 0,
+      "topic": "Science topics covered in middle-school to university science exams: physics, chemistry, biology, earth science, astronomy, and environmental science",
+      "children": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "parents": [],
+      "metadata": {
+        "uuid": "5f1ac354-4c78-4141-a42d-9c0641c5925c",
+        "topic_hash": "9da828df764466b8c08ed4c9c609c81357b5ec9d4784b9b3d97abcb5346cec8c"
+      }
+    },
+    "1": {
+      "id": 1,
+      "topic": "Physics: Mechanics, Electricity and Magnetism, Waves, and Thermodynamics",
+      "children": [
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "parents": [
+        0
+      ],
+      "metadata": {
+        "uuid": "c81b9a57-fe15-44fd-b9e9-fff20651c521",
+        "topic_hash": "407c3f93b3f240664dc85d4662304ba34d478d5ce7192de1c4b8ecca2ffc087b"
+      }
+    },
+    "2": {
+      "id": 2,
+      "topic": "Chemistry: Atomic structure, Chemical reactions, Stoichiometry, Organic and Inorganic Chemistry",
+      "children": [
+        7,
+        8,
+        9,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        26,
+        27,
+        29
+      ],
+      "parents": [
+        0
+      ],
+      "metadata": {
+        "uuid": "e7f9eeb8-b1db-4309-a1d8-d9d3cd0f6006",
+        "topic_hash": "b9e4585d4dafc8b925b8c9142a20a95fb13e40a4bd336c8ff45e955d4dbbbb9d"
+      }
+    },
+    "3": {
+      "id": 3,
+      "topic": "Biology: Cell biology, Genetics, Evolution, Physiology, Ecology",
+      "children": [
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        17,
+        21,
+        23,
+        25,
+        26,
+        28,
+        36
+      ],
+      "parents": [
+        0
+      ],
+      "metadata": {
+        "uuid": "2bcd389b-8092-450c-a98d-e16ce9eca568",
+        "topic_hash": "0d19864cf2b3988a02edef8810b0f1aad839746ab17aeb4bd73e5ef7f622c7a7"
+      }
+    },
+    "4": {
+      "id": 4,
+      "topic": "Earth Science: Geology, Meteorology, Oceanography, Plate Tectonics",
+      "children": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        22,
+        25,
+        29
+      ],
+      "parents": [
+        0
+      ],
+      "metadata": {
+        "uuid": "5d712ba6-ed76-478f-8c58-18d1004d4b44",
+        "topic_hash": "f1ac13f0edbe58b14cad5343d1c7f5a6d2210638421adc83f475151a6a5794cf"
+      }
+    },
+    "5": {
+      "id": 5,
+      "topic": "Astronomy: The solar system, Stars, Galaxies, Cosmology, Telescopes",
+      "children": [
+        18,
+        27,
+        28,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "parents": [
+        0
+      ],
+      "metadata": {
+        "uuid": "93a61982-6559-4f64-ab3e-0b232397bfa0",
+        "topic_hash": "0e68b19698859e2b6ac2f0e3f16e741c420c0821f07e68831c75785bac754a68"
+      }
+    },
+    "6": {
+      "id": 6,
+      "topic": "Environmental Science: Ecosystems, Human impact, Renewable resources, Conservation, Climate change",
+      "children": [
+        12,
+        14,
+        15,
+        17,
+        21,
+        22,
+        23,
+        29,
+        37,
+        38,
+        39,
+        40,
+        41,
+        42
+      ],
+      "parents": [
+        0
+      ],
+      "metadata": {
+        "uuid": "9618bb33-e2a2-4da4-b015-3b81d7cf6331",
+        "topic_hash": "bf24017676607e7b94d8d2839290f49800e58452152a5f8ea921a68dbd0f463e"
+      }
+    },
+    "7": {
+      "id": 7,
+      "topic": "Cell Structure and Function",
+      "children": [
+        55,
+        56,
+        57,
+        58,
+        59,
+        60
+      ],
+      "parents": [
+        3,
+        2
+      ],
+      "metadata": {
+        "uuid": "9ebe39c3-88da-4163-8afb-63cec38cf50b",
+        "topic_hash": "b6441a6c3b1ca2d86611e2b7a0d1a26ba7413a109ae3a45fb74da7aedeb170e1"
+      }
+    },
+    "8": {
+      "id": 8,
+      "topic": "DNA, RNA, and Protein Synthesis",
+      "children": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "parents": [
+        3,
+        2
+      ],
+      "metadata": {
+        "uuid": "57801a82-8089-4e19-9c23-3daa74264b54",
+        "topic_hash": "f42eb79801401fcc4d841bf3c6b98c20108917dfe25d776f1bc9061609956e75"
+      }
+    },
+    "9": {
+      "id": 9,
+      "topic": "Mendelian and Molecular Genetics",
+      "children": [
+        61,
+        62,
+        63,
+        64,
+        65,
+        66
+      ],
+      "parents": [
+        3,
+        2
+      ],
+      "metadata": {
+        "uuid": "2f3a6887-66f2-43e7-a7d4-6f69f791ad1a",
+        "topic_hash": "fea70989011dff5f26b95be0dca46fb0d7c2ddd6b4d7290a917d07d167dd2bf0"
+      }
+    },
+    "10": {
+      "id": 10,
+      "topic": "Natural Selection and Speciation",
+      "children": [
+        49,
+        50,
+        51,
+        52,
+        53,
+        54
+      ],
+      "parents": [
+        3
+      ],
+      "metadata": {
+        "uuid": "52bef9dc-57eb-4162-bf0c-a1f2b89d51eb",
+        "topic_hash": "acd8f1d8402316488298e0be15d2287ca5a1f3995ae8c594bdaa9dcfe496abc2"
+      }
+    },
+    "11": {
+      "id": 11,
+      "topic": "Human Physiology (Systems: Nervous, Circulatory, Respiratory, Digestive)",
+      "children": [
+        67,
+        68,
+        69,
+        70,
+        71,
+        72
+      ],
+      "parents": [
+        3
+      ],
+      "metadata": {
+        "uuid": "8b0968ee-3090-41f9-bfb2-046735ffbb77",
+        "topic_hash": "e28e8c8bdacc4a0fc8ea7483cad605cd053f9f59efb78b27d8ad0d7faeb30595"
+      }
+    },
+    "12": {
+      "id": 12,
+      "topic": "Ecological Interactions and Biodiversity",
+      "children": [
+        39,
+        41
+      ],
+      "parents": [
+        3,
+        6
+      ],
+      "metadata": {
+        "uuid": "185c1439-91d3-424a-9114-a995502ab7f0",
+        "topic_hash": "47a9aa2c6fc014913e871c435045a2be465aa15356bb88eaa3fee382c1fb2526"
+      }
+    },
+    "13": {
+      "id": 13,
+      "topic": "Mineralogy and Rock Types",
+      "children": [
+        73,
+        74,
+        75,
+        76,
+        77,
+        78
+      ],
+      "parents": [
+        4
+      ],
+      "metadata": {
+        "uuid": "28186282-a4a4-423b-90c9-7dd34ab231d3",
+        "topic_hash": "6008acdb94f3b5c23a02c2ccfc74eeeaef61b0aee65b96e4e83f83005c85274f"
+      }
+    },
+    "14": {
+      "id": 14,
+      "topic": "Weather Patterns and Atmospheric Processes",
+      "children": [
+        37
+      ],
+      "parents": [
+        4,
+        6
+      ],
+      "metadata": {
+        "uuid": "3492f3af-f4df-40d1-9841-3a9654e8626e",
+        "topic_hash": "6b3c8b4d090fde3d37a1c4b2a3d1e4c01c3f8ba7287ced473c5011ec139ac1a6"
+      }
+    },
+    "15": {
+      "id": 15,
+      "topic": "Ocean Currents and Marine Ecosystems",
+      "children": [
+        40
+      ],
+      "parents": [
+        4,
+        6
+      ],
+      "metadata": {
+        "uuid": "537d1d8a-a8aa-4e66-a8fc-a9779c1aa6e7",
+        "topic_hash": "f8c208a85e40c01015b2fc0d8f46bbd6ef0f011f4366058279cf332806412830"
+      }
+    },
+    "16": {
+      "id": 16,
+      "topic": "Earthquakes and Volcanoes",
+      "children": [
+        79,
+        80,
+        81,
+        82,
+        83,
+        84
+      ],
+      "parents": [
+        4
+      ],
+      "metadata": {
+        "uuid": "e8be9a51-20ac-44f2-947b-9e0a8c99857c",
+        "topic_hash": "89e22e1df81c4643b75d41377954aeb5e50a43a7a6ed3464b1bef8f4b4fd9771"
+      }
+    },
+    "17": {
+      "id": 17,
+      "topic": "Soil Formation and Erosion",
+      "children": [
+        37,
+        39,
+        40
+      ],
+      "parents": [
+        4,
+        3,
+        6
+      ],
+      "metadata": {
+        "uuid": "48b6225e-115c-49be-9562-6917257bfbf1",
+        "topic_hash": "25113784e505a4b459a371da32ca4f44d52265ddca7a96faa298e2a9ade1c9d6"
+      }
+    },
+    "18": {
+      "id": 18,
+      "topic": "Plate Boundaries and Continental Drift",
+      "children": [
+        85,
+        86,
+        87,
+        88,
+        89,
+        90
+      ],
+      "parents": [
+        4,
+        5
+      ],
+      "metadata": {
+        "uuid": "0116fb75-a453-4c85-99cd-c3f35ecefda8",
+        "topic_hash": "5ecfb89c38f4ce09757584eca0ae9e74dca1bf510452be62e5cf9056b21132d6"
+      }
+    },
+    "19": {
+      "id": 19,
+      "topic": "Periodic Table and Element Properties",
+      "children": [
+        91,
+        92,
+        93,
+        94,
+        95,
+        96
+      ],
+      "parents": [
+        2
+      ],
+      "metadata": {
+        "uuid": "7a43ed2a-32b0-415d-aeb5-b158b2f1fd28",
+        "topic_hash": "bbec261777be3f5008e16f194d8b8ee2766e14fcfdd6a9f648c0f2dcd5adfd55"
+      }
+    },
+    "20": {
+      "id": 20,
+      "topic": "Chemical Bonding: Ionic, Covalent, and Metallic Bonds",
+      "children": [
+        97,
+        98,
+        99,
+        100,
+        101,
+        102
+      ],
+      "parents": [
+        2
+      ],
+      "metadata": {
+        "uuid": "0ca9d152-4708-4786-ad58-5d8fa3dc823d",
+        "topic_hash": "044223a106d14ae37510852b58613120806eb6615c6a07cc4cf76c6880358bbd"
+      }
+    },
+    "21": {
+      "id": 21,
+      "topic": "Acids, Bases, and pH",
+      "children": [
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "parents": [
+        2,
+        3,
+        6
+      ],
+      "metadata": {
+        "uuid": "9f38f9f7-08fc-4b81-9541-4c5d2d8ac731",
+        "topic_hash": "be3b182c8a5ad68f2bef8fee0ca0c4a680593033adb448d12ecb51b5ee1fce18"
+      }
+    },
+    "22": {
+      "id": 22,
+      "topic": "Solutions and Solubility",
+      "children": [
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "parents": [
+        2,
+        4,
+        6
+      ],
+      "metadata": {
+        "uuid": "2c368fc2-3c38-47f5-9cff-47d1e7d4ed19",
+        "topic_hash": "e4b217f6f085904e60c51ed18bc4d5737d89ddaf84b230cbb16135bfa75604b0"
+      }
+    },
+    "23": {
+      "id": 23,
+      "topic": "Chemical Kinetics and Equilibrium",
+      "children": [
+        127,
+        128,
+        129,
+        130,
+        131,
+        132
+      ],
+      "parents": [
+        2,
+        3,
+        6
+      ],
+      "metadata": {
+        "uuid": "ddc6b3ee-439a-4210-be96-85b953eaa348",
+        "topic_hash": "01ccb1cd2ec7d35dbf0873b71a62129f74d4e748e70fe3d2483acaad360bce72"
+      }
+    },
+    "24": {
+      "id": 24,
+      "topic": "Redox Reactions and Electrochemistry",
+      "children": [
+        115,
+        116,
+        117,
+        118,
+        119,
+        120
+      ],
+      "parents": [
+        2,
+        1
+      ],
+      "metadata": {
+        "uuid": "76b7a242-ef24-47da-8337-95cd51b0c19a",
+        "topic_hash": "62035f3e107cd84faac1ac1e03d2df525899808efd9997705dd1f06d9eb75d4c"
+      }
+    },
+    "25": {
+      "id": 25,
+      "topic": "Kinematics and Dynamics",
+      "children": [
+        121,
+        122,
+        123,
+        124,
+        125,
+        126
+      ],
+      "parents": [
+        1,
+        3,
+        4
+      ],
+      "metadata": {
+        "uuid": "9cc1ad62-66c3-427b-aead-0171ba172a9f",
+        "topic_hash": "d0bb62dc432a7c19300c7368fe430b53d7626ff4d539bc31f7a065dc1645cf7b"
+      }
+    },
+    "26": {
+      "id": 26,
+      "topic": "Conservation Laws: Energy, Momentum, and Charge",
+      "children": [
+        133,
+        134,
+        135,
+        136,
+        137,
+        138
+      ],
+      "parents": [
+        1,
+        2,
+        3
+      ],
+      "metadata": {
+        "uuid": "d1e41086-42a0-4a95-9b05-2099b9c02911",
+        "topic_hash": "db6d740d4798aa23140d50279c7d892f8b43e48679936dfdf7b93fa5dc322b44"
+      }
+    },
+    "27": {
+      "id": 27,
+      "topic": "Electromagnetism: Electric Fields, Magnetic Fields, and Circuits",
+      "children": [
+        157,
+        158,
+        159,
+        160,
+        161,
+        162
+      ],
+      "parents": [
+        1,
+        2,
+        5
+      ],
+      "metadata": {
+        "uuid": "d71e83a1-27c7-41be-bf5f-418b9e24be8b",
+        "topic_hash": "9a2e6962cad07895572e6894e3ad9a71b1ca02e883ae1edc08130a51f26a2c28"
+      }
+    },
+    "28": {
+      "id": 28,
+      "topic": "Waves: Sound, Light, and their Properties",
+      "children": [
+        151,
+        152,
+        153,
+        154,
+        155,
+        156
+      ],
+      "parents": [
+        1,
+        3,
+        5
+      ],
+      "metadata": {
+        "uuid": "6785d9fb-56b2-480e-a440-56df14e73be1",
+        "topic_hash": "a7006fc5974bcf8eacc186614297db1c7400ebd198463494c5cf0bfc829d677f"
+      }
+    },
+    "29": {
+      "id": 29,
+      "topic": "Thermodynamics: Laws, Heat Transfer, and Entropy",
+      "children": [
+        145,
+        146,
+        147,
+        148,
+        149,
+        150
+      ],
+      "parents": [
+        1,
+        2,
+        4,
+        6
+      ],
+      "metadata": {
+        "uuid": "41d9c1c6-ca11-414f-8822-2b63b9fd7a9f",
+        "topic_hash": "a36361a2c47e2092d0d396519d3ebe0a1e3881f058a6842ab2dbc34571264d1f"
+      }
+    },
+    "30": {
+      "id": 30,
+      "topic": "Modern Physics: Quantum Mechanics and Relativity",
+      "children": [
+        139,
+        140,
+        141,
+        142,
+        143,
+        144
+      ],
+      "parents": [
+        1,
+        5
+      ],
+      "metadata": {
+        "uuid": "776f5958-e9e3-43b2-a784-d8ef93d2c53c",
+        "topic_hash": "2c6009827a5b42131290f73fea558903279d949c70bc10ce187869519fb63e95"
+      }
+    },
+    "31": {
+      "id": 31,
+      "topic": "Planetary Science: Planets, Moons, and Dwarf Planets of the Solar System",
+      "children": [
+        163,
+        164,
+        165,
+        166,
+        167,
+        168
+      ],
+      "parents": [
+        5
+      ],
+      "metadata": {
+        "uuid": "8d7712f3-714f-4136-a1e8-71c94e43aeb8",
+        "topic_hash": "8307ca241cacc770eb3644405b8bca93c95ad5ef46e20cd96daca1b2889f4151"
+      }
+    },
+    "32": {
+      "id": 32,
+      "topic": "Stellar Evolution: Life Cycle of Stars",
+      "children": [
+        175,
+        176,
+        177,
+        178,
+        179,
+        180
+      ],
+      "parents": [
+        5
+      ],
+      "metadata": {
+        "uuid": "b85eb395-4130-4f96-aa0b-010ef346fe44",
+        "topic_hash": "d3c4cc0e4a39d854b0dd73fec8a71ae5469ea9321eb1ce71edf68c9c79be9baa"
+      }
+    },
+    "33": {
+      "id": 33,
+      "topic": "Types and Structure of Galaxies",
+      "children": [
+        181,
+        182,
+        183,
+        184,
+        185,
+        186
+      ],
+      "parents": [
+        5
+      ],
+      "metadata": {
+        "uuid": "a680aae2-cdcc-43f8-8f50-a10b93dc8532",
+        "topic_hash": "172393112abca113fd8f31e5014f98f108b6719d751d8a102012eb734c5dac4a"
+      }
+    },
+    "34": {
+      "id": 34,
+      "topic": "Big Bang Theory and the Origin of the Universe",
+      "children": [
+        169,
+        170,
+        171,
+        172,
+        173,
+        174
+      ],
+      "parents": [
+        5
+      ],
+      "metadata": {
+        "uuid": "5e42dba8-b2f3-49c0-8470-a309f3ad89bd",
+        "topic_hash": "b982944c29764ce8370766c2bd7c7aaaca11f79e82e2e30e7151da6f31d2bcfb"
+      }
+    },
+    "35": {
+      "id": 35,
+      "topic": "Astronomical Observation Methods and Instruments",
+      "children": [
+        187,
+        188,
+        189,
+        190,
+        191,
+        192
+      ],
+      "parents": [
+        5
+      ],
+      "metadata": {
+        "uuid": "33e5a27d-e713-4238-8751-771bc849316a",
+        "topic_hash": "8b51ef65dc21fb7bce44577167759ec5e9273301f02b5a27b43e97926d892ace"
+      }
+    },
+    "36": {
+      "id": 36,
+      "topic": "Exoplanets and the Search for Extraterrestrial Life",
+      "children": [
+        205,
+        206,
+        207,
+        208,
+        209,
+        210
+      ],
+      "parents": [
+        5,
+        3
+      ],
+      "metadata": {
+        "uuid": "88b316cf-eef4-454c-a5d4-6bbaf5142dcf",
+        "topic_hash": "462a6df517e3b59bba9d981c2fd3b7157b597c12ad710615dfd10768bc24f38e"
+      }
+    },
+    "37": {
+      "id": 37,
+      "topic": "Carbon Cycle and Greenhouse Gases",
+      "children": [
+        193,
+        194,
+        195,
+        196,
+        197,
+        198
+      ],
+      "parents": [
+        6,
+        14,
+        17
+      ],
+      "metadata": {
+        "uuid": "a42fad8e-5f82-4560-99ba-ccb2aeb13504",
+        "topic_hash": "f008aad813e3838bde6851661c9dfed479f96d37ce50c04e3d7fc0aa57a426fa"
+      }
+    },
+    "38": {
+      "id": 38,
+      "topic": "Sustainable Energy Sources (Solar, Wind, Hydro, Geothermal)",
+      "children": [
+        199,
+        200,
+        201,
+        202,
+        203,
+        204
+      ],
+      "parents": [
+        6
+      ],
+      "metadata": {
+        "uuid": "662de74a-f4d4-49bd-a610-9dfa15535df2",
+        "topic_hash": "f055e89a9e4aab5ea4d3ce121021288f4ce87671493c88e2d95be528d7e31eeb"
+      }
+    },
+    "39": {
+      "id": 39,
+      "topic": "Deforestation and Habitat Loss",
+      "children": [
+        211,
+        212,
+        213,
+        214,
+        215,
+        216
+      ],
+      "parents": [
+        6,
+        12,
+        17
+      ],
+      "metadata": {
+        "uuid": "4b741bc7-be39-433e-8758-0157c18e0b04",
+        "topic_hash": "1ae4ef5017c3fd734daefe12aa0fdcfac1bbe648b69f612349b7e953a6aa63b4"
+      }
+    },
+    "40": {
+      "id": 40,
+      "topic": "Water Pollution and Freshwater Resources",
+      "children": [
+        217,
+        218,
+        219,
+        220,
+        221,
+        222
+      ],
+      "parents": [
+        6,
+        15,
+        17
+      ],
+      "metadata": {
+        "uuid": "b0756031-6b73-40b2-9520-63bfd7cbc0b0",
+        "topic_hash": "49349e255221a2611b0c98e11b2c5eb1d40b09a3382d39f233d3554bc05fda90"
+      }
+    },
+    "41": {
+      "id": 41,
+      "topic": "Endangered Species and Conservation Strategies",
+      "children": [
+        223,
+        224,
+        225,
+        226,
+        227,
+        228
+      ],
+      "parents": [
+        6,
+        12
+      ],
+      "metadata": {
+        "uuid": "4fdc732a-630b-41db-8075-4ecd8a8cc06c",
+        "topic_hash": "d434ff290b006ae69bab404711c2e1db3ff21c1432ded004450cb5d280c2401a"
+      }
+    },
+    "42": {
+      "id": 42,
+      "topic": "Environmental Policy and Global Agreements (e.g., Paris Agreement)",
+      "children": [
+        229,
+        230,
+        231,
+        232,
+        233,
+        234
+      ],
+      "parents": [
+        6
+      ],
+      "metadata": {
+        "uuid": "8d99ccab-59a3-464e-bd9f-96099624027e",
+        "topic_hash": "a2bd3e950137688f82a6187433fbdb788cd421a6983482935b0810c02f6dfa0b"
+      }
+    },
+    "43": {
+      "id": 43,
+      "topic": "Structure of DNA",
+      "children": [],
+      "parents": [
+        8
+      ],
+      "metadata": {
+        "uuid": "ecdd3df7-83ed-402c-90cc-4d9acea532d3",
+        "topic_hash": "beaa11300b9e94bb6c355ca59ef3d622180d12bd0d012ae9b97afeff21586aff"
+      }
+    },
+    "44": {
+      "id": 44,
+      "topic": "Structure of RNA",
+      "children": [],
+      "parents": [
+        8
+      ],
+      "metadata": {
+        "uuid": "9dceed18-31b6-4b82-be2d-ddb867fe32dc",
+        "topic_hash": "374afa1519fa1e5e7679cd6bdba8cbc504e533ea2df7a5814ed287a47931b462"
+      }
+    },
+    "45": {
+      "id": 45,
+      "topic": "Transcription",
+      "children": [],
+      "parents": [
+        8
+      ],
+      "metadata": {
+        "uuid": "d6d516fd-5d89-4364-9b58-086096244806",
+        "topic_hash": "30bf7b9b9540d4e11819ffbadf3ae6fe4c7ca94c8b433391e50e47e14a9d6cbf"
+      }
+    },
+    "46": {
+      "id": 46,
+      "topic": "Translation",
+      "children": [],
+      "parents": [
+        8
+      ],
+      "metadata": {
+        "uuid": "26f42e0e-77ea-42cd-834c-46f676bc532e",
+        "topic_hash": "6fbd766b1a71cc4d296d92f84976a1fd5f5a750ae0f0cc929db2c6458d3dc9ea"
+      }
+    },
+    "47": {
+      "id": 47,
+      "topic": "Genetic Code",
+      "children": [],
+      "parents": [
+        8
+      ],
+      "metadata": {
+        "uuid": "419aa720-7861-4864-87e4-3af8728791d5",
+        "topic_hash": "fae7434dc66874aa28cfcda85a47046ed56010e3e752e431b4ab8ca7f4ca335a"
+      }
+    },
+    "48": {
+      "id": 48,
+      "topic": "Regulation of Gene Expression",
+      "children": [],
+      "parents": [
+        8
+      ],
+      "metadata": {
+        "uuid": "aece8a3b-ac07-4b2c-8e23-0ed53380a44e",
+        "topic_hash": "52f32547189bb129f89185abc6e37a965fa53ceff0163854faf4c93b226a792a"
+      }
+    },
+    "49": {
+      "id": 49,
+      "topic": "Types of Natural Selection",
+      "children": [],
+      "parents": [
+        10
+      ],
+      "metadata": {
+        "uuid": "879e2ff0-20dc-4c20-9559-14b28707ea05",
+        "topic_hash": "562ca54af27363021858497b735a35bab4f955a7d4fbbf1d804350280f846cb6"
+      }
+    },
+    "50": {
+      "id": 50,
+      "topic": "Mechanisms of Speciation",
+      "children": [],
+      "parents": [
+        10
+      ],
+      "metadata": {
+        "uuid": "09b70224-daad-405c-9845-9a0105b594b3",
+        "topic_hash": "76ba7b3fd4a6ebf47ec3070c032e2c70fd4aaff1b1583994263dffd7259caf22"
+      }
+    },
+    "51": {
+      "id": 51,
+      "topic": "Genetic Drift and Its Role in Speciation",
+      "children": [],
+      "parents": [
+        10
+      ],
+      "metadata": {
+        "uuid": "94f7c0c7-5910-4d6e-96ac-987ef7944fcf",
+        "topic_hash": "06e2648ba6eb2b9afa685b402e09c98019493ed71b93acff8e3a1db6b857197e"
+      }
+    },
+    "52": {
+      "id": 52,
+      "topic": "Adaptive Radiation",
+      "children": [],
+      "parents": [
+        10
+      ],
+      "metadata": {
+        "uuid": "ad0b032d-e29f-40c1-ad43-3e61e44785c7",
+        "topic_hash": "83a6b69898ca8615912194618fc598a82e546bdda935cdaa7864762126b23240"
+      }
+    },
+    "53": {
+      "id": 53,
+      "topic": "Reproductive Isolation",
+      "children": [],
+      "parents": [
+        10
+      ],
+      "metadata": {
+        "uuid": "bcd90825-121a-4bbf-b178-bc25b9956817",
+        "topic_hash": "b13aed2764e14c49b32c3a706b62395fb1c08d2bf665210b8a5b56ba013f4d46"
+      }
+    },
+    "54": {
+      "id": 54,
+      "topic": "Examples of Natural Selection in Nature",
+      "children": [],
+      "parents": [
+        10
+      ],
+      "metadata": {
+        "uuid": "95dd8080-faea-4f0c-9f33-f218bdd54f4c",
+        "topic_hash": "8f9ae59b1d3659fc798560d9766583e7ee699385a0e817e4e479f2b138df5944"
+      }
+    },
+    "55": {
+      "id": 55,
+      "topic": "Plasma Membrane Structure and Function",
+      "children": [],
+      "parents": [
+        7
+      ],
+      "metadata": {
+        "uuid": "e87a38d3-b874-4488-8cd2-8e4d00e31c31",
+        "topic_hash": "fcffadf9b960ade8ee0cb15649330b86678a23969c46e32f15edb37d8c903f7c"
+      }
+    },
+    "56": {
+      "id": 56,
+      "topic": "Nucleus and Genetic Material",
+      "children": [],
+      "parents": [
+        7
+      ],
+      "metadata": {
+        "uuid": "411a2573-e3ea-4cc5-8c09-1b1e5f1b8a9f",
+        "topic_hash": "a1c515a4c66ce454790ca329e4fc928d80e9bd3106341cd0b8b8a6c2b9105bdd"
+      }
+    },
+    "57": {
+      "id": 57,
+      "topic": "Mitochondria and Energy Production",
+      "children": [],
+      "parents": [
+        7
+      ],
+      "metadata": {
+        "uuid": "dec84d23-b8d1-43a3-abe8-895333dad86b",
+        "topic_hash": "83971e033979bdf1142bef778858e349fee522078dc2a2c69763d38e48f8a048"
+      }
+    },
+    "58": {
+      "id": 58,
+      "topic": "Endoplasmic Reticulum and Protein Synthesis",
+      "children": [],
+      "parents": [
+        7
+      ],
+      "metadata": {
+        "uuid": "a197e985-1077-4b61-a3d0-836c86deba6a",
+        "topic_hash": "fdbbba459036417bfff7183f272b5e067fdeddcb487b83893c84cd388cdb1b03"
+      }
+    },
+    "59": {
+      "id": 59,
+      "topic": "Golgi Apparatus and Cellular Transport",
+      "children": [],
+      "parents": [
+        7
+      ],
+      "metadata": {
+        "uuid": "d43b8ac6-1362-4187-97da-74cd4a7c0688",
+        "topic_hash": "acb41c9f88818ed114e3e8bf5a560ff86ecc711aab5e3b002f1707a12ee6b570"
+      }
+    },
+    "60": {
+      "id": 60,
+      "topic": "Lysosomes and Cellular Digestion",
+      "children": [],
+      "parents": [
+        7
+      ],
+      "metadata": {
+        "uuid": "8c5bc323-0ccb-44e2-b80b-d94188c949a0",
+        "topic_hash": "f834ebcb18826c8f882f557a1697241db985be4d9642846fb94c79a9dd9da0af"
+      }
+    },
+    "61": {
+      "id": 61,
+      "topic": "Mendel's Laws of Inheritance",
+      "children": [],
+      "parents": [
+        9
+      ],
+      "metadata": {
+        "uuid": "d4a4d4b3-a2aa-40b8-8bd0-b4c58f19d228",
+        "topic_hash": "5ef2634e591bf7c9dde6ed5b694298812ae9286a4e6de4ff2eb2b290ad24dd8c"
+      }
+    },
+    "62": {
+      "id": 62,
+      "topic": "Monohybrid and Dihybrid Crosses",
+      "children": [],
+      "parents": [
+        9
+      ],
+      "metadata": {
+        "uuid": "b04d3af0-a927-46c2-8415-e60cdb475620",
+        "topic_hash": "1bb30d696fdd043901bd1ecdc89c50560e4cfa4baa9334ada37c58c6fdc7f108"
+      }
+    },
+    "63": {
+      "id": 63,
+      "topic": "Genetic Linkage and Recombination",
+      "children": [],
+      "parents": [
+        9
+      ],
+      "metadata": {
+        "uuid": "770ab4af-4ef4-4abf-9d5d-ee28d6239d9d",
+        "topic_hash": "cc5742cfecc1c7f113ed880be4f5a7fdfc7378f437e5c3e9b9fed75cc6a5ab81"
+      }
+    },
+    "64": {
+      "id": 64,
+      "topic": "DNA Structure and Function",
+      "children": [],
+      "parents": [
+        9
+      ],
+      "metadata": {
+        "uuid": "53ce0a2e-f17f-43f5-8f83-d037b7d0cf53",
+        "topic_hash": "e0277c9f16726ff3d5657b7e80458cc75f7a0899224747d8867d20ed223b6cc9"
+      }
+    },
+    "65": {
+      "id": 65,
+      "topic": "Gene Expression and Regulation",
+      "children": [],
+      "parents": [
+        9
+      ],
+      "metadata": {
+        "uuid": "b5cffba6-ae66-44a4-99be-7686d4f6ab21",
+        "topic_hash": "7fd75d4b6368b9cc76641448ef6fe81fd25fccd88f77fc814ac6af911f90ef6a"
+      }
+    },
+    "66": {
+      "id": 66,
+      "topic": "Mutations and Genetic Disorders",
+      "children": [],
+      "parents": [
+        9
+      ],
+      "metadata": {
+        "uuid": "ec4344c5-16b1-4ed9-a91b-33279011b7d4",
+        "topic_hash": "c1b49ad1b21bd8a006071e0276c95782ce3a7ea93fdfbc52915b585d65a98776"
+      }
+    },
+    "67": {
+      "id": 67,
+      "topic": "Autonomic Nervous System",
+      "children": [],
+      "parents": [
+        11
+      ],
+      "metadata": {
+        "uuid": "a5dd3346-37d6-4ad7-a34e-5130d97ee484",
+        "topic_hash": "cedb9f2b5688526e4a00ccb8f05ce655415082ea92d894e22ba5f1b6c9d81bae"
+      }
+    },
+    "68": {
+      "id": 68,
+      "topic": "Cardiac Physiology",
+      "children": [],
+      "parents": [
+        11
+      ],
+      "metadata": {
+        "uuid": "8bdcd08c-bce0-4b16-a62c-93ecbf631e94",
+        "topic_hash": "e63d0cc4c84f7f7bb3221fb0ecdd1e5443299a3d90fd7cad42cf63b7b2e24d52"
+      }
+    },
+    "69": {
+      "id": 69,
+      "topic": "Pulmonary Gas Exchange",
+      "children": [],
+      "parents": [
+        11
+      ],
+      "metadata": {
+        "uuid": "34ccbf2f-c974-4331-b4b0-c4f91e136b3c",
+        "topic_hash": "965a8754eaded462ccdb6e74c7c82cfdf83c6adc04f77ea98fda473c1400b0bb"
+      }
+    },
+    "70": {
+      "id": 70,
+      "topic": "Digestive Enzymes and Hormonal Regulation",
+      "children": [],
+      "parents": [
+        11
+      ],
+      "metadata": {
+        "uuid": "073b04ff-784f-4891-98f4-c6e66f877602",
+        "topic_hash": "800744fff0372e37f1723b0f2c8abf349ce9d9d135976c48f0f21ed6eca67892"
+      }
+    },
+    "71": {
+      "id": 71,
+      "topic": "Blood Pressure Regulation",
+      "children": [],
+      "parents": [
+        11
+      ],
+      "metadata": {
+        "uuid": "364aa0ee-9d74-4131-ae43-9e383b7c938c",
+        "topic_hash": "c98af925cc4544c89db8a7908c131edecb7df58b9f145604ce197b18719a779b"
+      }
+    },
+    "72": {
+      "id": 72,
+      "topic": "Neurotransmitters and Synaptic Transmission",
+      "children": [],
+      "parents": [
+        11
+      ],
+      "metadata": {
+        "uuid": "97b4c864-cc39-4cd3-8d33-2e50b517869a",
+        "topic_hash": "4dac97c45ebc8eff82c243ac7b280c52ac1eb04c9669c6d5b833ad3b5887fcfe"
+      }
+    },
+    "73": {
+      "id": 73,
+      "topic": "Igneous Rocks",
+      "children": [],
+      "parents": [
+        13
+      ],
+      "metadata": {
+        "uuid": "5ddd04b0-353e-48dc-8973-f3618f604b5c",
+        "topic_hash": "cf77341196a5f26ba2d6316fa9d901b90cec4a75574892a3512d0c7cf0981255"
+      }
+    },
+    "74": {
+      "id": 74,
+      "topic": "Sedimentary Rocks",
+      "children": [],
+      "parents": [
+        13
+      ],
+      "metadata": {
+        "uuid": "7993552b-d238-4e78-865f-5f93bd81acc7",
+        "topic_hash": "783c0b8d989b751bb1219f22c0c6fd3f8863e22bf1b18e78ba4211c523752b2f"
+      }
+    },
+    "75": {
+      "id": 75,
+      "topic": "Metamorphic Rocks",
+      "children": [],
+      "parents": [
+        13
+      ],
+      "metadata": {
+        "uuid": "313fa4fd-0064-470e-b02d-342544c08061",
+        "topic_hash": "5c44476c4ecc5f9b84189a0e7cc562a2499020f2a2cb1d5b79a7519772e3c9d6"
+      }
+    },
+    "76": {
+      "id": 76,
+      "topic": "Mineral Identification Techniques",
+      "children": [],
+      "parents": [
+        13
+      ],
+      "metadata": {
+        "uuid": "83339474-c89e-4521-b091-749603a50845",
+        "topic_hash": "e2991f5dc8e2a6de19a16fa1452d7378260f5e0f9fd47d7e6658e29aef972f08"
+      }
+    },
+    "77": {
+      "id": 77,
+      "topic": "Physical Properties of Minerals",
+      "children": [],
+      "parents": [
+        13
+      ],
+      "metadata": {
+        "uuid": "96dee3cf-7a0f-4c26-86f3-a323c4477c7d",
+        "topic_hash": "fbca98ad0a70f7668058a056a28a080bc7c63cda49fe73f52724e3f4cbf1ec73"
+      }
+    },
+    "78": {
+      "id": 78,
+      "topic": "Rock Cycle and Classification",
+      "children": [],
+      "parents": [
+        13
+      ],
+      "metadata": {
+        "uuid": "8b2c48b8-a10e-4fde-a376-360563a94e43",
+        "topic_hash": "ba3d30f9550669250666e19a584f97ed9de06a03bff2de095d654ec109240716"
+      }
+    },
+    "79": {
+      "id": 79,
+      "topic": "Plate Tectonics and Seismic Activity",
+      "children": [],
+      "parents": [
+        16
+      ],
+      "metadata": {
+        "uuid": "8ca9b5d0-16fb-408e-8e70-3e299715ec05",
+        "topic_hash": "2c5ddad154e6e74aa90da6005fd8590cf154add0010b5b7d38c764edd142a231"
+      }
+    },
+    "80": {
+      "id": 80,
+      "topic": "Earthquake Measurement and Scales",
+      "children": [],
+      "parents": [
+        16
+      ],
+      "metadata": {
+        "uuid": "b4781368-d71d-4395-a61b-5d917119eae4",
+        "topic_hash": "99007f65080d9839c96cb57ecb0d5d293b607d5e5cfbbcd49ad10c1e167043ec"
+      }
+    },
+    "81": {
+      "id": 81,
+      "topic": "Volcano Types and Eruptions",
+      "children": [],
+      "parents": [
+        16
+      ],
+      "metadata": {
+        "uuid": "be2a0646-36f9-47a7-87a3-47a8dd4896a7",
+        "topic_hash": "9b72fa2fdd11f8b70d11b532882b74cf58b0f9782ed1cb2c74dddaa2362c40cb"
+      }
+    },
+    "82": {
+      "id": 82,
+      "topic": "Seismic Waves and Propagation",
+      "children": [],
+      "parents": [
+        16
+      ],
+      "metadata": {
+        "uuid": "9df55dfe-8eef-4913-b68d-21c6a47746fd",
+        "topic_hash": "f27bba6bc89c13a025a78c1210381ea415bd62f5bab98236a291368a2183303b"
+      }
+    },
+    "83": {
+      "id": 83,
+      "topic": "Volcanic Hazards and Mitigation",
+      "children": [],
+      "parents": [
+        16
+      ],
+      "metadata": {
+        "uuid": "98feef76-7ee5-4941-984b-8fb5616a0d2e",
+        "topic_hash": "3da36883616577177274b95edcdfc81291fa1bd2c15e5ad03c184944f03fe7f0"
+      }
+    },
+    "84": {
+      "id": 84,
+      "topic": "Tsunamis and Secondary Effects",
+      "children": [],
+      "parents": [
+        16
+      ],
+      "metadata": {
+        "uuid": "1990de17-fd68-44e9-9202-1ae54787f8b7",
+        "topic_hash": "84b20088c2fb34dcb7c6bb56928bc298ca1f9bb13f9570c08fdbd663bc0d17c7"
+      }
+    },
+    "85": {
+      "id": 85,
+      "topic": "Types of Plate Boundaries",
+      "children": [],
+      "parents": [
+        18
+      ],
+      "metadata": {
+        "uuid": "a155f08e-5220-4ce7-9fc7-3183efe12a44",
+        "topic_hash": "97f2f401aba81686dc2d128d51fdcaa2d242c858b4bf863fcf0647ed35ba47fc"
+      }
+    },
+    "86": {
+      "id": 86,
+      "topic": "Mechanisms of Continental Drift",
+      "children": [],
+      "parents": [
+        18
+      ],
+      "metadata": {
+        "uuid": "483676e1-8a3e-4e18-a5eb-e63126ebec5a",
+        "topic_hash": "18a42f78c8f33defd8348c50895a9caac222e8c5fa43e7ad3086d2ff51889da0"
+      }
+    },
+    "87": {
+      "id": 87,
+      "topic": "Evidence for Continental Drift",
+      "children": [],
+      "parents": [
+        18
+      ],
+      "metadata": {
+        "uuid": "abd26737-c98e-4178-8121-50dbfd2e9b16",
+        "topic_hash": "389cd1fb3d1ddd2d34082f72ea1219aa36fae910d7866e2520de9d08700866a9"
+      }
+    },
+    "88": {
+      "id": 88,
+      "topic": "Plate Tectonics Theory",
+      "children": [],
+      "parents": [
+        18
+      ],
+      "metadata": {
+        "uuid": "fa26a342-45ca-4083-b5b8-30a35093da34",
+        "topic_hash": "7128f310ee6140475a3a532f31a8de36087c7e10a7c552b525805b0530dcd021"
+      }
+    },
+    "89": {
+      "id": 89,
+      "topic": "Seafloor Spreading",
+      "children": [],
+      "parents": [
+        18
+      ],
+      "metadata": {
+        "uuid": "8de920dd-cf4e-4e53-a33b-044ec42850de",
+        "topic_hash": "39cfd1abc77447f5587c39af1acae55eab7aaa333f1ecbb539256e8093d930a7"
+      }
+    },
+    "90": {
+      "id": 90,
+      "topic": "Geological Features Formed at Plate Boundaries",
+      "children": [],
+      "parents": [
+        18
+      ],
+      "metadata": {
+        "uuid": "206b8e5d-c346-4529-aaf3-8c394550fb33",
+        "topic_hash": "a86e141bf4651d70e001bfc3d2c36082f1bc2e7036044143181b33b29c7c1b10"
+      }
+    },
+    "91": {
+      "id": 91,
+      "topic": "History of the Periodic Table",
+      "children": [],
+      "parents": [
+        19
+      ],
+      "metadata": {
+        "uuid": "779a337a-ec1a-485d-88aa-111d59341a4e",
+        "topic_hash": "83d3d0ef1f3c389e24a3f81300076d98da6c7a9532eeab1f1f9ac51ca056eb99"
+      }
+    },
+    "92": {
+      "id": 92,
+      "topic": "Periodic Trends (Electronegativity, Ionization Energy, etc.)",
+      "children": [],
+      "parents": [
+        19
+      ],
+      "metadata": {
+        "uuid": "672fec78-bee4-471a-aee3-cb48424353fe",
+        "topic_hash": "7743e03840c930751f642ed5010af6b40aa2032ae4e835597374b9990b1fb004"
+      }
+    },
+    "93": {
+      "id": 93,
+      "topic": "Groups and Periods in the Periodic Table",
+      "children": [],
+      "parents": [
+        19
+      ],
+      "metadata": {
+        "uuid": "bd6a35c3-8aed-4c3d-a76a-ec60ff51583c",
+        "topic_hash": "5f6e0128b10b2dd0f86d286cb3dc626f2c272306cb20b0637fbc8d5aeabab9be"
+      }
+    },
+    "94": {
+      "id": 94,
+      "topic": "Metals, Nonmetals, and Metalloids",
+      "children": [],
+      "parents": [
+        19
+      ],
+      "metadata": {
+        "uuid": "8041e670-20b1-4614-a88e-45af0018eb06",
+        "topic_hash": "0e4bb973cd70b8bc76a00191e398df927959a3c298d53a0d030261e47a710673"
+      }
+    },
+    "95": {
+      "id": 95,
+      "topic": "Element Blocks (s, p, d, f blocks)",
+      "children": [],
+      "parents": [
+        19
+      ],
+      "metadata": {
+        "uuid": "4eb4d101-1965-4294-b35d-55d0bca666d9",
+        "topic_hash": "56542412e63afcec600bb7d8c8d553799a6645155822cab64dc87cbe56168580"
+      }
+    },
+    "96": {
+      "id": 96,
+      "topic": "Applications of Element Properties",
+      "children": [],
+      "parents": [
+        19
+      ],
+      "metadata": {
+        "uuid": "2b28e9a1-58b4-4805-9a3d-1cd5c06689ca",
+        "topic_hash": "b2b59a6c74073fecd24921f3f441fb9cb8db9fe7b41eec3c95c27fcc9b83687a"
+      }
+    },
+    "97": {
+      "id": 97,
+      "topic": "Ionic Bonding: Formation and Properties",
+      "children": [],
+      "parents": [
+        20
+      ],
+      "metadata": {
+        "uuid": "df46c26d-fb45-4b46-b0a2-aa3d94617573",
+        "topic_hash": "accdd9821d4260fc531b7228607025464af50cb1f775b833f2a0c4d98e55cee6"
+      }
+    },
+    "98": {
+      "id": 98,
+      "topic": "Covalent Bonding: Types and Characteristics",
+      "children": [],
+      "parents": [
+        20
+      ],
+      "metadata": {
+        "uuid": "28504fb6-4ad5-47b3-9597-e8e6b3f321d8",
+        "topic_hash": "0cb87e98afa7fe0b48aed88a6da0ee8194bcf54b4349747611095fbb0db0e3f5"
+      }
+    },
+    "99": {
+      "id": 99,
+      "topic": "Metallic Bonding: Structure and Conductivity",
+      "children": [],
+      "parents": [
+        20
+      ],
+      "metadata": {
+        "uuid": "1c7541eb-dbfc-4d37-8964-e0004ae7d20b",
+        "topic_hash": "3d3022320b3372aaafa04950927c3cfa7fdcc50e98da2214511862fd3d1c30b1"
+      }
+    },
+    "100": {
+      "id": 100,
+      "topic": "Polar vs Nonpolar Bonds",
+      "children": [],
+      "parents": [
+        20
+      ],
+      "metadata": {
+        "uuid": "891344b6-2132-4ec6-b47f-86db14b43b42",
+        "topic_hash": "e9806769fbf13a8ee06260f25cb244887aca4f080f26a15ffcedce70c2d8abe7"
+      }
+    },
+    "101": {
+      "id": 101,
+      "topic": "Electronegativity and Bond Polarity",
+      "children": [],
+      "parents": [
+        20
+      ],
+      "metadata": {
+        "uuid": "b02862b1-f531-401b-b288-51334b848736",
+        "topic_hash": "97d13408d8cb8aa63bef19d515a0b01e0ba336b97094a9507419236a44e6ea2b"
+      }
+    },
+    "102": {
+      "id": 102,
+      "topic": "Bond Energy and Bond Length",
+      "children": [],
+      "parents": [
+        20
+      ],
+      "metadata": {
+        "uuid": "c9cec467-69a9-429c-9b1c-63db7dffffce",
+        "topic_hash": "3b4fcee63b9a37e013e8bf65790303021f8a9d0cb80b5cb915e2767f399505cf"
+      }
+    },
+    "103": {
+      "id": 103,
+      "topic": "Properties of Acids",
+      "children": [],
+      "parents": [
+        21
+      ],
+      "metadata": {
+        "uuid": "eeef5aa8-bd2c-4954-8d1b-2e29812c88dc",
+        "topic_hash": "6a4654ec8a974af4c62ed885f9dbb948035d4a590b1fce8537ab16a529c20120"
+      }
+    },
+    "104": {
+      "id": 104,
+      "topic": "Properties of Bases",
+      "children": [],
+      "parents": [
+        21
+      ],
+      "metadata": {
+        "uuid": "a048a0d0-c8b6-4afb-8ff1-5069c8fd237f",
+        "topic_hash": "475671f32d27daaa84a3b124cbc5f41a9ca65cb85e55d2fbad2d600370506fbb"
+      }
+    },
+    "105": {
+      "id": 105,
+      "topic": "The pH Scale",
+      "children": [],
+      "parents": [
+        21
+      ],
+      "metadata": {
+        "uuid": "d37c00ae-e62d-4eb1-8ae8-a7e362d929dd",
+        "topic_hash": "faafbbcc93d64dd81184884e80234a06ddc3c9d3ffdeeb4a3db226b940708ef0"
+      }
+    },
+    "106": {
+      "id": 106,
+      "topic": "Neutralization Reactions",
+      "children": [],
+      "parents": [
+        21
+      ],
+      "metadata": {
+        "uuid": "02418bb3-055a-4db8-b075-08be12c465cc",
+        "topic_hash": "8bef2710b823d3c63fa5d98962c54a38d3bf92847a93927f166333363be5d94a"
+      }
+    },
+    "107": {
+      "id": 107,
+      "topic": "Indicators and pH Measurement",
+      "children": [],
+      "parents": [
+        21
+      ],
+      "metadata": {
+        "uuid": "de9df880-0223-40ed-92ea-3530da761ecd",
+        "topic_hash": "59eb6afbb3fc249ffd5f9dab3247981ebe69687b59c26aa32aabf16d0453b9c1"
+      }
+    },
+    "108": {
+      "id": 108,
+      "topic": "Applications of Acids and Bases",
+      "children": [],
+      "parents": [
+        21
+      ],
+      "metadata": {
+        "uuid": "26307f38-fb38-48c9-adf2-3259ca3e3a7b",
+        "topic_hash": "174c0dcf917d70e71ee09882e401522f84cb4ba568fe0e8bb90fdc41bf378793"
+      }
+    },
+    "109": {
+      "id": 109,
+      "topic": "Types of Solutions",
+      "children": [],
+      "parents": [
+        22
+      ],
+      "metadata": {
+        "uuid": "ce0b571a-aa9f-4d14-b343-fa00ef68afbe",
+        "topic_hash": "e32d0ddcc58d8d7607dc5d812f3f02035f464dda11965ee66a3c55350b89917c"
+      }
+    },
+    "110": {
+      "id": 110,
+      "topic": "Factors Affecting Solubility",
+      "children": [],
+      "parents": [
+        22
+      ],
+      "metadata": {
+        "uuid": "5d3d4f3f-9c90-4561-a6ba-f8e896204cf0",
+        "topic_hash": "2fce86d8d5b6f262cdf17619814269402e23c83a512e4f04d4ff5df69ed67f20"
+      }
+    },
+    "111": {
+      "id": 111,
+      "topic": "Solubility Curves",
+      "children": [],
+      "parents": [
+        22
+      ],
+      "metadata": {
+        "uuid": "714d21c0-db54-4adf-9b16-0dd31dc22325",
+        "topic_hash": "f3bfa0548a75a9ce7d65e06dce14a93350b494db2ff7d618f1e812f9e5a901e1"
+      }
+    },
+    "112": {
+      "id": 112,
+      "topic": "Saturated, Unsaturated, and Supersaturated Solutions",
+      "children": [],
+      "parents": [
+        22
+      ],
+      "metadata": {
+        "uuid": "89389a6f-a270-43d1-a24f-1a185dfa13b1",
+        "topic_hash": "5669600d2a8a4640925b4d88bcc670599a93af90fd6693a24e47bfab98bfe1ce"
+      }
+    },
+    "113": {
+      "id": 113,
+      "topic": "Concentration Units (Molarity, Molality, etc.)",
+      "children": [],
+      "parents": [
+        22
+      ],
+      "metadata": {
+        "uuid": "e450864b-d026-4f9d-b64c-12b1c6dd4075",
+        "topic_hash": "5d3e499f2252ec82779a2b841ad71c689b6dafa0e747b04872dfe79b98114e14"
+      }
+    },
+    "114": {
+      "id": 114,
+      "topic": "Applications of Solutions in Daily Life",
+      "children": [],
+      "parents": [
+        22
+      ],
+      "metadata": {
+        "uuid": "2723f46a-2bec-45b6-b77f-bb2dec8d97a0",
+        "topic_hash": "d5db9f40b7f827709e0e78ee294611a2e4b5a2403f3bcc79eb27db1b03dd3b2e"
+      }
+    },
+    "115": {
+      "id": 115,
+      "topic": "Oxidation and Reduction Processes",
+      "children": [],
+      "parents": [
+        24
+      ],
+      "metadata": {
+        "uuid": "9897bfbc-4abe-4edd-aae1-ce565352473f",
+        "topic_hash": "e21ced6298fe62e0553067344bb408b01af1555904f4c692fbad57f05053eca1"
+      }
+    },
+    "116": {
+      "id": 116,
+      "topic": "Electrochemical Cells",
+      "children": [],
+      "parents": [
+        24
+      ],
+      "metadata": {
+        "uuid": "d1828043-ba70-4a99-b324-8a8102088811",
+        "topic_hash": "b7a304fcd8dc139c5375da3030984a7d8b5799c327a7cfc3cde32eac5191aa26"
+      }
+    },
+    "117": {
+      "id": 117,
+      "topic": "Standard Electrode Potentials",
+      "children": [],
+      "parents": [
+        24
+      ],
+      "metadata": {
+        "uuid": "df0d78f9-ded3-4b98-8038-76174129a08f",
+        "topic_hash": "171d9fad3a7bbc6706f0c96db735d7c8a86fe92a610525c4ff88b8862751dcc6"
+      }
+    },
+    "118": {
+      "id": 118,
+      "topic": "Nernst Equation",
+      "children": [],
+      "parents": [
+        24
+      ],
+      "metadata": {
+        "uuid": "f175206c-768b-4ddb-ad92-78ffb501e51c",
+        "topic_hash": "32b0a238c7e1f64b27baeae29765d4a133f714b4d3217c8ea8ab2bf663f7aa50"
+      }
+    },
+    "119": {
+      "id": 119,
+      "topic": "Electrolysis and Industrial Applications",
+      "children": [],
+      "parents": [
+        24
+      ],
+      "metadata": {
+        "uuid": "578066ce-84bc-4768-ab55-789b0760c63b",
+        "topic_hash": "45d05d8d1e6ee6019a0bcd878b40a6ca17483acd968ff7e6e74c3a44b55167c4"
+      }
+    },
+    "120": {
+      "id": 120,
+      "topic": "Redox Titrations and Analytical Techniques",
+      "children": [],
+      "parents": [
+        24
+      ],
+      "metadata": {
+        "uuid": "d10a9c27-302c-48ac-8351-d7ddca466fed",
+        "topic_hash": "223957eef2eb8ebeb3562fe299befc9c88fce3c2fcba2a1dee112f6189cd2647"
+      }
+    },
+    "121": {
+      "id": 121,
+      "topic": "Linear Motion",
+      "children": [],
+      "parents": [
+        25
+      ],
+      "metadata": {
+        "uuid": "53c6aa96-8735-4047-aa38-74b08cde7e1a",
+        "topic_hash": "144d58c3fe7760bca110826e409ff6b04b5a5b6d9e3b975750db336f16260128"
+      }
+    },
+    "122": {
+      "id": 122,
+      "topic": "Rotational Motion",
+      "children": [],
+      "parents": [
+        25
+      ],
+      "metadata": {
+        "uuid": "80783944-5178-4d1c-9b46-a4e8e73b374f",
+        "topic_hash": "cbfc731011b35c1c33034109bc7381d9349932f515db5dc68edb500443154011"
+      }
+    },
+    "123": {
+      "id": 123,
+      "topic": "Newton's Laws of Motion",
+      "children": [],
+      "parents": [
+        25
+      ],
+      "metadata": {
+        "uuid": "f5b2eda5-ef7f-49c5-a239-204808752049",
+        "topic_hash": "803a6a6382a4f2aba53bbe82ddbce46f61c3ee0e59cd2bfad5312f814046734c"
+      }
+    },
+    "124": {
+      "id": 124,
+      "topic": "Work, Energy, and Power",
+      "children": [],
+      "parents": [
+        25
+      ],
+      "metadata": {
+        "uuid": "67e73ec0-bf33-4c14-b2ec-c2321c999412",
+        "topic_hash": "3434fe5b150a8e3e72af609420801b1af5350af9e0512834fe1b7f08d679ce5d"
+      }
+    },
+    "125": {
+      "id": 125,
+      "topic": "Conservation Laws (Momentum, Energy)",
+      "children": [],
+      "parents": [
+        25
+      ],
+      "metadata": {
+        "uuid": "da196ed0-8ca9-4676-ac8e-7b5384547d6e",
+        "topic_hash": "4c7d6242d6ddc377ea0d1f6c688c4bcd83f7725332099e6981314d23d967707d"
+      }
+    },
+    "126": {
+      "id": 126,
+      "topic": "Friction and Forces",
+      "children": [],
+      "parents": [
+        25
+      ],
+      "metadata": {
+        "uuid": "b53c6069-046c-4014-a5fc-192323f9b4f3",
+        "topic_hash": "9e753fcf8852cc89fecc597d0e2b92033452d0a5072de357b182ac25fb778790"
+      }
+    },
+    "127": {
+      "id": 127,
+      "topic": "Rate Laws and Reaction Order",
+      "children": [],
+      "parents": [
+        23
+      ],
+      "metadata": {
+        "uuid": "bbfd7a32-b5cb-4959-960c-678469f939d7",
+        "topic_hash": "8abfad27dfa84f8e034d282755fa5fcc5bb8b3c918cf10a8837919c0d5d3ce66"
+      }
+    },
+    "128": {
+      "id": 128,
+      "topic": "Factors Affecting Reaction Rates",
+      "children": [],
+      "parents": [
+        23
+      ],
+      "metadata": {
+        "uuid": "e42270c3-20a2-4906-8652-c7bcaeac85f5",
+        "topic_hash": "05757a9f1e622620520afce49b7968a7affcdb9447817cb9676b23564bad9710"
+      }
+    },
+    "129": {
+      "id": 129,
+      "topic": "Collision Theory and Activation Energy",
+      "children": [],
+      "parents": [
+        23
+      ],
+      "metadata": {
+        "uuid": "b25687cd-9218-444b-ba21-f605d51aff1c",
+        "topic_hash": "7b17062d7cc4782d949fee5bb98340c85081116cf0a70f726e0172db77b4503c"
+      }
+    },
+    "130": {
+      "id": 130,
+      "topic": "Dynamic Equilibrium and the Equilibrium Constant (K)",
+      "children": [],
+      "parents": [
+        23
+      ],
+      "metadata": {
+        "uuid": "e5f395b9-dc1a-472f-ac89-b44f0a39eb93",
+        "topic_hash": "228d5cacce5d9a22ae9d9b7e175c11863b27734ed1ae464c2befdf77e38e29d8"
+      }
+    },
+    "131": {
+      "id": 131,
+      "topic": "Le Chatelier's Principle",
+      "children": [],
+      "parents": [
+        23
+      ],
+      "metadata": {
+        "uuid": "37b5f350-0e23-4318-a384-7e0be60b49fb",
+        "topic_hash": "87cadb7f9a3ea2f4600584ab7715693de50c60d88006b81a69e2cabd2decee21"
+      }
+    },
+    "132": {
+      "id": 132,
+      "topic": "Applications of Chemical Kinetics and Equilibrium in Industry",
+      "children": [],
+      "parents": [
+        23
+      ],
+      "metadata": {
+        "uuid": "a05f9934-8136-4f7c-93b1-007adb9dd3b8",
+        "topic_hash": "c11d20e015b8bfac04a474ecd48018949061ecaca4e7d17195c73f72c0c85312"
+      }
+    },
+    "133": {
+      "id": 133,
+      "topic": "Law of Conservation of Energy",
+      "children": [],
+      "parents": [
+        26
+      ],
+      "metadata": {
+        "uuid": "b148bbfa-f1c2-45c8-ab07-8f5ae3f996af",
+        "topic_hash": "8af9ce5f49779af2a882e743b4d928c43879e5172876ac5a8c875db373b22f1a"
+      }
+    },
+    "134": {
+      "id": 134,
+      "topic": "Law of Conservation of Linear Momentum",
+      "children": [],
+      "parents": [
+        26
+      ],
+      "metadata": {
+        "uuid": "6a80b43b-ab30-4df1-aa11-bbe49eb6d423",
+        "topic_hash": "2a75361b555406553fd458bf7a114d2d27180f8c003c90551a8679a505ccaf94"
+      }
+    },
+    "135": {
+      "id": 135,
+      "topic": "Law of Conservation of Angular Momentum",
+      "children": [],
+      "parents": [
+        26
+      ],
+      "metadata": {
+        "uuid": "913c2db9-83ab-4288-8bec-d7dc6e4b0fcb",
+        "topic_hash": "846d08cf889e10d3f212e1abde190c549c184bb4d3783a1a57869916bf60c19f"
+      }
+    },
+    "136": {
+      "id": 136,
+      "topic": "Law of Conservation of Electric Charge",
+      "children": [],
+      "parents": [
+        26
+      ],
+      "metadata": {
+        "uuid": "beec362d-bdfd-4322-a7ba-be93410c1ae9",
+        "topic_hash": "82ee7eb9996198bae5b53ab979dba3b7a7da28e8c43f7e58ae60b8dfceb97947"
+      }
+    },
+    "137": {
+      "id": 137,
+      "topic": "Noether's Theorem and Symmetries",
+      "children": [],
+      "parents": [
+        26
+      ],
+      "metadata": {
+        "uuid": "36fc5949-e513-4be4-a4e4-61a254994959",
+        "topic_hash": "e8894f731d3379103a9df80e23f83f3b5d02be38d5065b2581e1ced54649f440"
+      }
+    },
+    "138": {
+      "id": 138,
+      "topic": "Applications of Conservation Laws in Physics",
+      "children": [],
+      "parents": [
+        26
+      ],
+      "metadata": {
+        "uuid": "e155cc08-2fc2-4f10-8483-fdc3959f9f05",
+        "topic_hash": "216b1397846d411856c5deefa7ec68181f6ce68b6b2d7ca688799e7b645b3c65"
+      }
+    },
+    "139": {
+      "id": 139,
+      "topic": "Wave-Particle Duality",
+      "children": [],
+      "parents": [
+        30
+      ],
+      "metadata": {
+        "uuid": "65cdd7e1-2db0-48e9-b2db-85619af7fa03",
+        "topic_hash": "1372631a66139d4145ea1530b6379f55ad699327566de946dfec9e28617c5847"
+      }
+    },
+    "140": {
+      "id": 140,
+      "topic": "Uncertainty Principle",
+      "children": [],
+      "parents": [
+        30
+      ],
+      "metadata": {
+        "uuid": "b56b5027-e72a-487e-b502-a3482bbeafc5",
+        "topic_hash": "e895bb951d0ba18206fe2b6c2076c066fd91ed4bfddf0174ea7c349ecdd4e5ed"
+      }
+    },
+    "141": {
+      "id": 141,
+      "topic": "Schrödinger Equation",
+      "children": [],
+      "parents": [
+        30
+      ],
+      "metadata": {
+        "uuid": "f8701d8d-de10-4b70-8384-e675e1f5db5d",
+        "topic_hash": "eee0ea0e990349f362aa4007d354c1f8487c49a9330e0cfda557a4cdbccd95f6"
+      }
+    },
+    "142": {
+      "id": 142,
+      "topic": "Special Relativity",
+      "children": [],
+      "parents": [
+        30
+      ],
+      "metadata": {
+        "uuid": "d8a5c7f8-2955-497e-b4b1-2822a64f9125",
+        "topic_hash": "452f42e6cec009041e04c3b26fb2974404c00aece6ca5e1fd062240f251fcd71"
+      }
+    },
+    "143": {
+      "id": 143,
+      "topic": "General Relativity",
+      "children": [],
+      "parents": [
+        30
+      ],
+      "metadata": {
+        "uuid": "9f6a3710-dfbc-4ded-8ff9-23604be67cd3",
+        "topic_hash": "36b87c9d8206b03924e42e2ae01cdbe0982e29e7b4ddb0f533c8332b3bb354c8"
+      }
+    },
+    "144": {
+      "id": 144,
+      "topic": "Quantum Entanglement",
+      "children": [],
+      "parents": [
+        30
+      ],
+      "metadata": {
+        "uuid": "69ed5888-60db-47c6-a825-dcdafb25229c",
+        "topic_hash": "f5cc3f5f0c636467bae865f19f800c021f079ced5c7bf7dad48995e60f3b7827"
+      }
+    },
+    "145": {
+      "id": 145,
+      "topic": "First Law of Thermodynamics: Energy Conservation",
+      "children": [],
+      "parents": [
+        29
+      ],
+      "metadata": {
+        "uuid": "bcf6d4fb-8023-409b-85d1-8f7d85a0379a",
+        "topic_hash": "971a8a70514c6ffa7f44afc3a97ed57e705cfc2b717acc92fc962422740bf035"
+      }
+    },
+    "146": {
+      "id": 146,
+      "topic": "Second Law of Thermodynamics: Entropy and Irreversibility",
+      "children": [],
+      "parents": [
+        29
+      ],
+      "metadata": {
+        "uuid": "5176f9ab-fc0c-48cf-a06a-bdced32b39a5",
+        "topic_hash": "48b4c7b293f129c160debf7c90f8edb8eb6f229a0a90c0704dcbb11258a668b4"
+      }
+    },
+    "147": {
+      "id": 147,
+      "topic": "Third Law of Thermodynamics: Absolute Zero and Residual Entropy",
+      "children": [],
+      "parents": [
+        29
+      ],
+      "metadata": {
+        "uuid": "84c0f51e-0266-421d-8bd6-b1d806fd8814",
+        "topic_hash": "3f276a4da072a121f5c67e339f9612c476c7d9f3979d55e458604e77fc67cfdf"
+      }
+    },
+    "148": {
+      "id": 148,
+      "topic": "Modes of Heat Transfer: Conduction, Convection, and Radiation",
+      "children": [],
+      "parents": [
+        29
+      ],
+      "metadata": {
+        "uuid": "a8b1cc85-c4ba-4b45-8062-0127c3cba098",
+        "topic_hash": "202642b794cb035be7b6a66cbff997c8e8da7ccba42d44a7cae57b4584c3c632"
+      }
+    },
+    "149": {
+      "id": 149,
+      "topic": "Thermodynamic Systems and Surroundings",
+      "children": [],
+      "parents": [
+        29
+      ],
+      "metadata": {
+        "uuid": "be49da87-6f68-4e79-af58-e8eb4df2e32c",
+        "topic_hash": "28bf574f22db094587cdbf497eeb24e31da1efb3a2981292626c9ed3c478efda"
+      }
+    },
+    "150": {
+      "id": 150,
+      "topic": "Heat Engines and Refrigerators: Efficiency and Performance",
+      "children": [],
+      "parents": [
+        29
+      ],
+      "metadata": {
+        "uuid": "1e58184e-9cd5-4196-8a6b-50dfd932987d",
+        "topic_hash": "c4d237a04f2d7a8e5bfc7511d74edf26f669d732a367378623b297044c13760b"
+      }
+    },
+    "151": {
+      "id": 151,
+      "topic": "Wave Properties: Amplitude, Frequency, Wavelength, and Speed",
+      "children": [],
+      "parents": [
+        28
+      ],
+      "metadata": {
+        "uuid": "570de731-15c8-4c5b-b12e-fe9010b58dd1",
+        "topic_hash": "758ef67c6b8ceca120d712989c586d8177363b0fe27e7b5aa9a88b824d44d2b8"
+      }
+    },
+    "152": {
+      "id": 152,
+      "topic": "Types of Waves: Mechanical vs Electromagnetic",
+      "children": [],
+      "parents": [
+        28
+      ],
+      "metadata": {
+        "uuid": "6df9c0e5-1f41-4fb2-8807-7fbca72ba7c5",
+        "topic_hash": "5584b41918b3d2c96101daab8997fe894330a79dc0861f60e974b9643b5601e3"
+      }
+    },
+    "153": {
+      "id": 153,
+      "topic": "Sound Waves: Nature and Characteristics",
+      "children": [],
+      "parents": [
+        28
+      ],
+      "metadata": {
+        "uuid": "87b79881-f8ef-4f20-bafd-20ee665b4903",
+        "topic_hash": "94dc03159ef3ffdb2e9efb02b390757183b0d115325538a54cd75b062d5b357d"
+      }
+    },
+    "154": {
+      "id": 154,
+      "topic": "Light Waves: Electromagnetic Spectrum and Behavior",
+      "children": [],
+      "parents": [
+        28
+      ],
+      "metadata": {
+        "uuid": "11f82b00-3a5a-4665-87a0-85f221e496f6",
+        "topic_hash": "6c7ed96a0530f7955aec7516de29bd9e86e792d659aa6fbb27e7a125de870cb3"
+      }
+    },
+    "155": {
+      "id": 155,
+      "topic": "Wave Interactions: Reflection, Refraction, Diffraction, and Interference",
+      "children": [],
+      "parents": [
+        28
+      ],
+      "metadata": {
+        "uuid": "ef81e074-3373-4ffa-95aa-d96f9d80e4e9",
+        "topic_hash": "9b60b26533b02fa2b7798e3c303b1278cf300f435c27dfbe894e8a76130172cf"
+      }
+    },
+    "156": {
+      "id": 156,
+      "topic": "Wave Applications: Technology and Everyday Life",
+      "children": [],
+      "parents": [
+        28
+      ],
+      "metadata": {
+        "uuid": "4783664d-c82a-40b0-a7bb-728d6b458a25",
+        "topic_hash": "97059b434d2449559a72ddf9c2e2ed8ddfaaf6e65158c01740245b558ea98c99"
+      }
+    },
+    "157": {
+      "id": 157,
+      "topic": "Coulomb's Law and Electric Force",
+      "children": [],
+      "parents": [
+        27
+      ],
+      "metadata": {
+        "uuid": "5911f3f6-ac95-4596-a850-9a94310405f3",
+        "topic_hash": "2162ed1f29b2ef7f687bcc31ac03552aa869edce2f8bdb6e0dc24fedcf9464b3"
+      }
+    },
+    "158": {
+      "id": 158,
+      "topic": "Gauss's Law and Electric Flux",
+      "children": [],
+      "parents": [
+        27
+      ],
+      "metadata": {
+        "uuid": "f6a2d139-0c7c-4f80-94d8-a3c8fae6390e",
+        "topic_hash": "e785a81a24ce86fcd1593348c55a2d24d1639fdb1e427ea8d73adfed9325bc81"
+      }
+    },
+    "159": {
+      "id": 159,
+      "topic": "Magnetic Fields and Sources (Biot-Savart, Ampère's Law)",
+      "children": [],
+      "parents": [
+        27
+      ],
+      "metadata": {
+        "uuid": "ca38b128-90a5-495f-a8b0-700110de3e64",
+        "topic_hash": "14fc7a6191c46508e0dc27b4fa3f1b7489a6c6019c3afa8d283b42606d4fd83d"
+      }
+    },
+    "160": {
+      "id": 160,
+      "topic": "Electromagnetic Induction and Faraday's Law",
+      "children": [],
+      "parents": [
+        27
+      ],
+      "metadata": {
+        "uuid": "49a30ce2-ba3e-4a66-acc3-f8979dcfcf8e",
+        "topic_hash": "94e3482fbb30f99456498d6e77de45c3f992ba2be2e90c3671a382acca203f04"
+      }
+    },
+    "161": {
+      "id": 161,
+      "topic": "Electric Circuits: Current, Resistance, and Ohm's Law",
+      "children": [],
+      "parents": [
+        27
+      ],
+      "metadata": {
+        "uuid": "3505a88c-e72e-4fe2-819e-ac5a4b79806b",
+        "topic_hash": "af2826cff62a7bb26e288ed31803385bcfd792473c3d5f9d19c223baaebaf7a2"
+      }
+    },
+    "162": {
+      "id": 162,
+      "topic": "Maxwell's Equations",
+      "children": [],
+      "parents": [
+        27
+      ],
+      "metadata": {
+        "uuid": "afb21553-7e98-4379-bed7-cadc7211b0f8",
+        "topic_hash": "5ce728c5f65e81efaf3d3e7471a447aa0b1b5e4c373903af515b1a63e78ad80c"
+      }
+    },
+    "163": {
+      "id": 163,
+      "topic": "Terrestrial Planets: Mercury, Venus, Earth, Mars",
+      "children": [],
+      "parents": [
+        31
+      ],
+      "metadata": {
+        "uuid": "e7760bab-ad6d-4809-9d86-1810f6c52363",
+        "topic_hash": "acfc1abcb026864445a0a397d2f0c338f0187f2fe8ccec46a060e20c1b72fd3f"
+      }
+    },
+    "164": {
+      "id": 164,
+      "topic": "Gas Giants: Jupiter and Saturn",
+      "children": [],
+      "parents": [
+        31
+      ],
+      "metadata": {
+        "uuid": "36b9e911-6b7c-4eba-b7d9-3ff380844fb4",
+        "topic_hash": "33ee1c106425cba4a0c90e0b9e5affd98651118508d729ba0d5222414aa159bd"
+      }
+    },
+    "165": {
+      "id": 165,
+      "topic": "Ice Giants: Uranus and Neptune",
+      "children": [],
+      "parents": [
+        31
+      ],
+      "metadata": {
+        "uuid": "29af62ce-3471-4c2f-b998-235c5f144011",
+        "topic_hash": "d96be7ee04a7004372c40c6970f03a9ffa8a9faf88d358a751d61571ffa12f59"
+      }
+    },
+    "166": {
+      "id": 166,
+      "topic": "Major Moons of the Solar System",
+      "children": [],
+      "parents": [
+        31
+      ],
+      "metadata": {
+        "uuid": "9f0a7fbd-17d2-4098-9202-db1c2154449f",
+        "topic_hash": "4318d48c591adc39b398fb8654898b9b64cdff909a33b073d2917bcf3828f6b4"
+      }
+    },
+    "167": {
+      "id": 167,
+      "topic": "Dwarf Planets: Pluto, Eris, Haumea, Makemake, and Ceres",
+      "children": [],
+      "parents": [
+        31
+      ],
+      "metadata": {
+        "uuid": "bfdc62bc-5479-48ad-8b75-35b1bea8323e",
+        "topic_hash": "f674e3fdd0910ca268a9e77d7253e091eff58b512837142b9d554ddfb128bfef"
+      }
+    },
+    "168": {
+      "id": 168,
+      "topic": "Planetary Formation and Evolution Processes",
+      "children": [],
+      "parents": [
+        31
+      ],
+      "metadata": {
+        "uuid": "04cd0ecf-c8e8-4640-bc0f-743f13bb394a",
+        "topic_hash": "4cfbb55e4e8bd6d3af1dae7feb751d8d44005f1cf7262bf076ae6b35d1f3cfe8"
+      }
+    },
+    "169": {
+      "id": 169,
+      "topic": "Cosmic Inflation",
+      "children": [],
+      "parents": [
+        34
+      ],
+      "metadata": {
+        "uuid": "d6aac9fd-3d21-474c-8bcd-bc28a38e3698",
+        "topic_hash": "a3c6d9a10b82467bf4bb0ea8eff4de23b5d08dd24720952da47e08c24c00b024"
+      }
+    },
+    "170": {
+      "id": 170,
+      "topic": "Cosmic Microwave Background Radiation",
+      "children": [],
+      "parents": [
+        34
+      ],
+      "metadata": {
+        "uuid": "2ac30252-ebbe-455f-8767-61e3d6bae780",
+        "topic_hash": "b186785c9bd3f5af5708a9b80b8202ddcf97b4ec2d8819334cc308d7788a741b"
+      }
+    },
+    "171": {
+      "id": 171,
+      "topic": "Nucleosynthesis and Element Formation",
+      "children": [],
+      "parents": [
+        34
+      ],
+      "metadata": {
+        "uuid": "68c6ecb0-638b-4d59-8cfc-0c8ac51548db",
+        "topic_hash": "f23e272a7cd4ff307b0a311921024895e43b9059f5f7fed01884723ff60dfbd7"
+      }
+    },
+    "172": {
+      "id": 172,
+      "topic": "Hubble's Law and Universal Expansion",
+      "children": [],
+      "parents": [
+        34
+      ],
+      "metadata": {
+        "uuid": "661cd5f7-3d61-46c7-88f9-f065d9c57192",
+        "topic_hash": "d82fad630f125ab4d00092753de0023a54f51a6dde314b3a0de98728746bb83d"
+      }
+    },
+    "173": {
+      "id": 173,
+      "topic": "Singularity and the Initial Conditions",
+      "children": [],
+      "parents": [
+        34
+      ],
+      "metadata": {
+        "uuid": "cbafc2f1-5d67-4953-b9db-722ff97cd9f8",
+        "topic_hash": "eba7e7f77ed86560f7271f5c934fb00f07c39108b3143a1d00f8b14a47fc79a4"
+      }
+    },
+    "174": {
+      "id": 174,
+      "topic": "Observational Evidence for the Big Bang",
+      "children": [],
+      "parents": [
+        34
+      ],
+      "metadata": {
+        "uuid": "8e3332d9-c452-4c42-b3b0-bcfda1621965",
+        "topic_hash": "2640516c055d9a29d58459db2b9ff6ec7acea6c0f7536b6b66e4a76a72efdca1"
+      }
+    },
+    "175": {
+      "id": 175,
+      "topic": "Star Formation and Protostars",
+      "children": [],
+      "parents": [
+        32
+      ],
+      "metadata": {
+        "uuid": "9970a5b6-2f59-4207-9cac-2202285b7ab4",
+        "topic_hash": "fab821c972f86a7967ee0f3719e7970f181c8f72fc973c1daa65c1b203b16468"
+      }
+    },
+    "176": {
+      "id": 176,
+      "topic": "Main Sequence Stars",
+      "children": [],
+      "parents": [
+        32
+      ],
+      "metadata": {
+        "uuid": "2f669bf7-b025-4c1b-869b-ae6a8a3b5c4f",
+        "topic_hash": "8022063bbf8b0ef5528e3d7e2817c3627c4c2842100360ec7fefeccc8828996d"
+      }
+    },
+    "177": {
+      "id": 177,
+      "topic": "Red Giants and Supergiants",
+      "children": [],
+      "parents": [
+        32
+      ],
+      "metadata": {
+        "uuid": "84569634-9029-4b97-ab04-78c7970e942f",
+        "topic_hash": "0be7ae5a85150d609a6cc16c624d140661bcafdea34be3ba8aa53f5bfecebee2"
+      }
+    },
+    "178": {
+      "id": 178,
+      "topic": "Stellar Nucleosynthesis",
+      "children": [],
+      "parents": [
+        32
+      ],
+      "metadata": {
+        "uuid": "42addb94-43b3-4cb1-adb7-42fc238e5211",
+        "topic_hash": "a5f642015dfe625a6c5686baca2967b66dea90d99aa3b01d357c8a2f074ac19c"
+      }
+    },
+    "179": {
+      "id": 179,
+      "topic": "Stellar Death: White Dwarfs, Neutron Stars, and Black Holes",
+      "children": [],
+      "parents": [
+        32
+      ],
+      "metadata": {
+        "uuid": "ad658624-bdee-4328-9e1f-49a8af34ecb5",
+        "topic_hash": "b0abd37b594bc0b73d77bbc8b71e1acce083f2b71a671f1f232ef2f5070e3047"
+      }
+    },
+    "180": {
+      "id": 180,
+      "topic": "Supernovae and Stellar Remnants",
+      "children": [],
+      "parents": [
+        32
+      ],
+      "metadata": {
+        "uuid": "719f528e-379c-4ffe-8563-09c7dd15ee8e",
+        "topic_hash": "47f9653e9980fbb8a5760eb14cc40b70a2e450699db06119b14c9066940ad138"
+      }
+    },
+    "181": {
+      "id": 181,
+      "topic": "Spiral Galaxies",
+      "children": [],
+      "parents": [
+        33
+      ],
+      "metadata": {
+        "uuid": "2c8abb00-535c-4cc3-b665-afe417c30ec1",
+        "topic_hash": "8cd73f57f8aaa5ce756990327c5ebd00373f50ec397bc0e780da1ec99de373d1"
+      }
+    },
+    "182": {
+      "id": 182,
+      "topic": "Elliptical Galaxies",
+      "children": [],
+      "parents": [
+        33
+      ],
+      "metadata": {
+        "uuid": "7aee29b0-052f-47ce-96eb-b791a187b97e",
+        "topic_hash": "7a80b5a6f38ff89a36442450c011ab4e065ab33550dec5f85c27250fc057374f"
+      }
+    },
+    "183": {
+      "id": 183,
+      "topic": "Irregular Galaxies",
+      "children": [],
+      "parents": [
+        33
+      ],
+      "metadata": {
+        "uuid": "f4e60e8c-d5c2-40b0-8669-861167c8e558",
+        "topic_hash": "d5bf652bdd36c46869b60b0a81b6410354cd8ff4fc303141a0427a8f896546c3"
+      }
+    },
+    "184": {
+      "id": 184,
+      "topic": "Lenticular Galaxies",
+      "children": [],
+      "parents": [
+        33
+      ],
+      "metadata": {
+        "uuid": "4e832ccc-301c-4e06-a701-7cd70cbf089b",
+        "topic_hash": "d7b977726b6e7744a90ba3d28486061cbbece881b5a728f0b23e78dbbc3a92b7"
+      }
+    },
+    "185": {
+      "id": 185,
+      "topic": "Barred Spiral Galaxies",
+      "children": [],
+      "parents": [
+        33
+      ],
+      "metadata": {
+        "uuid": "8b9428e5-041f-4a07-92a3-ca6c588a3de3",
+        "topic_hash": "ab57b3c1924cac4718d3f533b615111619605c235cf900e5f3f13b661a9b667a"
+      }
+    },
+    "186": {
+      "id": 186,
+      "topic": "Galactic Components (Bulge, Disk, Halo)",
+      "children": [],
+      "parents": [
+        33
+      ],
+      "metadata": {
+        "uuid": "18200e4a-07ae-472a-b219-486903d33346",
+        "topic_hash": "e7b05b9fd0e41b4f28574a1a724c3c8e0c1425d3d7ca749aa0a1c43dd6f5cd37"
+      }
+    },
+    "187": {
+      "id": 187,
+      "topic": "Optical Telescopes",
+      "children": [],
+      "parents": [
+        35
+      ],
+      "metadata": {
+        "uuid": "09857d20-b6a7-4e6d-b9ed-6ac54df3523a",
+        "topic_hash": "53a332c82b1f63c45f374e670c116e2871ed85278a36ebefa2428c8d8f935429"
+      }
+    },
+    "188": {
+      "id": 188,
+      "topic": "Radio Astronomy Techniques",
+      "children": [],
+      "parents": [
+        35
+      ],
+      "metadata": {
+        "uuid": "e99cc0f9-b63c-4e8f-afa9-0ed761fb7687",
+        "topic_hash": "a2099027f32f36be1847141dce751acac23a6cd1d2d3ea4ce47fc7762ac957b1"
+      }
+    },
+    "189": {
+      "id": 189,
+      "topic": "Spectroscopy in Astronomy",
+      "children": [],
+      "parents": [
+        35
+      ],
+      "metadata": {
+        "uuid": "2f382773-8226-46de-bd65-f0e47588d8b6",
+        "topic_hash": "ecc7912b9fb0baea81981789419c057da42f96ab03ee613a89e309e2a72a1bec"
+      }
+    },
+    "190": {
+      "id": 190,
+      "topic": "Photometry Methods",
+      "children": [],
+      "parents": [
+        35
+      ],
+      "metadata": {
+        "uuid": "1273b700-f38c-49a1-ad7e-0e457e522521",
+        "topic_hash": "9ca79a5480e9fc4ce4aa463b357e3968c4c83e22f3cd9f69dcdbf026b1158f26"
+      }
+    },
+    "191": {
+      "id": 191,
+      "topic": "Space-based Observatories",
+      "children": [],
+      "parents": [
+        35
+      ],
+      "metadata": {
+        "uuid": "69a3df18-04a8-4f06-a227-649f4854290a",
+        "topic_hash": "acf48380e582235fa13f9f7a35c2e58d225191b0b84f6ae4e7176d6724d23db0"
+      }
+    },
+    "192": {
+      "id": 192,
+      "topic": "Adaptive Optics",
+      "children": [],
+      "parents": [
+        35
+      ],
+      "metadata": {
+        "uuid": "12930297-37f8-4f4b-b1c5-dbb4be4dec58",
+        "topic_hash": "38f3c968f54fe6cc31b69fefdac4fc3fcf0dddd19fd7cd85f432850266ee0ff2"
+      }
+    },
+    "193": {
+      "id": 193,
+      "topic": "Photosynthesis and Carbon Sequestration",
+      "children": [],
+      "parents": [
+        37
+      ],
+      "metadata": {
+        "uuid": "56999c3f-5982-473e-97ed-8db34fdff5da",
+        "topic_hash": "7b48dcee8650288bc3e886fe89e0faf10c29e5d09eb82a72df926c9fa016ed37"
+      }
+    },
+    "194": {
+      "id": 194,
+      "topic": "Respiration and Carbon Release",
+      "children": [],
+      "parents": [
+        37
+      ],
+      "metadata": {
+        "uuid": "65142a14-dbe1-44a3-a801-1ad4302d579f",
+        "topic_hash": "bb7cfb57842fb352b59296836e99478af77332bc96d36a5168504413e593651d"
+      }
+    },
+    "195": {
+      "id": 195,
+      "topic": "Fossil Fuels and Carbon Emissions",
+      "children": [],
+      "parents": [
+        37
+      ],
+      "metadata": {
+        "uuid": "35a9f367-2c69-4329-8855-c144eabde579",
+        "topic_hash": "b381a60b9049cf004ae1e41ce51d6802131829e5599176149cfece271a37442e"
+      }
+    },
+    "196": {
+      "id": 196,
+      "topic": "Oceanic Carbon Cycle",
+      "children": [],
+      "parents": [
+        37
+      ],
+      "metadata": {
+        "uuid": "bb4de7ef-9e8f-47b3-bf98-6f969afa0f9c",
+        "topic_hash": "1095d5a3910e0b4e41c0322ffd0965dcd3a0648ca7735ac4ca8e50eae9f38ed7"
+      }
+    },
+    "197": {
+      "id": 197,
+      "topic": "Deforestation and Land Use Change",
+      "children": [],
+      "parents": [
+        37
+      ],
+      "metadata": {
+        "uuid": "1aaae845-a6af-4f2d-a9cd-30dd53954874",
+        "topic_hash": "b54895214fd540a2800fde63bd19ad1a03637ce115ad011eff46ce6061e39768"
+      }
+    },
+    "198": {
+      "id": 198,
+      "topic": "Methane and Other Greenhouse Gases",
+      "children": [],
+      "parents": [
+        37
+      ],
+      "metadata": {
+        "uuid": "cd5b5cb2-8e55-4bbb-87bf-a3257210e490",
+        "topic_hash": "5e0a6f2033f6d10d12f2f2961c51b9dd886c9f0415bd19d9c5adad7c7ed97120"
+      }
+    },
+    "199": {
+      "id": 199,
+      "topic": "Photovoltaic Solar Power",
+      "children": [],
+      "parents": [
+        38
+      ],
+      "metadata": {
+        "uuid": "2770d2ee-860d-440e-bf1e-3c4aeefc6570",
+        "topic_hash": "f9938219ed31b19f771b422e12ce93ddc6728ab3bb1258278365cd03166def5a"
+      }
+    },
+    "200": {
+      "id": 200,
+      "topic": "Offshore and Onshore Wind Energy",
+      "children": [],
+      "parents": [
+        38
+      ],
+      "metadata": {
+        "uuid": "0fcda741-156b-46cf-b1f3-bfe9e813533c",
+        "topic_hash": "b0e23f864e0dac244e0931c8d0f51d6b72a68c8e524a9d7a3847b5461c872153"
+      }
+    },
+    "201": {
+      "id": 201,
+      "topic": "Run-of-the-River Hydroelectricity",
+      "children": [],
+      "parents": [
+        38
+      ],
+      "metadata": {
+        "uuid": "b6c9135c-e0a5-4491-9c20-a71844783bef",
+        "topic_hash": "f691816b4a5fe9184aa388d8ed96a797c0dd9c89dfd5ad9943ce098cc40cb30e"
+      }
+    },
+    "202": {
+      "id": 202,
+      "topic": "Enhanced Geothermal Systems (EGS)",
+      "children": [],
+      "parents": [
+        38
+      ],
+      "metadata": {
+        "uuid": "0b00fa73-e800-4441-b09a-b7f535a8ebd2",
+        "topic_hash": "1fb1765a9ce96d2e4877edf0719398d1c09abd4e35eda9f8364f56d975b923bd"
+      }
+    },
+    "203": {
+      "id": 203,
+      "topic": "Grid Integration of Renewable Energy",
+      "children": [],
+      "parents": [
+        38
+      ],
+      "metadata": {
+        "uuid": "80ff28ea-e8c9-48bc-b75c-760a945ea139",
+        "topic_hash": "c70676cd4a6544bf51922e11b22193fd014fee03f2e48a847789f939ff772cb4"
+      }
+    },
+    "204": {
+      "id": 204,
+      "topic": "Environmental Impact of Sustainable Energy",
+      "children": [],
+      "parents": [
+        38
+      ],
+      "metadata": {
+        "uuid": "3e14cb14-6698-4c74-b2bc-a4d1e8e39803",
+        "topic_hash": "863872ef0a3ae519be726e22e7d7f4fbc6bec3abf3e0a6ba1dc6aeac07fed0e8"
+      }
+    },
+    "205": {
+      "id": 205,
+      "topic": "Methods of Exoplanet Detection",
+      "children": [],
+      "parents": [
+        36
+      ],
+      "metadata": {
+        "uuid": "a4bfd15e-87e6-407f-a017-830b85eb1efd",
+        "topic_hash": "6cf28eddb13dc0ea9ed1bd9123fc36b543b10606522ea2cd13816663de9c812d"
+      }
+    },
+    "206": {
+      "id": 206,
+      "topic": "Habitability Criteria for Exoplanets",
+      "children": [],
+      "parents": [
+        36
+      ],
+      "metadata": {
+        "uuid": "ff2a7b0c-b195-4d1b-99cd-7ab1a17638e1",
+        "topic_hash": "3ff0de4eaca2b8cee88d80906a8952720dbd104b1f12d56e3b97a69bcd2f7422"
+      }
+    },
+    "207": {
+      "id": 207,
+      "topic": "Biosignatures and Atmospheric Analysis",
+      "children": [],
+      "parents": [
+        36
+      ],
+      "metadata": {
+        "uuid": "791cb7e9-3843-44fd-b5e9-db5a87bdca44",
+        "topic_hash": "d12ed51a5725609083ee0609c7c5830542a6d424187950d075d5a0f4abf43a68"
+      }
+    },
+    "208": {
+      "id": 208,
+      "topic": "Exoplanetary System Formation and Evolution",
+      "children": [],
+      "parents": [
+        36
+      ],
+      "metadata": {
+        "uuid": "54c5ac7c-bad6-47fb-b167-7cb7b6fc5605",
+        "topic_hash": "368fc2d90be7c78b6b0e39e35830118a7ec7278fb22732f9dce8af32b602a550"
+      }
+    },
+    "209": {
+      "id": 209,
+      "topic": "Missions and Telescopes for Exoplanet Discovery",
+      "children": [],
+      "parents": [
+        36
+      ],
+      "metadata": {
+        "uuid": "2eeec3aa-84ee-4392-9279-eeb01fce8981",
+        "topic_hash": "d5e3240d5e6d5b92ae7acf1824d7ce0d0672a9c787441bc0c8f7595af1709170"
+      }
+    },
+    "210": {
+      "id": 210,
+      "topic": "Potential Extraterrestrial Life Forms and Adaptations",
+      "children": [],
+      "parents": [
+        36
+      ],
+      "metadata": {
+        "uuid": "dae9160d-243d-4e31-81cc-725909a6b298",
+        "topic_hash": "118fbcafeda4893e429f580267ccc188cd89aae45d5f441b3190c67f2da95c5d"
+      }
+    },
+    "211": {
+      "id": 211,
+      "topic": "Causes of Deforestation",
+      "children": [],
+      "parents": [
+        39
+      ],
+      "metadata": {
+        "uuid": "13262855-cccc-44d3-b297-a570203795b1",
+        "topic_hash": "c2c710ef16cf2468d400f443e2a2b3bd743172dff80311abcb89d5c4275545d1"
+      }
+    },
+    "212": {
+      "id": 212,
+      "topic": "Impacts on Biodiversity",
+      "children": [],
+      "parents": [
+        39
+      ],
+      "metadata": {
+        "uuid": "f226b03d-4ddf-4008-a7c1-4d6caafa97ef",
+        "topic_hash": "28707b8aa9c594348398ca25c596e7b40e5c18737721e1570ac67b8505617c0f"
+      }
+    },
+    "213": {
+      "id": 213,
+      "topic": "Deforestation and Climate Change",
+      "children": [],
+      "parents": [
+        39
+      ],
+      "metadata": {
+        "uuid": "a426b615-6be2-4360-a360-7d430086da77",
+        "topic_hash": "fd3732ac3bdf359841c008d94bb8c953110ba78963564caaaf75f3f64548f5c2"
+      }
+    },
+    "214": {
+      "id": 214,
+      "topic": "Socioeconomic Drivers of Habitat Loss",
+      "children": [],
+      "parents": [
+        39
+      ],
+      "metadata": {
+        "uuid": "5dbaef2d-5c30-4810-aa33-8cd380085b66",
+        "topic_hash": "11277a51617d078ece4bdb7fe19ad8e3b0fa59da36f1cc17a80a15d4564e6052"
+      }
+    },
+    "215": {
+      "id": 215,
+      "topic": "Conservation and Restoration Efforts",
+      "children": [],
+      "parents": [
+        39
+      ],
+      "metadata": {
+        "uuid": "91a391ca-e5bd-4f65-8a62-31840b69a870",
+        "topic_hash": "6036e4c8d601c1546145f238a4799ae94c603d0863dc81b5eee5b79858f4c2ab"
+      }
+    },
+    "216": {
+      "id": 216,
+      "topic": "Legal and Policy Frameworks Addressing Deforestation",
+      "children": [],
+      "parents": [
+        39
+      ],
+      "metadata": {
+        "uuid": "6e47a2cc-0c64-4be8-ba51-c79ad5e14bb6",
+        "topic_hash": "df6bc5539cf82358d3c18fb5cb0171bf8e432fe64b0c7b0892297322b8df8001"
+      }
+    },
+    "217": {
+      "id": 217,
+      "topic": "Sources of Water Pollution",
+      "children": [],
+      "parents": [
+        40
+      ],
+      "metadata": {
+        "uuid": "e5934c72-5e31-49c4-8585-e9123717d0bd",
+        "topic_hash": "57d5cd4a21f7bfa012cb4ffc30c1f6ff956149ed6e21a933e3911f4ea868545b"
+      }
+    },
+    "218": {
+      "id": 218,
+      "topic": "Impacts on Aquatic Ecosystems",
+      "children": [],
+      "parents": [
+        40
+      ],
+      "metadata": {
+        "uuid": "3963277f-3416-4ecc-b7b3-a9c01b95e8bf",
+        "topic_hash": "67bc6b686331d1142caebedf9d71d087d87ef9985f6f520f52ef8837a35a0dc6"
+      }
+    },
+    "219": {
+      "id": 219,
+      "topic": "Drinking Water Contamination",
+      "children": [],
+      "parents": [
+        40
+      ],
+      "metadata": {
+        "uuid": "e5abb50b-3358-4f3c-8629-6647bccd4605",
+        "topic_hash": "2efd84555503d51424e21fbcdb8a225b1a912f7144612d195625428789d96bb1"
+      }
+    },
+    "220": {
+      "id": 220,
+      "topic": "Water Pollution Control Technologies",
+      "children": [],
+      "parents": [
+        40
+      ],
+      "metadata": {
+        "uuid": "0b377b96-be2a-44c3-9d34-933aee6937e3",
+        "topic_hash": "09e3bcae8396a7cc5919b4f80d7689d9b800505216b5fb5e7caf22c5b14295d7"
+      }
+    },
+    "221": {
+      "id": 221,
+      "topic": "Legal and Regulatory Frameworks for Water Quality",
+      "children": [],
+      "parents": [
+        40
+      ],
+      "metadata": {
+        "uuid": "d093f466-b6a6-49d5-8c39-e4166d086138",
+        "topic_hash": "f88fe4abd8d6a217ad50e448833ee48124622539958d4be2bc1a4c9bc182e31c"
+      }
+    },
+    "222": {
+      "id": 222,
+      "topic": "Freshwater Resource Management and Conservation",
+      "children": [],
+      "parents": [
+        40
+      ],
+      "metadata": {
+        "uuid": "f057f7e2-13ec-4845-912a-5dda6707ea7b",
+        "topic_hash": "027cffc9eb0a5b07775b2e806f46d544347c6ac053bb1fe881b892ff997899bd"
+      }
+    },
+    "223": {
+      "id": 223,
+      "topic": "Legal Frameworks for Species Protection",
+      "children": [],
+      "parents": [
+        41
+      ],
+      "metadata": {
+        "uuid": "e2ab3ff1-2b31-4d23-a05f-2782c7edf789",
+        "topic_hash": "ba9615bf9dae1cb791bc52aa25b13b84031b7ed7fefae661dfb501fe18dc8d1f"
+      }
+    },
+    "224": {
+      "id": 224,
+      "topic": "Habitat Restoration Techniques",
+      "children": [],
+      "parents": [
+        41
+      ],
+      "metadata": {
+        "uuid": "cbe87fb9-30be-4ca8-abdd-f8fdc0be6f6d",
+        "topic_hash": "d427a51cfefb590a3f907d18e7d5c2162b44fd90c6b91b526428fc37e02d23b7"
+      }
+    },
+    "225": {
+      "id": 225,
+      "topic": "Captive Breeding and Reintroduction Programs",
+      "children": [],
+      "parents": [
+        41
+      ],
+      "metadata": {
+        "uuid": "4f5698cd-48c7-4a31-99d0-fac7c9c4a314",
+        "topic_hash": "62c1c769f1b87673012f44c19380c59a2808aea38902607ce181ff47db3ac1dd"
+      }
+    },
+    "226": {
+      "id": 226,
+      "topic": "Community-Based Conservation Initiatives",
+      "children": [],
+      "parents": [
+        41
+      ],
+      "metadata": {
+        "uuid": "148bf9b1-309b-4f1d-ba71-cbbb590a679d",
+        "topic_hash": "1de23f0342eb668dc34adc2cdcda0980d161534f4ac70e791dfdddc486c39ffa"
+      }
+    },
+    "227": {
+      "id": 227,
+      "topic": "Threats to Endangered Species",
+      "children": [],
+      "parents": [
+        41
+      ],
+      "metadata": {
+        "uuid": "d4cef24e-de75-43ca-967b-718053541b14",
+        "topic_hash": "db000996b3b7ec84dbae2af6dd03916d01f025a30f081a0e72bf323eca7c7424"
+      }
+    },
+    "228": {
+      "id": 228,
+      "topic": "Biodiversity Monitoring and Assessment",
+      "children": [],
+      "parents": [
+        41
+      ],
+      "metadata": {
+        "uuid": "e2f00ca4-2c0b-46e0-8967-df8c5c6a3656",
+        "topic_hash": "d9893c84e6c1ab912362c9ed940d99a21c6a2595958d3886b94cb616979f89b7"
+      }
+    },
+    "229": {
+      "id": 229,
+      "topic": "Kyoto Protocol and its Legacy",
+      "children": [],
+      "parents": [
+        42
+      ],
+      "metadata": {
+        "uuid": "f331b1d7-3df9-4506-980d-069b2d3b8549",
+        "topic_hash": "150d9d3218c827d6540c3e0908d6780fda8a55c4a970a4119634d87be33171d4"
+      }
+    },
+    "230": {
+      "id": 230,
+      "topic": "Nationally Determined Contributions (NDCs)",
+      "children": [],
+      "parents": [
+        42
+      ],
+      "metadata": {
+        "uuid": "6c07b0b2-72a0-45f4-a446-e75bbe7d90d2",
+        "topic_hash": "e6f7453d53c378656df5a9dc65c30bba0cd8fae221532e19a2f23f4a77bf5155"
+      }
+    },
+    "231": {
+      "id": 231,
+      "topic": "Carbon Markets and Emissions Trading Schemes",
+      "children": [],
+      "parents": [
+        42
+      ],
+      "metadata": {
+        "uuid": "a3a2c843-2226-4983-9335-9be51ebc1fd2",
+        "topic_hash": "7f825d1abe2cc9236f7dffbdd291c54b1ffe62cfffd40fb2e02674eba5999469"
+      }
+    },
+    "232": {
+      "id": 232,
+      "topic": "Climate Finance Mechanisms",
+      "children": [],
+      "parents": [
+        42
+      ],
+      "metadata": {
+        "uuid": "453d927a-f937-4e7c-855b-e8a8d9daeb94",
+        "topic_hash": "78a4ecaac227b054139dcaf59abf445efb0bcedb7e596f88bc7e63f31728b6a2"
+      }
+    },
+    "233": {
+      "id": 233,
+      "topic": "International Monitoring and Reporting Frameworks",
+      "children": [],
+      "parents": [
+        42
+      ],
+      "metadata": {
+        "uuid": "7500ff2d-1e69-4803-b923-abafffcceee6",
+        "topic_hash": "a0baab984b04bdc6f65f169746836d5e01b1a1dde52eb8a41b54a17c63e041ba"
+      }
+    },
+    "234": {
+      "id": 234,
+      "topic": "Adaptation and Mitigation Strategies in International Policy",
+      "children": [],
+      "parents": [
+        42
+      ],
+      "metadata": {
+        "uuid": "38d534d4-25b2-48d4-8bf8-7d7e1cf6627c",
+        "topic_hash": "93b8aa75acc7a96dda9fdaf75ff850214c69fc7fa97df53ca1b78b9e72d2a8a6"
+      }
+    }
+  },
+  "root_id": 0,
+  "metadata": {
+    "provider": "openai",
+    "model": "gpt-4.1",
+    "temperature": 0.9,
+    "created_at": "2026-10-04T09:08:00.290717+00:00"
+  }
+}
