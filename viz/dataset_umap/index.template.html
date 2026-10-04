@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Question embeddings — UMAP</title>
+<style>
+  body { margin: 0; padding: 24px; background: #fcfcfb; color: #0b0b0b;
+    font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  .sub { color: #52514e; margin: 0 0 16px; font-size: 13px; }
+  @media (prefers-color-scheme: dark) { body:not(.light) { background: #1a1a19; color: #fff; } body:not(.light) .sub { color: #c3c2b7; } }
+  body.dark { background: #1a1a19; color: #fff; } body.dark .sub { color: #c3c2b7; }
+</style>
+</head>
+<body>
+<h1 id="title">Question embeddings — UMAP</h1>
+<p class="sub" id="sub"></p>
+<div id="umap"></div>
+<script>
+/*__MODULE__*/
+const DATA = /*__DATA__*/null;
+(async () => {
+  // Inlined data when built; otherwise fetch the JSON next to this page.
+  const data = DATA || await fetch("points.json").then((r) => r.json());
+  const m = data.meta;
+  document.getElementById("sub").textContent =
+    `${m.n_points.toLocaleString()} questions from ${m.inputs.join(", ")} · ${m.model} · ` +
+    `UMAP (n_neighbors=${m.umap.n_neighbors}, min_dist=${m.umap.min_dist}, ${m.umap.metric}). ` +
+    `Hover a point to read the question; click a legend item or panel to isolate a category.`;
+  // ?color=origin and ?theme=dark are optional URL overrides.
+  const params = new URLSearchParams(location.search);
+  if (params.get("theme")) document.body.classList.add(params.get("theme"));
+  createUmapScatter(document.getElementById("umap"), data, {
+    colorBy: params.get("color") || "domain",
+    theme: params.get("theme") || "auto",
+  });
+})();
+</script>
+</body>
+</html>
