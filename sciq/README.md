@@ -4,7 +4,7 @@ Hand-written unanswerable questions derived from
 [allenai/sciq](https://huggingface.co/datasets/allenai/sciq) (13,679 rows:
 train 11,679 / validation 1,000 / test 1,000).
 
-`sciq-adversarial-manual.csv` — **531 rows so far** (target 3000). The `edit_style` column separates the two methods (see below).
+`sciq-adversarial-manual.csv` — **586 rows so far** (target 3000). The `edit_style` column separates the two methods (see below).
 
 ## Why the LAB-Bench approach does not transfer
 
@@ -104,7 +104,7 @@ Measured effect:
 | | n | length AUC | bag-of-words AUC | delta |
 |---|---|---|---|---|
 | `appended_clause` (rows 0–289, frozen) | 290 | 0.754 | 0.852 | +29.0 |
-| `substituted_term` (rows 290+) | 241 | **0.501** | **0.594** | −0.5 |
+| `substituted_term` (rows 290+) | 296 | **0.502** | **0.630** | −0.6 |
 
 The 290 appended rows are deliberately **not** being re-authored — they are kept
 as-is and tagged `edit_style=appended_clause` so they can be filtered out if the
@@ -120,6 +120,19 @@ have to be run on every batch.
 
 `manual_sciq_batch5.py` enforces this with a build-time guard: an edit fails if
 it introduces any of 15 banned tokens the original question did not already have.
+
+### Swap terms become signatures too — `swap_term_ledger.py`
+
+Banning negation is not sufficient. Bag-of-words AUC fell steadily while the
+substitution vocabulary stayed wide (0.627 → 0.611 → 0.607 → 0.594), then rose
+to **0.630** in batch 10 because a handful of favourite swap terms had quietly
+accumulated: `mineral` 7 uses, `vacuum` / `isotopes` / `crystal` 5 each,
+`wavelength` / `minerals` / `mass` / `colour` 4 each — every one of them
+appearing zero times in the original questions.
+
+Individually trivial, collectively worth +0.036 AUC. `swap_term_ledger.py`
+reports every term introduced ≥3 times; treat those as retired and pick
+alternatives before writing the next batch.
 
 **The 290 rows from batches 1–4 therefore need re-authoring in this style.**
 Not for plausibility — they are plausible — but because their surface form leaks
