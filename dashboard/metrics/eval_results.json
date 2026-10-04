@@ -1,0 +1,21 @@
+{
+  "note": "Sample data - replace metrics/eval_results.json and metrics/training_log.json with your real results.",
+  "metrics": [
+    {"name": "Accuracy (%)", "base": 61.2, "finetuned": 78.5, "higher_is_better": true},
+    {"name": "Eval loss", "base": 2.31, "finetuned": 1.27, "higher_is_better": false},
+    {"name": "Perplexity", "base": 10.1, "finetuned": 3.6, "higher_is_better": false},
+    {"name": "ROUGE-L", "base": 0.32, "finetuned": 0.47, "higher_is_better": true}
+  ],
+  "examples": [
+    {
+      "prompt": "Summarize: The meeting was moved from Monday to Wednesday because the client was traveling.",
+      "base": "The meeting is about a client who travels a lot and meetings on Monday.",
+      "finetuned": "The meeting was rescheduled to Wednesday since the client was traveling on Monday."
+    },
+    {
+      "prompt": "What is the capital of Australia?",
+      "base": "Sydney is the capital of Australia.",
+      "finetuned": "The capital of Australia is Canberra."
+    }
+  ]
+}
