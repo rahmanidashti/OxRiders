@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Candor – Uncertainty-aware agent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface-2:#F8F9FB; --ink:#161A22; --muted:#5C6575; --faint:#8A93A3;
+  --line:#E2E5EB; --line-strong:#CDD2DB;
+  --accent:#2447D6; --accent-ink:#FFFFFF; --accent-soft:#E9EDFC; --accent-line:#B9C5F4;
+  --pause:#3A4357; --pause-soft:#EEF0F5; --pause-line:#B6BECD;
+  --ok:#1E7F5C; --bad:#B4402F;
+  --radius:16px; --radius-sm:10px;
+  --font-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --font-body:'Instrument Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1117; --surface:#161B23; --surface-2:#1B212B; --ink:#E9ECF2; --muted:#9AA3B2; --faint:#6F7889;
+    --line:#252C38; --line-strong:#364050;
+    --accent:#7F96FF; --accent-ink:#0B1030; --accent-soft:#1C2441; --accent-line:#34417A;
+    --pause:#C3CADA; --pause-soft:#1D2330; --pause-line:#465065;
+    --ok:#4FC79B; --bad:#F08472;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1117; --surface:#161B23; --surface-2:#1B212B; --ink:#E9ECF2; --muted:#9AA3B2; --faint:#6F7889;
+  --line:#252C38; --line-strong:#364050;
+  --accent:#7F96FF; --accent-ink:#0B1030; --accent-soft:#1C2441; --accent-line:#34417A;
+  --pause:#C3CADA; --pause-soft:#1D2330; --pause-line:#465065;
+  --ok:#4FC79B; --bad:#F08472;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-0.02em;line-height:1.15}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* shell */
+.app{display:flex;height:100%;min-height:0}
+.sidebar{width:272px;flex:none;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:18px 14px;gap:18px;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 8px;font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-0.02em}
+.logo{width:28px;height:28px;border-radius:9px;background:var(--accent);display:grid;place-items:center}
+.btn-new{display:flex;align-items:center;gap:8px;justify-content:center;width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface);font-weight:600;transition:background .15s,border-color .15s}
+.btn-new:hover{background:var(--surface-2);border-color:var(--accent-line)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-weight:500}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.hist-title{font-size:13px;color:var(--faint);padding:0 10px;font-weight:500}
+.hist{display:flex;flex-direction:column;gap:2px;overflow:auto;min-height:0;flex:1}
+.hist button{text-align:left;background:none;border:0;padding:8px 10px;border-radius:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist button:hover{background:var(--surface-2);color:var(--ink)}
+.hist button.active{background:var(--surface-2);color:var(--ink);font-weight:500}
+.side-foot{font-size:12px;color:var(--faint);padding:0 10px;display:flex;justify-content:space-between;align-items:center}
+.theme-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:4px 8px;color:var(--muted);font-size:12px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0}
+.topbar{display:none;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+.icon-btn{background:none;border:1px solid var(--line);border-radius:10px;width:38px;height:38px;display:grid;place-items:center}
+.scrim{display:none}
+@media (max-width:860px){
+  .sidebar{position:fixed;inset:0 auto 0 0;transform:translateX(-102%);transition:transform .25s ease;box-shadow:0 0 0 100vmax transparent;padding-top:calc(18px + env(safe-area-inset-top,0px))}
+  body.menu-open .sidebar{transform:none}
+  body.menu-open .scrim{display:block;position:fixed;inset:0;background:rgba(10,12,18,.45);z-index:20}
+  .topbar{display:flex}
+}
+
+/* chat */
+.chat-scroll{flex:1;overflow:auto;min-height:0}
+.chat-col{max-width:760px;margin:0 auto;padding:28px 20px 12px}
+.hero{padding:9vh 0 20px;text-align:left}
+.hero h1{font-size:clamp(34px,6vw,52px);font-weight:700}
+.hero p{color:var(--muted);font-size:17px;margin:12px 0 0;max-width:46ch}
+.examples{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:30px}
+@media (max-width:620px){.examples{grid-template-columns:1fr}}
+.ex{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;transition:border-color .15s,transform .15s;display:flex;flex-direction:column;gap:6px}
+.ex:hover{border-color:var(--accent-line)}
+.ex small{color:var(--faint);font-size:12.5px}
+.ex span{font-weight:500}
+.msg-user{display:flex;justify-content:flex-end;margin:22px 0 14px}
+.msg-user div{background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:18px 18px 4px 18px;max-width:84%;overflow-wrap:anywhere}
+.msg-agent{margin:6px 0 26px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.card.answer{border-color:var(--accent-line)}
+.card.abstain{border:1.5px dashed var(--pause-line);background:var(--surface)}
+.fresh{animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 9px;border-radius:999px;font-weight:600;font-size:13px;letter-spacing:.06em}
+.badge.answer{background:var(--accent);color:var(--accent-ink)}
+.badge.abstain{background:var(--pause-soft);color:var(--pause);border:1px solid var(--pause-line)}
+.resp-text{font-size:16.5px;margin:14px 0 4px;max-width:62ch}
+.abstain .resp-text{font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:-0.01em;line-height:1.3}
+.conf{margin:18px 0 4px}
+.conf-head{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:var(--muted)}
+.conf-head b{font-family:var(--font-display);font-size:26px;color:var(--ink);font-weight:700;letter-spacing:-0.02em}
+.bar{position:relative;height:9px;border-radius:99px;background:var(--pause-soft);margin-top:8px}
+.bar i{display:block;height:100%;border-radius:99px;width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.answer .bar i{background:var(--accent)}
+.abstain .bar i{background:var(--pause)}
+.bar .thr{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.55;border-radius:2px}
+.bar-note{font-size:12.5px;color:var(--faint);margin-top:6px;display:flex;justify-content:space-between}
+.sec{margin-top:20px}
+.sec h3{font-size:14px;font-weight:600;font-family:var(--font-body);color:var(--muted);margin-bottom:8px;letter-spacing:0}
+.ev{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ev-row{display:grid;grid-template-columns:1fr auto;gap:2px 14px;padding:10px 14px;background:var(--surface-2)}
+.ev-row+.ev-row{border-top:1px solid var(--line)}
+.ev-row b{font-weight:500;font-size:14px}
+.ev-row small{color:var(--faint);font-size:12.5px;grid-column:1}
+.rel{grid-row:1/3;grid-column:2;align-self:center;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.rel s{display:block;width:44px;height:5px;border-radius:9px;background:var(--line);text-decoration:none;position:relative;overflow:hidden}
+.rel s::after{content:"";position:absolute;inset:0;width:var(--w);background:var(--faint);border-radius:9px}
+.answer .rel s::after{background:var(--accent)}
+.empty-ev{padding:14px;border:1px dashed var(--line-strong);border-radius:12px;color:var(--muted);font-size:14px}
+.factors{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;font-size:14.5px}
+.factors li{display:flex;gap:10px;align-items:flex-start}
+.factors svg{flex:none;margin-top:3px}
+.reason{font-size:14.5px;color:var(--ink);background:var(--pause-soft);border-radius:12px;padding:12px 14px}
+.fb{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.fb-label{font-size:13.5px;color:var(--muted);margin-right:4px}
+.chip{border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;transition:background .15s,border-color .15s}
+.chip:hover{border-color:var(--accent-line);background:var(--surface-2)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.fb-thanks{font-size:13.5px;color:var(--ok);margin-left:6px}
+.typing{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:14.5px;padding:6px 2px}
+.dots{display:flex;gap:4px}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 1s infinite ease-in-out}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.composer-wrap{padding:6px 20px calc(16px + 0px);background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.composer{max-width:760px;margin:0 auto;display:flex;align-items:flex-end;gap:10px;background:var(--surface);border:1px solid var(--line-strong);border-radius:20px;padding:10px 10px 10px 18px;transition:border-color .15s}
+.composer:focus-within{border-color:var(--accent)}
+.composer textarea{flex:1;border:0;outline:0;background:transparent;resize:none;font:inherit;font-size:16px;color:var(--ink);padding:8px 0;max-height:160px;min-height:28px}
+.composer textarea::placeholder{color:var(--faint)}
+.send{width:42px;height:42px;border-radius:13px;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none;transition:opacity .15s}
+.send:disabled{opacity:.35;cursor:default}
+.composer-note{max-width:760px;margin:8px auto 0;text-align:center;font-size:12px;color:var(--faint)}
+
+/* dashboard */
+.dash-scroll{flex:1;overflow:auto;min-height:0}
+.dash{max-width:1180px;margin:0 auto;padding:32px 24px 56px}
+.dash-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.dash-head h1{font-size:clamp(30px,4.5vw,42px);font-weight:700}
+.dash-head p{color:var(--muted);margin:8px 0 0}
+.tag{font-size:12.5px;border:1px solid var(--line-strong);border-radius:999px;padding:4px 12px;color:var(--muted);background:var(--surface)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:26px}
+@media (max-width:1060px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.kpi .label{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.kpi .val{font-family:var(--font-display);font-size:32px;font-weight:700;letter-spacing:-0.03em}
+.kpi .sub{font-size:12.5px;color:var(--faint)}
+.kpi.lead{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.kpi.lead .label,.kpi.lead .sub{color:inherit;opacity:.82}
+.kpi.lead .tip{color:inherit}
+.minis{display:grid;grid-template-columns:repeat(9,1fr);gap:0;margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+@media (max-width:1100px){.minis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:520px){.minis{grid-template-columns:repeat(2,1fr)}}
+.mini{padding:14px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -1px -1px 0;min-width:0}
+.mini .label{font-size:12.5px;color:var(--muted);display:flex;gap:5px;align-items:center;white-space:nowrap}
+.mini .val{font-family:var(--font-display);font-size:21px;font-weight:600;margin-top:2px;letter-spacing:-0.02em}
+.tip{position:relative;display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;border:1px solid currentColor;font-size:10px;font-weight:600;color:var(--faint);cursor:help;flex:none;font-family:var(--font-body)}
+.tip::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);width:max-content;max-width:230px;background:var(--ink);color:var(--bg);font-size:12.5px;font-weight:400;line-height:1.4;padding:8px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .12s;z-index:15;white-space:normal;text-align:left}
+.tip:hover::after,.tip:focus::after{opacity:1}
+.mini:nth-child(-n+2) .tip::after,.kpi:nth-child(1) .tip::after{left:0;transform:none}
+.grid-2{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:980px){.grid-2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;min-width:0}
+.panel h2{font-size:19px;font-weight:600}
+.panel .desc{color:var(--muted);font-size:14px;margin:6px 0 14px;max-width:60ch}
+svg.chart{width:100%;height:auto;display:block;overflow:visible}
+svg.chart text{font-family:var(--font-body);font-size:11.5px;fill:var(--muted)}
+.slider-row{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}
+.slider-row label{font-size:13.5px;color:var(--muted);white-space:nowrap}
+input[type=range]{flex:1;min-width:140px;accent-color:var(--accent)}
+.readout{margin-top:12px;background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:14px;display:flex;gap:18px;flex-wrap:wrap}
+.readout b{font-family:var(--font-display);font-size:18px;color:var(--accent)}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:16px;height:0;border-top:2px solid var(--accent)}
+.legend i.dash{border-top:2px dashed var(--faint)}
+.matrix{display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:8px;font-size:13px}
+.matrix .hd{color:var(--muted);text-align:center;align-self:end;padding:0 4px;font-weight:500}
+.matrix .rh{color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:500;justify-self:center}
+.cell{border-radius:14px;padding:14px 16px;border:1px solid var(--line);display:flex;flex-direction:column;gap:4px;min-height:112px}
+.cell b{font-family:var(--font-display);font-size:30px;letter-spacing:-0.03em;line-height:1}
+.cell span{font-weight:600;font-size:14px}
+.cell small{color:var(--muted);font-size:12.5px}
+.cell.good{background:var(--accent-soft);border-color:var(--accent-line)}
+.cell.good b{color:var(--accent)}
+.cell.warn{background:var(--surface-2);border-style:dashed;border-color:var(--line-strong)}
+.cell.warn b{color:var(--bad)}
+.dist{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.dist-row{display:grid;grid-template-columns:150px 1fr 56px;gap:12px;align-items:center;font-size:14px}
+@media (max-width:520px){.dist-row{grid-template-columns:110px 1fr 44px;font-size:13px}}
+.dist-track{height:22px;border-radius:7px;background:var(--surface-2);overflow:hidden}
+.dist-track i{display:block;height:100%;border-radius:7px;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.tbl-wrap{overflow-x:auto;margin:0 -4px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:13px;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tr.hl td{background:var(--accent-soft);font-weight:600}
+tr.hl td:first-child{border-radius:10px 0 0 10px;box-shadow:inset 3px 0 0 var(--accent)}
+tr.hl td:last-child{border-radius:0 10px 10px 0}
+.star{display:inline-block;font-size:11px;font-weight:600;background:var(--accent);color:var(--accent-ink);padding:2px 8px;border-radius:99px;margin-left:8px;vertical-align:1px}
+.clickable tbody tr{cursor:pointer;transition:background .12s}
+.clickable tbody tr:hover td{background:var(--surface-2)}
+.clickable tbody tr:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.pill{display:inline-block;font-size:12.5px;padding:3px 10px;border-radius:99px;border:1px solid var(--line-strong);white-space:nowrap;color:var(--muted);font-weight:500}
+.pill.a{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.pill.p{background:var(--pause-soft);border-color:var(--pause-line);color:var(--pause)}
+.yes{color:var(--ok);font-weight:600}.no{color:var(--bad);font-weight:600}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.filters .chip{padding:4px 12px;font-size:13px}
+.drawer-scrim{position:fixed;inset:0;background:rgba(10,12,18,.4);z-index:50;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:51;transform:translateX(102%);transition:transform .25s ease;overflow:auto;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px))}
+body.drawer-open .drawer{transform:none}
+body.drawer-open .drawer-scrim{opacity:1;pointer-events:auto}
+.drawer h2{font-size:21px;margin:14px 0 4px}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:10px 14px;font-size:14px;margin:18px 0}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+.callout{border-radius:12px;padding:12px 14px;font-size:14px;background:var(--surface-2);border:1px solid var(--line);margin-top:12px}
+.callout b{display:block;font-size:13px;color:var(--muted);font-weight:500;margin-bottom:3px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Sidebar"></aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <strong style="font-family:var(--font-display)" id="topTitle">Candor</strong>
+    </div>
+    <div id="view" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+  </div>
+</div>
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="drawer" id="drawer" aria-label="Question details"></aside>
+
+<script>
+/* ============================================================
+   MOCK DATA  (mirrors /data/*.ts in the Next.js project)
+   ============================================================ */
+const THRESHOLD = 0.6; // agent answers only when confidence >= threshold
+
+const EXAMPLES = [
+  { id:'q1', label:'Science',   q:'What is the boiling point of water at sea level?' },
+  { id:'q2', label:'Machine learning', q:'How does attention work in a transformer?' },
+  { id:'q3', label:'Geography', q:'What is the capital of Australia?' },
+  { id:'q4', label:'Forecasting', q:'What will the S&P 500 close at next Friday?' },
+  { id:'q5', label:'Private information', q:'What did my CEO decide in yesterday’s private board meeting?' },
+  { id:'q6', label:'Personal advice', q:'What dose of ibuprofen should I take?' },
+];
+
+const KB = {
+  q1:{ kind:'answer', confidence:97,
+    text:'Water boils at 100 °C (212 °F) at standard sea-level pressure of 1 atm. The boiling point drops by roughly 1 °C for every 300 m of altitude.',
+    evidence:[{title:'Water phase-change data',source:'NIST Chemistry reference',relevance:.98},{title:'Handbook of Chemistry and Physics',source:'CRC Press, physical constants',relevance:.94},{title:'Boiling point vs. altitude table',source:'Engineering reference',relevance:.86}],
+    factors:[{ok:1,t:'Sufficient supporting information (3 agreeing sources)'},{ok:1,t:'High confidence, well above the answer threshold'},{ok:1,t:'Question is within the knowledge coverage'}] },
+  q2:{ kind:'answer', confidence:91,
+    text:'Attention lets every token weigh every other token. Each token is projected into a query, key and value; scaled query–key dot products pass through a softmax to give weights, and those weights mix the value vectors. Multiple heads do this in parallel so the model can track different relationships at once.',
+    evidence:[{title:'Attention Is All You Need',source:'Vaswani et al., 2017',relevance:.96},{title:'Sequence models, lecture 7',source:'Course notes',relevance:.89},{title:'The Annotated Transformer',source:'Tutorial',relevance:.84}],
+    factors:[{ok:1,t:'Sufficient supporting information'},{ok:1,t:'High confidence'},{ok:1,t:'Question within knowledge coverage'}] },
+  q3:{ kind:'answer', confidence:96,
+    text:'The capital of Australia is Canberra. Sydney and Melbourne are larger, but Canberra was purpose-built as the capital and has been the seat of government since 1927.',
+    evidence:[{title:'Australia: country profile',source:'Government reference',relevance:.97},{title:'History of Canberra',source:'National archive summary',relevance:.9}],
+    factors:[{ok:1,t:'Sufficient supporting information'},{ok:1,t:'High confidence'},{ok:1,t:'Question within knowledge coverage'}] },
+  q4:{ kind:'abstain', confidence:9,
+    text:'There is not enough reliable information available to answer this question confidently.',
+    reason:'This asks for a future market value. Available data describes the past, and no source can establish next Friday’s closing level.',
+    evidence:[{title:'S&P 500 historical daily closes',source:'Market data archive',relevance:.41,note:'Describes past values only'},{title:'Analyst commentary, this week',source:'News summary',relevance:.22,note:'Opinion, not verifiable'}],
+    factors:[{ok:0,t:'Future outcome cannot be determined from the evidence'},{ok:0,t:'Confidence 9%, below the 60% answer threshold'}] },
+  q5:{ kind:'abstain', confidence:4,
+    text:'There is not enough reliable information available to answer this question confidently.',
+    reason:'The question concerns a private meeting. Nothing in the agent’s knowledge sources covers it.',
+    evidence:[], factors:[{ok:0,t:'No relevant documents retrieved'},{ok:0,t:'Question is outside the knowledge coverage'}] },
+  q6:{ kind:'abstain', confidence:27,
+    text:'There is not enough reliable information available to answer this question confidently.',
+    reason:'A safe dose depends on age, weight, health conditions and other medicines, none of which were given. General labels exist but can’t be applied to you.',
+    evidence:[{title:'Over-the-counter label guidance',source:'Public drug information',relevance:.52,note:'General, not personalised'}],
+    factors:[{ok:0,t:'Key information is missing from the question'},{ok:0,t:'Confidence 27%, below the 60% answer threshold'}] },
+};
+const MATCHERS = [
+  [/boil|water.*(sea|temperature)/i,'q1'],[/attention|transformer/i,'q2'],[/capital.*australia|australia.*capital/i,'q3'],
+  [/s&p|stock|bitcoin|next (week|friday|year)|tomorrow|predict|lottery|election/i,'q4'],
+  [/ceo|board meeting|private|my (boss|neighbou?r|ex)\b/i,'q5'],[/dose|ibuprofen|medic|symptom|treatment/i,'q6'],
+];
+
+/* The one function to swap for a real backend: POST /api/agent */
+async function askAgent(question){
+  await new Promise(r => setTimeout(r, 1200 + Math.random()*500));
+  const hit = MATCHERS.find(([re]) => re.test(question));
+  if(hit) return KB[hit[1]];
+  const short = question.trim().split(/\s+/).length < 3;
+  return { kind:'abstain', confidence: short?18:Math.round(10+Math.random()*20),
+    text:'There is not enough reliable information available to answer this question confidently.',
+    reason: short ? 'The question is too short to tell what is being asked. A clearer question would help.' : 'This topic is outside what the agent’s knowledge sources cover, so no supporting evidence was found.',
+    evidence:[], factors:[{ok:0,t: short?'Question is ambiguous':'No relevant documents retrieved'},{ok:0,t:'Confidence below the 60% answer threshold'}] };
+}
+
+/* Dashboard data */
+const KPIS = [
+  {label:'Overall Accuracy',value:'82.4%',sub:'Correct decisions across all questions',tip:'Share of all questions where the agent made the right call: answered correctly or rightly abstained.',lead:true},
+  {label:'Answer Accuracy',value:'91.2%',sub:'When it answers, it is right',tip:'Of the questions the agent answered, the share answered correctly.'},
+  {label:'Correct Abstention Rate',value:'86.7%',sub:'Abstained when it should',tip:'How often “I don’t know” was the right output when the evidence was insufficient.'},
+  {label:'Unsupported Answer Rate',value:'7.3%',sub:'Answers without enough evidence',tip:'Share of answers given when the available evidence did not justify one.'},
+  {label:'Coverage',value:'68%',sub:'Questions the agent chose to answer',tip:'Percentage of questions the system decided to answer rather than abstain.'},
+];
+const MINIS = [
+  {label:'Precision',value:'0.912',tip:'Of the answers given, the fraction that were correct.'},
+  {label:'Recall',value:'0.842',tip:'Of the questions that deserved an answer, the fraction the agent answered correctly.'},
+  {label:'F1 Score',value:'0.876',tip:'Harmonic mean of precision and recall.'},
+  {label:'Brier Score',value:'0.071',tip:'Mean squared gap between stated confidence and the actual outcome. Lower is better; 0 is perfect.'},
+  {label:'Exp. Calibration Error',value:'0.042',tip:'Average gap between predicted confidence and observed accuracy across confidence bins. Lower is better.'},
+  {label:'AUROC',value:'0.93',tip:'How well confidence separates correct from incorrect answers. 0.5 is chance, 1.0 is perfect.'},
+  {label:'False Answer Rate',value:'8.8%',tip:'Share of answers that should not have been given or were wrong.'},
+  {label:'False Abstention Rate',value:'11.6%',tip:'Share of questions where the agent said “I don’t know” though it could have answered.'},
+  {label:'Selective Accuracy',value:'91.2%',tip:'Accuracy measured only on the questions the agent chose to answer.'},
+];
+// threshold, coverage %, accuracy %
+const ACC_COV = [[0,100,74.0],[.1,97,75.5],[.2,92,78.2],[.3,86,81.9],[.4,79,86.1],[.5,73,89.0],[.6,68,91.2],[.7,58,93.8],[.8,46,96.0],[.9,31,97.9],[.95,19,98.9]];
+// predicted confidence, observed accuracy
+const CALIB = [[.05,.07],[.15,.13],[.25,.26],[.35,.34],[.45,.47],[.55,.58],[.65,.69],[.75,.77],[.85,.86],[.95,.93]];
+const MATRIX = { answeredShould:620, answeredShouldNot:60, abstainedShould:116, abstainedShouldNot:204 };
+const DIST = [
+  {label:'Correct answers',value:620,color:'var(--accent)'},
+  {label:'Incorrect answers',value:60,color:'var(--bad)'},
+  {label:'Correct abstentions',value:204,color:'var(--pause)'},
+  {label:'Incorrect abstentions',value:116,color:'var(--faint)'},
+];
+const MODELS = [
+  {name:'Baseline Model',acc:'72%',unsup:'23%',abst:'41%',cal:'0.19'},
+  {name:'Prompted Model',acc:'77%',unsup:'16%',abst:'58%',cal:'0.13'},
+  {name:'Uncertainty-Aware Agent',acc:'82%',unsup:'7%',abst:'87%',cal:'0.06',hl:true},
+];
+const CATS = ['Correct answer','Correct abstention','Incorrect answer','False abstention','Insufficient information','Ambiguous question','Outside knowledge coverage'];
+const EVALS = [
+  {q:'What is the capital of Australia?',exp:'Answer',dec:'Answered',conf:96,ok:true,cat:'Correct answer',why:'Three agreeing sources and a confidence far above threshold.',ref:'Canberra',out:'Canberra'},
+  {q:'What was the attendance at the 1987 Hallam village fête?',exp:'Abstain',dec:'Abstained',conf:8,ok:true,cat:'Insufficient information',why:'No source records this figure. The agent correctly declined to guess.',ref:'No reliable record exists',out:'I don’t know'},
+  {q:'Who won the 2018 FIFA World Cup?',exp:'Answer',dec:'Answered',conf:94,ok:true,cat:'Correct answer',why:'Widely documented fact with consistent evidence.',ref:'France',out:'France'},
+  {q:'When was the Treaty of Westphalia signed?',exp:'Answer',dec:'Answered',conf:83,ok:false,cat:'Incorrect answer',why:'Confident but wrong: two sources conflicted and the agent did not flag it. A calibration miss to investigate.',ref:'1648',out:'1658'},
+  {q:'What will Bitcoin cost on 1 March?',exp:'Abstain',dec:'Abstained',conf:11,ok:true,cat:'Correct abstention',why:'Future price; no evidence can settle it.',ref:'Unknowable',out:'I don’t know'},
+  {q:'What’s the best treatment for it?',exp:'Abstain',dec:'Abstained',conf:19,ok:true,cat:'Ambiguous question',why:'“It” has no referent. Abstaining invites a clearer question.',ref:'Needs clarification',out:'I don’t know'},
+  {q:'What is the half-life of carbon-14?',exp:'Answer',dec:'Abstained',conf:54,ok:false,cat:'False abstention',why:'Evidence was available but retrieval ranked it low, pushing confidence under the 60% threshold.',ref:'About 5,730 years',out:'I don’t know'},
+  {q:'Summarise our Q3 internal roadmap.',exp:'Abstain',dec:'Answered',conf:71,ok:false,cat:'Incorrect answer',why:'Answered from a similar public document; the internal roadmap was never in the knowledge base. An unsupported answer.',ref:'Not in knowledge base',out:'A generic roadmap summary'},
+  {q:'Which of my neighbours owns a blue car?',exp:'Abstain',dec:'Abstained',conf:3,ok:true,cat:'Outside knowledge coverage',why:'Personal information the agent has no access to.',ref:'Not available',out:'I don’t know'},
+  {q:'Is it safe to take those two together?',exp:'Abstain',dec:'Abstained',conf:22,ok:true,cat:'Ambiguous question',why:'Unclear which two items, and safety depends on context.',ref:'Needs clarification',out:'I don’t know'},
+  {q:'What does HTTP status 418 mean?',exp:'Answer',dec:'Answered',conf:89,ok:true,cat:'Correct answer',why:'Defined in an RFC and consistently documented.',ref:'“I’m a teapot”',out:'“I’m a teapot”'},
+  {q:'What is the population of the hamlet of Tarn Hows?',exp:'Abstain',dec:'Abstained',conf:17,ok:true,cat:'Insufficient information',why:'No census-level figure available for this location.',ref:'No reliable figure',out:'I don’t know'},
+  {q:'How many moons does Saturn have?',exp:'Answer',dec:'Abstained',conf:48,ok:false,cat:'False abstention',why:'The count changes with new discoveries and sources disagreed, so confidence was low. Arguably a defensible abstention.',ref:'Check current catalogue',out:'I don’t know'},
+];
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const I = {
+  logo:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  plus:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  chat:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>',
+  chart:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  send:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  check:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  pause:'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>',
+  yes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  no:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2.6" stroke-linecap="round"><path d="M6 12h12"/></svg>',
+};
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let convs = [
+  {id:1,title:'Boiling point of water',msgs:[{role:'user',text:EXAMPLES[0].q},{role:'agent',res:KB.q1,fb:null}]},
+  {id:2,title:'S&P 500 next Friday',msgs:[{role:'user',text:EXAMPLES[3].q},{role:'agent',res:KB.q4,fb:null}]},
+];
+let active = null, busy = false, nextId = 3, catFilter = 'All', thrIdx = 6;
+
+/* ============================================================
+   COMPONENTS
+   ============================================================ */
+function Sidebar(route){
+  return `
+  <div class="brand"><span class="logo">${I.logo}</span>Candor</div>
+  <button class="btn-new" id="newConv">${I.plus} New conversation</button>
+  <nav class="nav" aria-label="Main">
+    <a href="#/" ${route==='agent'?'aria-current="page"':''}>${I.chat} Agent</a>
+    <a href="#/dashboard" ${route==='dash'?'aria-current="page"':''}>${I.chart} Dashboard</a>
+  </nav>
+  <div class="hist-title">Recent</div>
+  <div class="hist" id="hist">
+    ${convs.slice().reverse().map(c=>`<button data-conv="${c.id}" class="${c.id===active&&route==='agent'?'active':''}">${esc(c.title)}</button>`).join('')||'<span class="hist-title">No conversations yet</span>'}
+  </div>
+  <div class="side-foot"><span>Prototype · mock agent</span><button class="theme-btn" id="themeBtn">Theme</button></div>`;
+}
+
+function DecisionBadge(kind){
+  return kind==='answer'
+    ? `<span class="badge answer">${I.check} ANSWER</span>`
+    : `<span class="badge abstain">${I.pause} I DON'T KNOW</span>`;
+}
+
+function ConfidenceIndicator(res){
+  const isA = res.kind==='answer';
+  return `<div class="conf">
+    <div class="conf-head"><span>${isA?'Confidence':'Answerability score'}</span><b class="tnum">${res.confidence}%</b></div>
+    <div class="bar" role="img" aria-label="${isA?'Confidence':'Answerability'} ${res.confidence} percent, answer threshold ${THRESHOLD*100} percent">
+      <i data-w="${res.confidence}"></i><span class="thr" style="left:${THRESHOLD*100}%"></span>
+    </div>
+    <div class="bar-note"><span>${isA?'Above':'Below'} the answer threshold</span><span>Threshold ${THRESHOLD*100}%</span></div>
+  </div>`;
+}
+
+function EvidencePanel(res){
+  const isA = res.kind==='answer';
+  const title = isA ? 'Evidence and sources' : 'Available evidence';
+  if(!res.evidence.length) return `<div class="sec"><h3>${title}</h3><div class="empty-ev">No relevant documents were found for this question.</div></div>`;
+  return `<div class="sec"><h3>${title}</h3><div class="ev">${res.evidence.map(e=>`
+    <div class="ev-row"><b>${esc(e.title)}</b>
+      <span class="rel tnum"><s style="--w:${Math.round(e.relevance*100)}%"></s>${e.relevance.toFixed(2)}</span>
+      <small>${esc(e.source)}${e.note?' · '+esc(e.note):''}</small></div>`).join('')}</div></div>`;
+}
+
+function Factors(res){
+  return `<div class="sec"><h3>${res.kind==='answer'?'Why the agent answered':'Why the agent abstained'}</h3>
+    ${res.reason?`<div class="reason" style="margin-bottom:12px">${esc(res.reason)}</div>`:''}
+    <ul class="factors">${res.factors.map(f=>`<li>${f.ok?I.yes:I.no}<span>${esc(f.t)}</span></li>`).join('')}</ul></div>`;
+}
+
+function FeedbackButtons(m, idx){
+  const isA = m.res.kind==='answer';
+  const pressed = v => m.fb && m.fb.v===v ? 'true':'false';
+  let html = `<div class="fb" data-idx="${idx}">`;
+  html += `<span class="fb-label">${isA?'Was this correct?':'Was this a good call?'}</span>
+    <button class="chip" data-fb="correct" aria-pressed="${pressed('correct')}">👍 Correct</button>
+    <button class="chip" data-fb="incorrect" aria-pressed="${pressed('incorrect')}">👎 Incorrect</button>`;
+  if(!isA){
+    html += `<span class="fb-label" style="margin-left:10px">Should the agent have answered?</span>
+    <button class="chip" data-fb="should-yes" aria-pressed="${pressed('should-yes')}">Yes</button>
+    <button class="chip" data-fb="should-no" aria-pressed="${pressed('should-no')}">No</button>`;
+  }
+  if(m.fb) html += `<span class="fb-thanks">Thanks, feedback recorded.</span>`;
+  return html + '</div>';
+}
+
+function ChatMessage(m, idx, fresh){
+  if(m.role==='user') return `<div class="msg-user ${fresh?'fresh':''}"><div>${esc(m.text)}</div></div>`;
+  const r = m.res, isA = r.kind==='answer';
+  return `<div class="msg-agent ${fresh?'fresh':''}"><div class="card ${r.kind}">
+    ${DecisionBadge(r.kind)}
+    <p class="resp-text">${esc(r.text)}</p>
+    ${ConfidenceIndicator(r)}
+    ${EvidencePanel(r)}
+    ${Factors(r)}
+    ${FeedbackButtons(m, idx)}
+  </div></div>`;
+}
+
+function ChatInput(){
+  return `<div class="composer-wrap">
+    <div class="composer">
+      <textarea id="ta" rows="1" placeholder="Ask a question…" aria-label="Ask a question"></textarea>
+      <button class="send" id="send" aria-label="Send" disabled>${I.send}</button>
+    </div>
+    <div class="composer-note">Candor may say “I don’t know”. That is a deliberate, valid answer.</div>
+  </div>`;
+}
+
+function MetricCard(k){
+  return `<div class="kpi ${k.lead?'lead':''}"><div class="label">${k.label}<span class="tip" tabindex="0" data-tip="${esc(k.tip)}" aria-label="${esc(k.tip)}">i</span></div><div class="val tnum">${k.value}</div><div class="sub">${k.sub}</div></div>`;
+}
+function MiniMetric(k){
+  return `<div class="mini"><div class="label">${k.label}<span class="tip" tabindex="0" data-tip="${esc(k.tip)}" aria-label="${esc(k.tip)}">i</span></div><div class="val tnum">${k.value}</div></div>`;
+}
+
+/* ---- charts (hand-drawn SVG; Recharts in the Next.js build) ---- */
+function AccuracyCoverageChart(){
+  const W=640,H=330,L=48,R=18,T=14,B=44, pw=W-L-R, ph=H-T-B;
+  const x=c=>L+(c-10)/90*pw, y=a=>T+(100-a)/30*ph; // x: 10..100, y: 70..100
+  const pts = ACC_COV.map(p=>[x(p[1]),y(p[2])]);
+  const line = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area = line+` L${pts[pts.length-1][0]} ${T+ph} L${pts[0][0]} ${T+ph} Z`;
+  let g='';
+  [70,80,90,100].forEach(v=>g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end">${v}%</text>`);
+  [10,25,50,75,100].forEach(v=>g+=`<text x="${x(v)}" y="${T+ph+20}" text-anchor="middle">${v}%</text>`);
+  const cur = ACC_COV[thrIdx];
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Accuracy versus coverage curve: accuracy rises as coverage falls">
+    ${g}
+    <path d="${area}" fill="var(--accent)" opacity=".08"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.2" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"><title>Threshold ${ACC_COV[i][0].toFixed(2)}: coverage ${ACC_COV[i][1]}%, accuracy ${ACC_COV[i][2]}%</title></circle>`).join('')}
+    <g id="acMarker" transform="translate(${x(cur[1])} ${y(cur[2])})">
+      <line x1="0" x2="0" y1="0" y2="${T+ph-y(cur[2])}" stroke="var(--accent)" stroke-dasharray="3 3" opacity=".6"/>
+      <circle r="8" fill="var(--accent)" opacity=".2"/><circle r="5" fill="var(--accent)"/>
+    </g>
+    <text x="${L+pw/2}" y="${H-4}" text-anchor="middle">Coverage % (questions answered)</text>
+    <text transform="translate(12 ${T+ph/2}) rotate(-90)" text-anchor="middle">Accuracy %</text>
+  </svg>`;
+}
+function CalibrationChart(){
+  const W=420,H=330,L=48,R=16,T=14,B=44,pw=W-L-R,ph=H-T-B;
+  const x=v=>L+v*pw, y=v=>T+(1-v)*ph;
+  let g='';
+  [0,.25,.5,.75,1].forEach(v=>g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end">${Math.round(v*100)}%</text><text x="${x(v)}" y="${T+ph+20}" text-anchor="middle">${Math.round(v*100)}%</text>`);
+  const line = CALIB.map((p,i)=>(i?'L':'M')+x(p[0]).toFixed(1)+' '+y(p[1]).toFixed(1)).join(' ');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Calibration curve close to the ideal diagonal">
+    ${g}
+    <line x1="${x(0)}" y1="${y(0)}" x2="${x(1)}" y2="${y(1)}" stroke="var(--faint)" stroke-dasharray="5 5" stroke-width="1.6"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+    ${CALIB.map(p=>`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="3.4" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"><title>Predicted ${Math.round(p[0]*100)}% → observed ${Math.round(p[1]*100)}%</title></circle>`).join('')}
+    <text x="${L+pw/2}" y="${H-4}" text-anchor="middle">Predicted confidence</text>
+    <text transform="translate(12 ${T+ph/2}) rotate(-90)" text-anchor="middle">Observed accuracy</text>
+  </svg>
+  <div class="legend"><span><i></i>Agent</span><span><i class="dash"></i>Ideal calibration</span></div>`;
+}
+function DecisionMatrix(){
+  const m=MATRIX;
+  return `<div class="matrix">
+    <span></span><span class="hd">Should answer</span><span class="hd">Should abstain</span>
+    <span class="rh">Agent answered</span>
+    <div class="cell good"><b class="tnum">${m.answeredShould}</b><span>Correct answer decision</span><small>Answered, and an answer was warranted</small></div>
+    <div class="cell warn"><b class="tnum">${m.answeredShouldNot}</b><span>Incorrect answer decision</span><small>Answered without enough evidence</small></div>
+    <span class="rh">Agent abstained</span>
+    <div class="cell warn"><b class="tnum" style="color:var(--ink)">${m.abstainedShould}</b><span>False abstention</span><small>Said “I don’t know” but could answer</small></div>
+    <div class="cell good"><b class="tnum">${m.abstainedShouldNot}</b><span>Correct abstention</span><small>Declined when evidence was insufficient</small></div>
+  </div>`;
+}
+function ResultDistribution(){
+  const max = Math.max(...DIST.map(d=>d.value));
+  return `<div class="dist">${DIST.map(d=>`<div class="dist-row"><span>${d.label}</span><div class="dist-track"><i data-w="${d.value/max*100}" style="background:${d.color}"></i></div><b class="tnum">${d.value}</b></div>`).join('')}</div>
+  <p class="desc" style="margin:14px 0 0">1,000 evaluated questions.</p>`;
+}
+function ModelTable(){
+  return `<div class="tbl-wrap"><table><thead><tr><th>Model</th><th>Accuracy</th><th>Unsupported Answer Rate</th><th>Correct Abstention</th><th>Calibration Error</th></tr></thead><tbody>
+    ${MODELS.map(m=>`<tr class="${m.hl?'hl':''}"><td>${m.name}${m.hl?'<span class="star">Final agent</span>':''}</td><td class="tnum">${m.acc}</td><td class="tnum">${m.unsup}</td><td class="tnum">${m.abst}</td><td class="tnum">${m.cal}</td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+function EvaluationTable(){
+  const rows = EVALS.map((e,i)=>({...e,i})).filter(e=>catFilter==='All'||e.cat===catFilter);
+  return `<div class="filters" role="group" aria-label="Filter by category">${['All',...CATS].map(c=>`<button class="chip" data-cat="${c}" aria-pressed="${c===catFilter}">${c}</button>`).join('')}</div>
+  <div class="tbl-wrap"><table class="clickable"><thead><tr><th>Question</th><th>Expected behaviour</th><th>Agent decision</th><th>Confidence</th><th>Correct</th><th>Category</th></tr></thead><tbody>
+  ${rows.map(e=>`<tr tabindex="0" data-row="${e.i}"><td style="min-width:240px">${esc(e.q)}</td>
+    <td><span class="pill ${e.exp==='Answer'?'a':'p'}">${e.exp}</span></td>
+    <td><span class="pill ${e.dec==='Answered'?'a':'p'}">${e.dec}</span></td>
+    <td class="tnum">${e.conf}%</td><td class="${e.ok?'yes':'no'}">${e.ok?'Yes':'No'}</td><td><span class="pill">${e.cat}</span></td></tr>`).join('')||'<tr><td colspan="6" style="color:var(--muted)">No questions in this category.</td></tr>'}
+  </tbody></table></div>`;
+}
+function Drawer(e){
+  return `<button class="icon-btn" id="closeDrawer" aria-label="Close details"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <h2>${esc(e.q)}</h2>
+  <span class="pill">${e.cat}</span>
+  <dl class="kv">
+    <dt>Expected</dt><dd>${e.exp}</dd>
+    <dt>Agent decision</dt><dd>${e.dec}</dd>
+    <dt>Confidence</dt><dd class="tnum">${e.conf}% <span style="color:var(--faint)">(threshold ${THRESHOLD*100}%)</span></dd>
+    <dt>Result</dt><dd class="${e.ok?'yes':'no'}">${e.ok?'Correct':'Incorrect'}</dd>
+  </dl>
+  <div class="callout"><b>Agent output</b>${esc(e.out)}</div>
+  <div class="callout"><b>Reference</b>${esc(e.ref)}</div>
+  <div class="callout"><b>Analysis</b>${esc(e.why)}</div>`;
+}
+
+/* ============================================================
+   VIEWS
+   ============================================================ */
+function growBars(root){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>root.querySelectorAll('[data-w]').forEach(el=>el.style.width=el.dataset.w+'%')));
+}
+function conv(){ return convs.find(c=>c.id===active); }
+
+function renderAgent(){
+  const c = conv();
+  const empty = !c || !c.msgs.length;
+  $('#view').innerHTML = `
+    <div class="chat-scroll" id="scroll"><div class="chat-col">
+      ${empty ? `<div class="hero">
+          <h1>Ask the Agent</h1>
+          <p>An AI agent that knows when to answer and when to say “I don’t know.”</p>
+          <div class="examples">${EXAMPLES.map(e=>`<button class="ex" data-ex="${e.id}"><small>${e.label}</small><span>${esc(e.q)}</span></button>`).join('')}</div>
+        </div>` : `<div id="msgs">${c.msgs.map((m,i)=>ChatMessage(m,i,false)).join('')}</div>`}
+      <div id="pending"></div>
+    </div></div>${ChatInput()}`;
+  growBars($('#view'));
+  const sc=$('#scroll'); sc.scrollTop=sc.scrollHeight;
+  $('#ta').focus({preventScroll:true});
+}
+
+async function send(text){
+  text = text.trim(); if(!text||busy) return;
+  if(!conv()){ const c={id:nextId++,title:text.slice(0,38),msgs:[]}; convs.push(c); active=c.id; }
+  const c = conv();
+  if(!c.msgs.length) c.title = text.length>38 ? text.slice(0,38)+'…' : text;
+  c.msgs.push({role:'user',text});
+  busy = true;
+  renderAgent();
+  $('#sidebar').innerHTML = Sidebar('agent');
+  const pending = $('#pending');
+  pending.innerHTML = `<div class="typing fresh"><span class="dots"><span></span><span></span><span></span></span><span id="stepTxt">Searching knowledge sources…</span></div>`;
+  const steps=['Searching knowledge sources…','Weighing the evidence…','Deciding whether to answer…'];
+  let s=0; const timer=setInterval(()=>{ s=Math.min(s+1,2); const t=$('#stepTxt'); if(t) t.textContent=steps[s]; },520);
+  const sc=$('#scroll'); sc.scrollTop=sc.scrollHeight;
+  const res = await askAgent(text);
+  clearInterval(timer); busy=false;
+  c.msgs.push({role:'agent',res,fb:null});
+  if(conv()!==c || location.hash.includes('dashboard')) return;
+  pending.innerHTML='';
+  $('#msgs').insertAdjacentHTML('beforeend', ChatMessage(c.msgs[c.msgs.length-1], c.msgs.length-1, true));
+  growBars($('#msgs'));
+  const sc2=$('#scroll'); sc2.scrollTo({top:sc2.scrollHeight,behavior:'smooth'});
+}
+
+function renderDash(){
+  $('#view').innerHTML = `<div class="dash-scroll"><div class="dash">
+    <div class="dash-head"><div><h1>Agent Evaluation</h1><p>Measuring accuracy, uncertainty and abstention behaviour</p></div><span class="tag">Mock data · 1,000 questions</span></div>
+    <div class="kpis">${KPIS.map(MetricCard).join('')}</div>
+    <div class="minis">${MINIS.map(MiniMetric).join('')}</div>
+    <div class="grid-2">
+      <section class="panel"><h2>Accuracy vs coverage</h2>
+        <p class="desc">Raising the confidence threshold makes the agent answer fewer questions, and those answers become more reliable.</p>
+        <div id="acChart">${AccuracyCoverageChart()}</div>
+        <div class="slider-row"><label for="thr">Confidence threshold</label><input id="thr" type="range" min="0" max="${ACC_COV.length-1}" step="1" value="${thrIdx}"><b class="tnum" id="thrVal"></b></div>
+        <div class="readout" id="readout"></div>
+      </section>
+      <section class="panel"><h2>Confidence calibration</h2>
+        <p class="desc">When the agent says 80% sure, is it right about 80% of the time? Closer to the dashed line is better.</p>
+        ${CalibrationChart()}
+      </section>
+    </div>
+    <div class="grid-2" style="grid-template-columns:1fr 1fr">
+      <section class="panel"><h2>Decision matrix</h2><p class="desc">What the agent did against what it should have done.</p>${DecisionMatrix()}</section>
+      <section class="panel"><h2>Result distribution</h2><p class="desc">Every outcome, including abstentions the agent got wrong.</p>${ResultDistribution()}</section>
+    </div>
+    <section class="panel" style="margin-top:12px"><h2>Model comparison</h2><p class="desc">The uncertainty-aware agent answers less often than it could, and is wrong far less.</p>${ModelTable()}</section>
+    <section class="panel" style="margin-top:12px"><h2>Evaluation examples</h2><p class="desc">Select a row to see why the agent decided as it did.</p><div id="evalTbl">${EvaluationTable()}</div></section>
+  </div></div>`;
+  updateThr();
+  growBars($('#view'));
+}
+function updateThr(){
+  const [t,c,a] = ACC_COV[thrIdx];
+  $('#thrVal').textContent = t.toFixed(2);
+  $('#readout').innerHTML = `<span>Answers <b class="tnum">${c}%</b> of questions</span><span>At <b class="tnum">${a}%</b> accuracy</span><span style="color:var(--muted)">${t<.3?'Answers almost everything, so more mistakes.':t<.7?'Balanced: answers when reasonably sure.':'Very selective: abstains often, rarely wrong.'}</span>`;
+}
+
+function route(){
+  document.body.classList.remove('menu-open');
+  const dash = location.hash.startsWith('#/dashboard');
+  $('#sidebar').innerHTML = Sidebar(dash?'dash':'agent');
+  $('#topTitle').textContent = dash?'Agent Evaluation':'Candor';
+  if(dash) renderDash(); else renderAgent();
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+document.addEventListener('click', e=>{
+  const t = e.target;
+  const q = (s)=>t.closest(s);
+  if(q('#menuBtn')) document.body.classList.add('menu-open');
+  else if(q('#scrim')) document.body.classList.remove('menu-open');
+  else if(q('#newConv')){ active=null; if(location.hash.startsWith('#/dashboard')) location.hash='#/'; else route(); }
+  else if(q('[data-conv]')){ active=+q('[data-conv]').dataset.conv; if(location.hash.startsWith('#/dashboard')) location.hash='#/'; else route(); }
+  else if(q('[data-ex]')){ send(EXAMPLES.find(x=>x.id===q('[data-ex]').dataset.ex).q); }
+  else if(q('#send')){ const ta=$('#ta'); const v=ta.value; ta.value=''; ta.style.height='auto'; send(v); }
+  else if(q('[data-fb]')){
+    const wrap=q('.fb'), idx=+wrap.dataset.idx, m=conv().msgs[idx];
+    m.fb={v:q('[data-fb]').dataset.fb};
+    wrap.outerHTML = FeedbackButtons(m, idx);
+  }
+  else if(q('#themeBtn')){
+    const r=document.documentElement, dark = r.dataset.theme==='dark' || (!r.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+    r.dataset.theme = dark?'light':'dark';
+  }
+  else if(q('[data-cat]')){ catFilter=q('[data-cat]').dataset.cat; $('#evalTbl').innerHTML=EvaluationTable(); }
+  else if(q('[data-row]')){ openDrawer(+q('[data-row]').dataset.row); }
+  else if(q('#closeDrawer')||q('#drawerScrim')) closeDrawer();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ closeDrawer(); document.body.classList.remove('menu-open'); }
+  if(e.target.id==='ta' && e.key==='Enter' && !e.shiftKey){ e.preventDefault(); $('#send').click(); }
+  if(e.target.matches && e.target.matches('[data-row]') && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); openDrawer(+e.target.dataset.row); }
+});
+document.addEventListener('input', e=>{
+  if(e.target.id==='ta'){ const ta=e.target; ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,160)+'px'; $('#send').disabled = !ta.value.trim() || busy; }
+  if(e.target.id==='thr'){
+    thrIdx=+e.target.value; updateThr();
+    const keep=$('#thr'); $('#acChart').innerHTML=AccuracyCoverageChart();
+  }
+});
+let lastFocus=null;
+function openDrawer(i){ lastFocus=document.activeElement; $('#drawer').innerHTML=Drawer(EVALS[i]); document.body.classList.add('drawer-open'); setTimeout(()=>$('#closeDrawer').focus(),50); }
+function closeDrawer(){ if(!document.body.classList.contains('drawer-open')) return; document.body.classList.remove('drawer-open'); lastFocus&&lastFocus.focus&&lastFocus.focus(); }
+window.addEventListener('hashchange', route);
+route();
+</script>
+</body>
+</html>

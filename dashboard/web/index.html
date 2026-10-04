@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Candor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F5F8; --surface:#FFFFFF; --surface-2:#F8F9FB; --ink:#161A22; --muted:#5C6575; --faint:#8A93A3;
+  --line:#E2E5EB; --line-strong:#CDD2DB;
+  --accent:#2447D6; --accent-ink:#FFFFFF; --accent-soft:#E9EDFC; --accent-line:#B9C5F4;
+  --pause:#3A4357; --pause-soft:#EEF0F5; --pause-line:#B6BECD;
+  --ok:#1E7F5C; --bad:#B4402F;
+  --radius:16px; --radius-sm:10px;
+  --font-display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --font-body:'Instrument Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1117; --surface:#161B23; --surface-2:#1B212B; --ink:#E9ECF2; --muted:#9AA3B2; --faint:#6F7889;
+    --line:#252C38; --line-strong:#364050;
+    --accent:#7F96FF; --accent-ink:#0B1030; --accent-soft:#1C2441; --accent-line:#34417A;
+    --pause:#C3CADA; --pause-soft:#1D2330; --pause-line:#465065;
+    --ok:#4FC79B; --bad:#F08472;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1117; --surface:#161B23; --surface-2:#1B212B; --ink:#E9ECF2; --muted:#9AA3B2; --faint:#6F7889;
+  --line:#252C38; --line-strong:#364050;
+  --accent:#7F96FF; --accent-ink:#0B1030; --accent-soft:#1C2441; --accent-line:#34417A;
+  --pause:#C3CADA; --pause-soft:#1D2330; --pause-line:#465065;
+  --ok:#4FC79B; --bad:#F08472;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-0.02em;line-height:1.15}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* shell */
+.app{display:flex;height:100%;min-height:0}
+.sidebar{width:272px;flex:none;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:18px 14px;gap:18px;z-index:30}
+.brand{display:flex;align-items:center;gap:10px;padding:2px 8px;font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-0.02em}
+.logo{width:28px;height:28px;border-radius:9px;background:var(--accent);display:grid;place-items:center}
+.btn-new{display:flex;align-items:center;gap:8px;justify-content:center;width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface);font-weight:600;transition:background .15s,border-color .15s}
+.btn-new:hover{background:var(--surface-2);border-color:var(--accent-line)}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;color:var(--muted);text-decoration:none;font-weight:500}
+.nav a:hover{background:var(--surface-2);color:var(--ink)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent)}
+.hist-title{font-size:13px;color:var(--faint);padding:0 10px;font-weight:500}
+.hist{display:flex;flex-direction:column;gap:2px;overflow:auto;min-height:0;flex:1}
+.hist button{text-align:left;background:none;border:0;padding:8px 10px;border-radius:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hist button:hover{background:var(--surface-2);color:var(--ink)}
+.hist button.active{background:var(--surface-2);color:var(--ink);font-weight:500}
+.side-foot{font-size:12px;color:var(--faint);padding:0 10px;display:flex;justify-content:space-between;align-items:center}
+.theme-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:4px 8px;color:var(--muted);font-size:12px}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0}
+.topbar{display:none;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+.icon-btn{background:none;border:1px solid var(--line);border-radius:10px;width:38px;height:38px;display:grid;place-items:center}
+.scrim{display:none}
+@media (max-width:860px){
+  .sidebar{position:fixed;inset:0 auto 0 0;transform:translateX(-102%);transition:transform .25s ease;box-shadow:0 0 0 100vmax transparent;padding-top:calc(18px + env(safe-area-inset-top,0px))}
+  body.menu-open .sidebar{transform:none}
+  body.menu-open .scrim{display:block;position:fixed;inset:0;background:rgba(10,12,18,.45);z-index:20}
+  .topbar{display:flex}
+}
+
+/* chat */
+.chat-scroll{flex:1;overflow:auto;min-height:0}
+.chat-col{max-width:760px;margin:0 auto;padding:28px 20px 12px}
+.hero{padding:9vh 0 20px;text-align:left}
+.hero h1{font-size:clamp(34px,6vw,52px);font-weight:700}
+.hero p{color:var(--muted);font-size:17px;margin:12px 0 0;max-width:46ch}
+.examples{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:30px}
+@media (max-width:620px){.examples{grid-template-columns:1fr}}
+.ex{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;transition:border-color .15s,transform .15s;display:flex;flex-direction:column;gap:6px}
+.ex:hover{border-color:var(--accent-line)}
+.ex small{color:var(--faint);font-size:12.5px}
+.ex span{font-weight:500}
+.msg-user{display:flex;justify-content:flex-end;margin:22px 0 14px}
+.msg-user div{background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:18px 18px 4px 18px;max-width:84%;overflow-wrap:anywhere}
+.msg-agent{margin:6px 0 26px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.card.answer{border-color:var(--accent-line)}
+.card.abstain{border:1.5px dashed var(--pause-line);background:var(--surface)}
+.fresh{animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 9px;border-radius:999px;font-weight:600;font-size:13px;letter-spacing:.06em}
+.badge.answer{background:var(--accent);color:var(--accent-ink)}
+.badge.abstain{background:var(--pause-soft);color:var(--pause);border:1px solid var(--pause-line)}
+.resp-text{font-size:16.5px;margin:14px 0 4px;max-width:62ch}
+.abstain .resp-text{font-family:var(--font-display);font-size:20px;font-weight:600;letter-spacing:-0.01em;line-height:1.3}
+.conf{margin:18px 0 4px}
+.conf-head{display:flex;justify-content:space-between;align-items:baseline;font-size:13.5px;color:var(--muted)}
+.conf-head b{font-family:var(--font-display);font-size:26px;color:var(--ink);font-weight:700;letter-spacing:-0.02em}
+.bar{position:relative;height:9px;border-radius:99px;background:var(--pause-soft);margin-top:8px}
+.bar i{display:block;height:100%;border-radius:99px;width:0;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.answer .bar i{background:var(--accent)}
+.abstain .bar i{background:var(--pause)}
+.bar .thr{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink);opacity:.55;border-radius:2px}
+.bar-note{font-size:12.5px;color:var(--faint);margin-top:6px;display:flex;justify-content:space-between}
+.sec{margin-top:20px}
+.sec h3{font-size:14px;font-weight:600;font-family:var(--font-body);color:var(--muted);margin-bottom:8px;letter-spacing:0}
+.ev{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.ev-row{display:grid;grid-template-columns:1fr auto;gap:2px 14px;padding:10px 14px;background:var(--surface-2)}
+.ev-row+.ev-row{border-top:1px solid var(--line)}
+.ev-row b{font-weight:500;font-size:14px}
+.ev-row small{color:var(--faint);font-size:12.5px;grid-column:1}
+.rel{grid-row:1/3;grid-column:2;align-self:center;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+.rel s{display:block;width:44px;height:5px;border-radius:9px;background:var(--line);text-decoration:none;position:relative;overflow:hidden}
+.rel s::after{content:"";position:absolute;inset:0;width:var(--w);background:var(--faint);border-radius:9px}
+.answer .rel s::after{background:var(--accent)}
+.empty-ev{padding:14px;border:1px dashed var(--line-strong);border-radius:12px;color:var(--muted);font-size:14px}
+.factors{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px;font-size:14.5px}
+.factors li{display:flex;gap:10px;align-items:flex-start}
+.factors svg{flex:none;margin-top:3px}
+.reason{font-size:14.5px;color:var(--ink);background:var(--pause-soft);border-radius:12px;padding:12px 14px}
+.fb{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.fb-label{font-size:13.5px;color:var(--muted);margin-right:4px}
+.chip{border:1px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:6px 14px;font-size:14px;transition:background .15s,border-color .15s}
+.chip:hover{border-color:var(--accent-line);background:var(--surface-2)}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:600}
+.fb-thanks{font-size:13.5px;color:var(--ok);margin-left:6px}
+.typing{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:14.5px;padding:6px 2px}
+.dots{display:flex;gap:4px}
+.dots span{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:blink 1s infinite ease-in-out}
+.dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1)}}
+.composer-wrap{padding:6px 20px calc(16px + 0px);background:linear-gradient(to top,var(--bg) 70%,transparent)}
+.composer{max-width:760px;margin:0 auto;display:flex;align-items:flex-end;gap:10px;background:var(--surface);border:1px solid var(--line-strong);border-radius:20px;padding:10px 10px 10px 18px;transition:border-color .15s}
+.composer:focus-within{border-color:var(--accent)}
+.composer textarea{flex:1;border:0;outline:0;background:transparent;resize:none;font:inherit;font-size:16px;color:var(--ink);padding:8px 0;max-height:160px;min-height:28px}
+.composer textarea::placeholder{color:var(--faint)}
+.send{width:42px;height:42px;border-radius:13px;border:0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none;transition:opacity .15s}
+.send:disabled{opacity:.35;cursor:default}
+.composer-note{max-width:760px;margin:8px auto 0;text-align:center;font-size:12px;color:var(--faint)}
+
+/* dashboard */
+.dash-scroll{flex:1;overflow:auto;min-height:0}
+.dash{max-width:1180px;margin:0 auto;padding:32px 24px 56px}
+.dash-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.dash-head h1{font-size:clamp(30px,4.5vw,42px);font-weight:700}
+.dash-head p{color:var(--muted);margin:8px 0 0}
+.tag{font-size:12.5px;border:1px solid var(--line-strong);border-radius:999px;padding:4px 12px;color:var(--muted);background:var(--surface)}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:26px}
+@media (max-width:1060px){.kpis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.kpi .label{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.kpi .val{font-family:var(--font-display);font-size:32px;font-weight:700;letter-spacing:-0.03em}
+.kpi .sub{font-size:12.5px;color:var(--faint)}
+.kpi.lead{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.kpi.lead .label,.kpi.lead .sub{color:inherit;opacity:.82}
+.kpi.lead .tip{color:inherit}
+.minis{display:grid;grid-template-columns:repeat(9,1fr);gap:0;margin-top:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+@media (max-width:1100px){.minis{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:520px){.minis{grid-template-columns:repeat(2,1fr)}}
+.mini{padding:14px 16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);margin:0 -1px -1px 0;min-width:0}
+.mini .label{font-size:12.5px;color:var(--muted);display:flex;gap:5px;align-items:center;white-space:nowrap}
+.mini .val{font-family:var(--font-display);font-size:21px;font-weight:600;margin-top:2px;letter-spacing:-0.02em}
+.tip{position:relative;display:inline-grid;place-items:center;width:16px;height:16px;border-radius:50%;border:1px solid currentColor;font-size:10px;font-weight:600;color:var(--faint);cursor:help;flex:none;font-family:var(--font-body)}
+.tip::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);width:max-content;max-width:230px;background:var(--ink);color:var(--bg);font-size:12.5px;font-weight:400;line-height:1.4;padding:8px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:opacity .12s;z-index:15;white-space:normal;text-align:left}
+.tip:hover::after,.tip:focus::after{opacity:1}
+.mini:nth-child(-n+2) .tip::after,.kpi:nth-child(1) .tip::after{left:0;transform:none}
+.grid-2{display:grid;grid-template-columns:1.25fr 1fr;gap:12px;margin-top:12px}
+@media (max-width:980px){.grid-2{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;min-width:0}
+.panel h2{font-size:19px;font-weight:600}
+.panel .desc{color:var(--muted);font-size:14px;margin:6px 0 14px;max-width:60ch}
+svg.chart{width:100%;height:auto;display:block;overflow:visible}
+svg.chart text{font-family:var(--font-body);font-size:11.5px;fill:var(--muted)}
+.slider-row{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}
+.slider-row label{font-size:13.5px;color:var(--muted);white-space:nowrap}
+input[type=range]{flex:1;min-width:140px;accent-color:var(--accent)}
+.readout{margin-top:12px;background:var(--accent-soft);border-radius:12px;padding:12px 14px;font-size:14px;display:flex;gap:18px;flex-wrap:wrap}
+.readout b{font-family:var(--font-display);font-size:18px;color:var(--accent)}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:16px;height:0;border-top:2px solid var(--accent)}
+.legend i.ideal{border-top:2px dashed var(--faint)}
+.matrix{display:grid;grid-template-columns:auto 1fr 1fr;grid-template-rows:auto 1fr 1fr;gap:8px;font-size:13px}
+.matrix .hd{color:var(--muted);text-align:center;align-self:end;padding:0 4px;font-weight:500}
+.matrix .rh{color:var(--muted);writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:500;justify-self:center}
+.cell{border-radius:14px;padding:14px 16px;border:1px solid var(--line);display:flex;flex-direction:column;gap:4px;min-height:112px}
+.cell b{font-family:var(--font-display);font-size:30px;letter-spacing:-0.03em;line-height:1}
+.cell span{font-weight:600;font-size:14px}
+.cell small{color:var(--muted);font-size:12.5px}
+.cell.good{background:var(--accent-soft);border-color:var(--accent-line)}
+.cell.good b{color:var(--accent)}
+.cell.warn{background:var(--surface-2);border-style:dashed;border-color:var(--line-strong)}
+.cell.warn b{color:var(--bad)}
+.dist{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.dist-row{display:grid;grid-template-columns:150px 1fr 56px;gap:12px;align-items:center;font-size:14px}
+@media (max-width:520px){.dist-row{grid-template-columns:110px 1fr 44px;font-size:13px}}
+.dist-track{height:22px;border-radius:7px;background:var(--surface-2);overflow:hidden}
+.dist-track i{display:block;height:100%;border-radius:7px;width:0;transition:width .9s cubic-bezier(.2,.8,.2,1)}
+.tbl-wrap{overflow-x:auto;margin:0 -4px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:13px;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tbody tr:last-child td{border-bottom:0}
+tr.hl td{background:var(--accent-soft);font-weight:600}
+tr.hl td:first-child{border-radius:10px 0 0 10px;box-shadow:inset 3px 0 0 var(--accent)}
+tr.hl td:last-child{border-radius:0 10px 10px 0}
+.star{display:inline-block;font-size:11px;font-weight:600;background:var(--accent);color:var(--accent-ink);padding:2px 8px;border-radius:99px;margin-left:8px;vertical-align:1px}
+.clickable tbody tr{cursor:pointer;transition:background .12s}
+.clickable tbody tr:hover td{background:var(--surface-2)}
+.clickable tbody tr:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.pill{display:inline-block;font-size:12.5px;padding:3px 10px;border-radius:99px;border:1px solid var(--line-strong);white-space:nowrap;color:var(--muted);font-weight:500}
+.pill.a{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.pill.p{background:var(--pause-soft);border-color:var(--pause-line);color:var(--pause)}
+.yes{color:var(--ok);font-weight:600}.no{color:var(--bad);font-weight:600}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 12px}
+.filters .chip{padding:4px 12px;font-size:13px}
+.drawer-scrim{position:fixed;inset:0;background:rgba(10,12,18,.4);z-index:50;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:51;transform:translateX(102%);transition:transform .25s ease;overflow:auto;padding:calc(24px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px))}
+body.drawer-open .drawer{transform:none}
+body.drawer-open .drawer-scrim{opacity:1;pointer-events:auto}
+.drawer h2{font-size:21px;margin:14px 0 4px}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:10px 14px;font-size:14px;margin:18px 0}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+.callout{border-radius:12px;padding:12px 14px;font-size:14px;background:var(--surface-2);border:1px solid var(--line);margin-top:12px}
+.callout b{display:block;font-size:13px;color:var(--muted);font-weight:500;margin-bottom:3px}
+/* live agent: passage + question + candidate answer */
+.composer.claim{flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+.composer.claim #passage{padding:6px 8px;font-size:15px;min-height:46px;max-height:200px;border-bottom:1px solid var(--line);border-radius:0}
+.claim-row{display:flex;gap:8px;align-items:center}
+.claim-row input{flex:1;min-width:0;border:1px solid var(--line);border-radius:12px;background:var(--surface-2);font:inherit;font-size:15px;color:var(--ink);padding:10px 12px;outline:0}
+.claim-row input::placeholder{color:var(--faint)}
+.claim-row input:focus{border-color:var(--accent)}
+.claim-row #answer{flex:.7}
+@media (max-width:620px){.claim-row{flex-wrap:wrap}.claim-row input,.claim-row #answer{flex:1 1 100%}}
+.msg-user .meta{display:block;font-size:13px;opacity:.85;margin-top:4px}
+.card.error{border-color:var(--bad)}
+.card.error p{margin:0;color:var(--bad)}
+.passage{white-space:pre-wrap;max-height:260px;overflow:auto}
+.mini .label{white-space:normal;line-height:1.3;align-items:flex-start}
+.notice{padding:16px 18px;border:1px dashed var(--line-strong);border-radius:var(--radius);background:var(--surface);color:var(--muted);margin-top:26px}
+.notice h2{color:var(--ink);font-size:19px;margin-bottom:6px}
+.notice code{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
+.notice pre{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;overflow-x:auto;font-size:13px;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar" aria-label="Sidebar"></aside>
+  <div class="scrim" id="scrim"></div>
+  <div class="main">
+    <div class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <strong style="font-family:var(--font-display)" id="topTitle">Candor</strong>
+    </div>
+    <div id="view" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
+  </div>
+</div>
+<div class="drawer-scrim" id="drawerScrim"></div>
+<aside class="drawer" id="drawer" aria-label="Question details"></aside>
+
+<script>
+/* ============================================================
+   Candor: live KEV agent + evaluation dashboard.
+   Data comes from the backend (server.py):
+     GET  /api/config    threshold, starter examples
+     POST /api/agent     {passage, question, answer} -> decision
+     GET  /api/eval      evaluation built from a pulled KEV run
+     POST /api/feedback  thumbs up/down
+   ============================================================ */
+let CFG = { threshold: 0.6, kev_configured: true, examples: [] };
+let EVAL = null; // null = not loaded yet
+
+/* ============================================================
+   UTIL
+   ============================================================ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pct = (v, d = 1) => v == null ? '–' : (v * 100).toFixed(d) + '%';
+const num = (v, d = 3) => v == null ? '–' : v.toFixed(d);
+const thrPct = () => Math.round(CFG.threshold * 100);
+const I = {
+  logo:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  plus:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
+  chat:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>',
+  chart:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
+  send:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+  check:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  pause:'<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1.2"/><rect x="14" y="5" width="4" height="14" rx="1.2"/></svg>',
+  yes:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--ok)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  no:'<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--faint)" stroke-width="2.6" stroke-linecap="round"><path d="M6 12h12"/></svg>',
+};
+
+async function api(path, opts = {}){
+  const r = await fetch(path, { headers: {'Content-Type':'application/json'}, ...opts });
+  if(r.status === 401){ location.href = '/login'; throw new Error('Not logged in'); }
+  const data = await r.json().catch(() => ({}));
+  if(!r.ok) throw new Error(typeof data.detail === 'string' ? data.detail : 'Request failed (HTTP ' + r.status + ')');
+  return data;
+}
+const askAgent = input => api('/api/agent', { method:'POST', body: JSON.stringify(input) });
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let convs = [];
+let active = null, busy = false, nextId = 1, catFilter = 'All', thrIdx = 0;
+let draftPassage = ''; // kept across renders so follow-up questions reuse the passage
+
+/* ============================================================
+   AGENT COMPONENTS
+   ============================================================ */
+function Sidebar(route){
+  return `
+  <div class="brand"><span class="logo">${I.logo}</span>Candor</div>
+  <button class="btn-new" id="newConv">${I.plus} New conversation</button>
+  <nav class="nav" aria-label="Main">
+    <a href="#/" ${route==='agent'?'aria-current="page"':''}>${I.chat} Agent</a>
+    <a href="#/dashboard" ${route==='dash'?'aria-current="page"':''}>${I.chart} Dashboard</a>
+  </nav>
+  <div class="hist-title">Recent</div>
+  <div class="hist" id="hist">
+    ${convs.slice().reverse().map(c=>`<button data-conv="${c.id}" class="${c.id===active&&route==='agent'?'active':''}">${esc(c.title)}</button>`).join('')||'<span class="hist-title">No conversations yet</span>'}
+  </div>
+  <div class="side-foot"><span>KEV · live model</span><button class="theme-btn" id="themeBtn">Theme</button></div>`;
+}
+
+function DecisionBadge(res){
+  return res.kind==='answer'
+    ? `<span class="badge answer">${I.check} ANSWER · ${esc(res.verdict.toUpperCase())}</span>`
+    : `<span class="badge abstain">${I.pause} I DON'T KNOW</span>`;
+}
+
+function ConfidenceIndicator(res){
+  const isA = res.kind==='answer', c = +(res.confidence*100).toFixed(1);
+  const label = isA ? 'Confidence' : 'Best-answer confidence';
+  return `<div class="conf">
+    <div class="conf-head"><span>${label}</span><b class="tnum">${pct(res.confidence)}</b></div>
+    <div class="bar" role="img" aria-label="${label} ${c} percent, answer threshold ${thrPct()} percent">
+      <i data-w="${c}"></i><span class="thr" style="left:${thrPct()}%"></span>
+    </div>
+    <div class="bar-note"><span>${isA?'Above':'Below'} the answer threshold</span><span>Threshold ${thrPct()}%</span></div>
+  </div>`;
+}
+
+function OptionsPanel(res){
+  return `<div class="sec"><h3>KEV's probabilities</h3><div class="ev">${res.options.map(o=>`
+    <div class="ev-row"><b>${esc(o.label)}</b>
+      <span class="rel tnum"><s style="--w:${Math.round(o.p*100)}%"></s>${pct(o.p)}</span>
+      <small>${o.key==='C'?'The passage lacks the information to decide':o.key==='A'?'The candidate answer is correct':'The candidate answer is wrong'}</small></div>`).join('')}</div></div>`;
+}
+
+function Factors(res){
+  return `<div class="sec"><h3>${res.kind==='answer'?'Why the agent answered':'Why the agent abstained'}</h3>
+    ${res.reason?`<div class="reason" style="margin-bottom:12px">${esc(res.reason)}</div>`:''}
+    <ul class="factors">${res.factors.map(f=>`<li>${f.ok?I.yes:I.no}<span>${esc(f.t)}</span></li>`).join('')}</ul></div>`;
+}
+
+function FeedbackButtons(m, idx){
+  const isA = m.res.kind==='answer';
+  const pressed = v => m.fb && m.fb.v===v ? 'true':'false';
+  let html = `<div class="fb" data-idx="${idx}">`;
+  html += `<span class="fb-label">${isA?'Was this correct?':'Was this a good call?'}</span>
+    <button class="chip" data-fb="correct" aria-pressed="${pressed('correct')}">👍 Correct</button>
+    <button class="chip" data-fb="incorrect" aria-pressed="${pressed('incorrect')}">👎 Incorrect</button>`;
+  if(!isA){
+    html += `<span class="fb-label" style="margin-left:10px">Should the agent have answered?</span>
+    <button class="chip" data-fb="should-yes" aria-pressed="${pressed('should-yes')}">Yes</button>
+    <button class="chip" data-fb="should-no" aria-pressed="${pressed('should-no')}">No</button>`;
+  }
+  if(m.fb && m.fb.status==='saved') html += `<span class="fb-thanks">Thanks, feedback recorded.</span>`;
+  if(m.fb && m.fb.status==='error') html += `<span class="fb-thanks" style="color:var(--bad)">Could not save feedback.</span>`;
+  return html + '</div>';
+}
+
+function ChatMessage(m, idx, fresh){
+  if(m.role==='user'){
+    const q = m.input;
+    return `<div class="msg-user ${fresh?'fresh':''}"><div>${esc(q.question)}
+      <span class="meta">Candidate answer: ${esc(q.answer)}</span>
+      ${q.passage?`<span class="meta">Passage: ${esc(q.passage.length>160?q.passage.slice(0,160)+'…':q.passage)}</span>`:'<span class="meta">No passage given</span>'}
+    </div></div>`;
+  }
+  if(m.error) return `<div class="msg-agent ${fresh?'fresh':''}"><div class="card error"><p>⚠️ ${esc(m.error)}</p></div></div>`;
+  const r = m.res;
+  return `<div class="msg-agent ${fresh?'fresh':''}"><div class="card ${r.kind}">
+    ${DecisionBadge(r)}
+    <p class="resp-text">${esc(r.text)}</p>
+    ${ConfidenceIndicator(r)}
+    ${OptionsPanel(r)}
+    ${Factors(r)}
+    ${FeedbackButtons(m, idx)}
+  </div></div>`;
+}
+
+function ChatInput(){
+  return `<div class="composer-wrap">
+    <div class="composer claim">
+      <textarea id="passage" rows="2" placeholder="Passage: the text KEV checks the answer against" aria-label="Passage">${esc(draftPassage)}</textarea>
+      <div class="claim-row">
+        <input id="question" placeholder="Question" aria-label="Question" autocomplete="off">
+        <input id="answer" placeholder="Candidate answer" aria-label="Candidate answer" autocomplete="off">
+        <button class="send" id="send" aria-label="Send" disabled>${I.send}</button>
+      </div>
+    </div>
+    <div class="composer-note">Candor may say “I don’t know”. That is a deliberate, valid answer.${CFG.kev_configured?'':' <b style="color:var(--bad)">KEV_MODEL_URL is not set on the server.</b>'}</div>
+  </div>`;
+}
+
+/* ============================================================
+   AGENT VIEW
+   ============================================================ */
+function growBars(root){
+  requestAnimationFrame(()=>requestAnimationFrame(()=>root.querySelectorAll('[data-w]').forEach(el=>el.style.width=el.dataset.w+'%')));
+}
+function conv(){ return convs.find(c=>c.id===active); }
+
+function renderAgent(){
+  const c = conv();
+  const empty = !c || !c.msgs.length;
+  $('#view').innerHTML = `
+    <div class="chat-scroll" id="scroll"><div class="chat-col">
+      ${empty ? `<div class="hero">
+          <h1>Ask the Agent</h1>
+          <p>Give a passage, a question and a candidate answer. KEV says whether the answer is right, or “I don’t know” when the passage can’t settle it.</p>
+          <div class="examples">${CFG.examples.map((e,i)=>`<button class="ex" data-ex="${i}"><small>${esc(e.label)}</small><span>${esc(e.question)}</span><small>Candidate: ${esc(e.answer)}</small></button>`).join('')}</div>
+        </div>` : `<div id="msgs">${c.msgs.map((m,i)=>ChatMessage(m,i,false)).join('')}</div>`}
+      <div id="pending"></div>
+    </div></div>${ChatInput()}`;
+  growBars($('#view'));
+  const sc=$('#scroll'); sc.scrollTop=sc.scrollHeight;
+  $('#question').focus({preventScroll:true});
+}
+
+function inputValues(){
+  return { passage: $('#passage').value.trim(), question: $('#question').value.trim(), answer: $('#answer').value.trim() };
+}
+function updateSend(){ const v=inputValues(); $('#send').disabled = !v.question || !v.answer || busy; }
+
+async function send(input){
+  if(!input.question || !input.answer || busy) return;
+  if(!conv()){ const c={id:nextId++,title:'',msgs:[]}; convs.push(c); active=c.id; }
+  const c = conv();
+  if(!c.msgs.length) c.title = input.question.length>38 ? input.question.slice(0,38)+'…' : input.question;
+  c.msgs.push({role:'user',input});
+  busy = true;
+  renderAgent();
+  $('#sidebar').innerHTML = Sidebar('agent');
+  const pending = $('#pending');
+  pending.innerHTML = `<div class="typing fresh"><span class="dots"><span></span><span></span><span></span></span><span id="stepTxt">Sending to KEV…</span></div>`;
+  const steps=['Sending to KEV…','Scoring the answer against the passage…','Still working. The model may be starting up (up to a minute)…'];
+  let s=0; const timer=setInterval(()=>{ s=Math.min(s+1,2); const t=$('#stepTxt'); if(t) t.textContent=steps[s]; },4000);
+  const sc=$('#scroll'); sc.scrollTop=sc.scrollHeight;
+  let msg;
+  try { msg = {role:'agent',input,res:await askAgent(input),fb:null}; }
+  catch(err){ msg = {role:'agent',input,error:err.message}; }
+  clearInterval(timer); busy=false;
+  c.msgs.push(msg);
+  if(conv()!==c || location.hash.includes('dashboard')) return;
+  pending.innerHTML='';
+  $('#msgs').insertAdjacentHTML('beforeend', ChatMessage(msg, c.msgs.length-1, true));
+  growBars($('#msgs'));
+  updateSend();
+  const sc2=$('#scroll'); sc2.scrollTo({top:sc2.scrollHeight,behavior:'smooth'});
+}
+
+async function sendFeedback(m, idx, wrap, value){
+  m.fb = {v:value, status:'saving'};
+  wrap.outerHTML = FeedbackButtons(m, idx);
+  try {
+    await api('/api/feedback', {method:'POST', body: JSON.stringify({
+      ...m.input, decision: m.res.verdict, confidence: m.res.confidence, feedback: value })});
+    m.fb.status = 'saved';
+  } catch { m.fb.status = 'error'; }
+  const el = document.querySelector(`.fb[data-idx="${idx}"]`);
+  if(el) el.outerHTML = FeedbackButtons(m, idx);
+}
+
+/* ============================================================
+   DASHBOARD COMPONENTS (data from /api/eval)
+   ============================================================ */
+const CATS = ['Correct answer','Wrong answer','Unsupported answer','False abstention','Correct abstention'];
+const LABEL = {A:'True', B:'False', C:'Not enough information'};
+
+function kpis(s){
+  return [
+    {label:'Overall Accuracy',value:pct(s.overall_accuracy),sub:'Correct decisions across all questions',tip:'Share of all questions where the agent made the right call: answered correctly or rightly said “I don’t know”.',lead:true},
+    {label:'Answer Accuracy',value:pct(s.answer_accuracy),sub:'When it answers, it is right',tip:'Of the questions the agent answered, the share answered correctly.'},
+    {label:'Correct Abstention Rate',value:pct(s.correct_abstention_rate),sub:'Abstained when it should',tip:'Of the questions whose passage lacks the information, how often the agent said “I don’t know”.'},
+    {label:'Unsupported Answer Rate',value:pct(s.unsupported_answer_rate),sub:'Answers without enough evidence',tip:'Share of answers given when the passage did not contain the information.'},
+    {label:'Coverage',value:pct(s.coverage,0),sub:'Questions the agent chose to answer',tip:'Share of questions the agent answered rather than abstaining.'},
+  ];
+}
+function minis(s){
+  return [
+    {label:'Precision',value:num(s.precision),tip:'Of the answers given, the fraction that were correct.'},
+    {label:'Recall',value:num(s.recall),tip:'Of the answerable questions, the fraction the agent answered correctly.'},
+    {label:'F1 Score',value:num(s.f1),tip:'Harmonic mean of precision and recall.'},
+    {label:'Brier Score',value:num(s.brier),tip:'Mean squared gap between KEV’s three probabilities and the true label. Lower is better; 0 is perfect.'},
+    {label:'Exp. Calibration Error',value:num(s.ece),tip:'Average gap between KEV’s top probability and its observed accuracy, over 10 confidence bins. Lower is better.'},
+    {label:'AUROC',value:num(s.auroc,2),tip:'How well KEV’s top probability separates its correct from its incorrect predictions. 0.5 is chance, 1.0 is perfect.'},
+    {label:'False Answer Rate',value:pct(s.false_answer_rate),tip:'Share of answers that were wrong or should not have been given.'},
+    {label:'False Abstention Rate',value:pct(s.false_abstention_rate),tip:'Of the answerable questions, the share where the agent said “I don’t know”.'},
+    {label:'3-way Accuracy',value:pct(s.classification_accuracy),tip:'How often KEV’s most likely option (True, False or Not enough information) matches the label, ignoring the threshold.'},
+  ];
+}
+function MetricCard(k){
+  return `<div class="kpi ${k.lead?'lead':''}"><div class="label">${k.label}<span class="tip" tabindex="0" data-tip="${esc(k.tip)}" aria-label="${esc(k.tip)}">i</span></div><div class="val tnum">${k.value}</div><div class="sub">${k.sub}</div></div>`;
+}
+function MiniMetric(k){
+  return `<div class="mini"><div class="label">${k.label}<span class="tip" tabindex="0" data-tip="${esc(k.tip)}" aria-label="${esc(k.tip)}">i</span></div><div class="val tnum">${k.value}</div></div>`;
+}
+
+function accCov(){ return EVAL.summary.sweep.filter(p=>p.accuracy!=null).map(p=>[p.threshold,p.coverage*100,p.accuracy*100]); }
+
+function AccuracyCoverageChart(){
+  const pts0 = accCov();
+  const W=640,H=330,L=48,R=18,T=14,B=44, pw=W-L-R, ph=H-T-B;
+  const lo = Math.max(0, Math.floor(Math.min(...pts0.map(p=>p[2]))/10)*10);
+  const x=c=>L+c/100*pw, y=a=>T+(100-a)/(100-lo)*ph;
+  const pts = pts0.map(p=>[x(p[1]),y(p[2])]);
+  const line = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area = line+` L${pts[pts.length-1][0]} ${T+ph} L${pts[0][0]} ${T+ph} Z`;
+  let g='';
+  const step = (100-lo) >= 40 ? 20 : 10;
+  for(let v=lo; v<=100; v+=step) g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end">${v}%</text>`;
+  [0,25,50,75,100].forEach(v=>g+=`<text x="${x(v)}" y="${T+ph+20}" text-anchor="middle">${v}%</text>`);
+  const cur = pts0[Math.min(thrIdx, pts0.length-1)];
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Accuracy versus coverage curve">
+    ${g}
+    <path d="${area}" fill="var(--accent)" opacity=".08"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.2" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"><title>Threshold ${pts0[i][0].toFixed(2)}: coverage ${pts0[i][1].toFixed(1)}%, accuracy ${pts0[i][2].toFixed(1)}%</title></circle>`).join('')}
+    <g transform="translate(${x(cur[1])} ${y(cur[2])})">
+      <line x1="0" x2="0" y1="0" y2="${T+ph-y(cur[2])}" stroke="var(--accent)" stroke-dasharray="3 3" opacity=".6"/>
+      <circle r="8" fill="var(--accent)" opacity=".2"/><circle r="5" fill="var(--accent)"/>
+    </g>
+    <text x="${L+pw/2}" y="${H-4}" text-anchor="middle">Coverage % (questions answered)</text>
+    <text transform="translate(12 ${T+ph/2}) rotate(-90)" text-anchor="middle">Answer accuracy %</text>
+  </svg>`;
+}
+function CalibrationChart(){
+  const pts0 = EVAL.summary.calibration;
+  const W=420,H=330,L=48,R=16,T=14,B=44,pw=W-L-R,ph=H-T-B;
+  const x=v=>L+v*pw, y=v=>T+(1-v)*ph;
+  let g='';
+  [0,.25,.5,.75,1].forEach(v=>g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end">${Math.round(v*100)}%</text><text x="${x(v)}" y="${T+ph+20}" text-anchor="middle">${Math.round(v*100)}%</text>`);
+  const line = pts0.map((p,i)=>(i?'L':'M')+x(p[0]).toFixed(1)+' '+y(p[1]).toFixed(1)).join(' ');
+  return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Calibration curve against the ideal diagonal">
+    ${g}
+    <line x1="${x(0)}" y1="${y(0)}" x2="${x(1)}" y2="${y(1)}" stroke="var(--faint)" stroke-dasharray="5 5" stroke-width="1.6"/>
+    <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
+    ${pts0.map(p=>`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="3.4" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"><title>Predicted ${Math.round(p[0]*100)}% → observed ${Math.round(p[1]*100)}% (${p[2]} questions)</title></circle>`).join('')}
+    <text x="${L+pw/2}" y="${H-4}" text-anchor="middle">Predicted confidence</text>
+    <text transform="translate(12 ${T+ph/2}) rotate(-90)" text-anchor="middle">Observed accuracy</text>
+  </svg>
+  <div class="legend"><span><i></i>KEV</span><span><i class="ideal"></i>Ideal calibration</span></div>`;
+}
+function DecisionMatrix(){
+  const c = EVAL.summary.categories;
+  return `<div class="matrix">
+    <span></span><span class="hd">Should answer</span><span class="hd">Should abstain</span>
+    <span class="rh">Agent answered</span>
+    <div class="cell good"><b class="tnum">${(c['Correct answer']+c['Wrong answer']).toLocaleString()}</b><span>Correct answer decision</span><small>Answered, and the passage had the information (${c['Wrong answer'].toLocaleString()} of these answers were wrong)</small></div>
+    <div class="cell warn"><b class="tnum">${c['Unsupported answer'].toLocaleString()}</b><span>Incorrect answer decision</span><small>Answered although the passage lacked the information</small></div>
+    <span class="rh">Agent abstained</span>
+    <div class="cell warn"><b class="tnum" style="color:var(--ink)">${c['False abstention'].toLocaleString()}</b><span>False abstention</span><small>Said “I don’t know” but could answer</small></div>
+    <div class="cell good"><b class="tnum">${c['Correct abstention'].toLocaleString()}</b><span>Correct abstention</span><small>Declined when the information was missing</small></div>
+  </div>`;
+}
+function ResultDistribution(){
+  const c = EVAL.summary.categories;
+  const rows = [
+    {label:'Correct answers',value:c['Correct answer'],color:'var(--accent)'},
+    {label:'Wrong answers',value:c['Wrong answer'],color:'var(--bad)'},
+    {label:'Unsupported answers',value:c['Unsupported answer'],color:'var(--bad)'},
+    {label:'Correct abstentions',value:c['Correct abstention'],color:'var(--pause)'},
+    {label:'False abstentions',value:c['False abstention'],color:'var(--faint)'},
+  ];
+  const max = Math.max(1, ...rows.map(d=>d.value));
+  return `<div class="dist">${rows.map(d=>`<div class="dist-row"><span>${d.label}</span><div class="dist-track"><i data-w="${d.value/max*100}" style="background:${d.color}"></i></div><b class="tnum">${d.value.toLocaleString()}</b></div>`).join('')}</div>
+  <p class="desc" style="margin:14px 0 0">${EVAL.summary.n.toLocaleString()} evaluated questions.</p>`;
+}
+function ModelTable(){
+  return `<div class="tbl-wrap"><table><thead><tr><th>Model</th><th>Accuracy</th><th>Unsupported Answer Rate</th><th>Correct Abstention</th><th>Calibration Error</th></tr></thead><tbody>
+    ${EVAL.models.map(m=>`<tr class="${m.final?'hl':''}"><td>${esc(m.name)}${m.final?'<span class="star">Final agent</span>':''}</td><td class="tnum">${pct(m.overall_accuracy,0)}</td><td class="tnum">${pct(m.unsupported_answer_rate,0)}</td><td class="tnum">${pct(m.correct_abstention_rate,0)}</td><td class="tnum">${num(m.ece,2)}</td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+const expected = e => e.label==='C' ? 'Abstain' : 'Answer: ' + LABEL[e.label];
+const decided = e => e.decision==='abstain' ? 'Abstained' : 'Answered: ' + LABEL[e.decision];
+const isOk = e => e.category==='Correct answer' || e.category==='Correct abstention';
+
+function EvaluationTable(){
+  const rows = EVAL.examples.map((e,i)=>({...e,i})).filter(e=>catFilter==='All'||e.category===catFilter);
+  return `<div class="filters" role="group" aria-label="Filter by category">${['All',...CATS].map(c=>`<button class="chip" data-cat="${c}" aria-pressed="${c===catFilter}">${c}</button>`).join('')}</div>
+  <div class="tbl-wrap"><table class="clickable"><thead><tr><th>Question</th><th>Candidate answer</th><th>Expected</th><th>Agent decision</th><th>Confidence</th><th>Correct</th><th>Category</th></tr></thead><tbody>
+  ${rows.map(e=>`<tr tabindex="0" data-row="${e.i}"><td style="min-width:240px">${esc(e.question)}</td><td>${esc(e.answer)}</td>
+    <td><span class="pill ${e.label==='C'?'p':'a'}">${expected(e)}</span></td>
+    <td><span class="pill ${e.decision==='abstain'?'p':'a'}">${decided(e)}</span></td>
+    <td class="tnum">${pct(e.confidence,0)}</td><td class="${isOk(e)?'yes':'no'}">${isOk(e)?'Yes':'No'}</td><td><span class="pill">${e.category}</span></td></tr>`).join('')||'<tr><td colspan="7" style="color:var(--muted)">No questions in this category.</td></tr>'}
+  </tbody></table></div>`;
+}
+function Drawer(e){
+  return `<button class="icon-btn" id="closeDrawer" aria-label="Close details"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <h2>${esc(e.question)}</h2>
+  <span class="pill">${e.category}</span>
+  <dl class="kv">
+    <dt>Candidate answer</dt><dd>${esc(e.answer)}</dd>
+    <dt>Expected</dt><dd>${expected(e)}</dd>
+    <dt>Agent decision</dt><dd>${decided(e)}</dd>
+    <dt>Confidence</dt><dd class="tnum">${pct(e.confidence)} <span style="color:var(--faint)">(threshold ${thrPct()}%)</span></dd>
+    <dt>Result</dt><dd class="${isOk(e)?'yes':'no'}">${isOk(e)?'Correct':'Incorrect'}</dd>
+    ${e.scenario?`<dt>Source</dt><dd>${esc(e.scenario)}</dd>`:''}
+    <dt>Item</dt><dd class="tnum">${esc(e.id)}</dd>
+  </dl>
+  <div class="callout"><b>KEV's probabilities</b>${['A','B','C'].map(k=>`${LABEL[k]}: ${pct(e.probs[k])}`).join(' · ')}</div>
+  <div class="callout"><b>Passage</b><div class="passage">${esc(e.passage)||'–'}</div></div>`;
+}
+
+/* ============================================================
+   DASHBOARD VIEW
+   ============================================================ */
+function DashNotice(title, body){
+  return `<div class="dash-scroll"><div class="dash">
+    <div class="dash-head"><div><h1>Agent Evaluation</h1><p>Measuring accuracy, uncertainty and abstention behaviour</p></div></div>
+    <div class="notice"><h2>${title}</h2>${body}</div></div></div>`;
+}
+
+async function renderDash(){
+  if(EVAL===null){
+    $('#view').innerHTML = DashNotice('Loading evaluation…', '');
+    try { EVAL = await api('/api/eval'); }
+    catch(err){ $('#view').innerHTML = DashNotice('Could not load the evaluation', `<p>${esc(err.message)}</p>`); EVAL = null; return; }
+    if(!location.hash.startsWith('#/dashboard')) return;
+  }
+  if(!EVAL.available){
+    $('#view').innerHTML = DashNotice('No evaluation results yet',
+      `<p>The dashboard shows KEV's real results once a training run has been pulled from Modal and built:</p>
+      <pre>modal run skills/kev-finetune/scripts/kev_modal.py::pull --name &lt;run&gt;
+cd dashboard && python build_eval.py --run ../runs/&lt;run&gt;</pre>
+      <p>This writes <code>dashboard/data/eval.json</code>. See the dashboard README for details.</p>`);
+    return;
+  }
+  const s = EVAL.summary, pts = accCov();
+  thrIdx = pts.reduce((best,p,i)=>Math.abs(p[0]-EVAL.threshold)<Math.abs(pts[best][0]-EVAL.threshold)?i:best,0);
+  $('#view').innerHTML = `<div class="dash-scroll"><div class="dash">
+    <div class="dash-head"><div><h1>Agent Evaluation</h1><p>Measuring accuracy, uncertainty and abstention behaviour</p></div><span class="tag">KEV run ${esc(EVAL.run)} · ${s.n.toLocaleString()} development questions · threshold ${Math.round(EVAL.threshold*100)}%</span></div>
+    <div class="kpis">${kpis(s).map(MetricCard).join('')}</div>
+    <div class="minis">${minis(s).map(MiniMetric).join('')}</div>
+    <div class="grid-2">
+      <section class="panel"><h2>Accuracy vs coverage</h2>
+        <p class="desc">Raising the confidence threshold makes the agent answer fewer questions, and those answers become more reliable.</p>
+        <div id="acChart">${AccuracyCoverageChart()}</div>
+        <div class="slider-row"><label for="thr">Confidence threshold</label><input id="thr" type="range" min="0" max="${pts.length-1}" step="1" value="${thrIdx}"><b class="tnum" id="thrVal"></b></div>
+        <div class="readout" id="readout"></div>
+      </section>
+      <section class="panel"><h2>Confidence calibration</h2>
+        <p class="desc">When KEV says 80% sure, is it right about 80% of the time? Closer to the dashed line is better.</p>
+        ${CalibrationChart()}
+      </section>
+    </div>
+    <div class="grid-2" style="grid-template-columns:1fr 1fr">
+      <section class="panel"><h2>Decision matrix</h2><p class="desc">What the agent did against what it should have done.</p>${DecisionMatrix()}</section>
+      <section class="panel"><h2>Result distribution</h2><p class="desc">Every outcome, including abstentions the agent got wrong.</p>${ResultDistribution()}</section>
+    </div>
+    <section class="panel" style="margin-top:12px"><h2>Model comparison</h2><p class="desc">The base model and the fine-tuned KEV, scored on the same development questions with the same answer rule.</p>${ModelTable()}</section>
+    <section class="panel" style="margin-top:12px"><h2>Evaluation examples</h2><p class="desc">Up to 25 questions per outcome, most confident first. Select a row to see the passage and KEV's probabilities.</p><div id="evalTbl">${EvaluationTable()}</div></section>
+  </div></div>`;
+  updateThr();
+  growBars($('#view'));
+}
+function updateThr(){
+  const [t,c,a] = accCov()[thrIdx];
+  $('#thrVal').textContent = t.toFixed(2);
+  $('#readout').innerHTML = `<span>Answers <b class="tnum">${c.toFixed(0)}%</b> of questions</span><span>At <b class="tnum">${a.toFixed(1)}%</b> accuracy</span><span style="color:var(--muted)">${t<.3?'Answers almost everything, so more mistakes.':t<.7?'Balanced: answers when reasonably sure.':'Very selective: abstains often, rarely wrong.'}</span>`;
+}
+
+function route(){
+  document.body.classList.remove('menu-open');
+  const dash = location.hash.startsWith('#/dashboard');
+  $('#sidebar').innerHTML = Sidebar(dash?'dash':'agent');
+  $('#topTitle').textContent = dash?'Agent Evaluation':'Candor';
+  if(dash) renderDash(); else renderAgent();
+}
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+document.addEventListener('click', e=>{
+  const t = e.target;
+  const q = (s)=>t.closest(s);
+  if(q('#menuBtn')) document.body.classList.add('menu-open');
+  else if(q('#scrim')) document.body.classList.remove('menu-open');
+  else if(q('#newConv')){ active=null; if(location.hash.startsWith('#/dashboard')) location.hash='#/'; else route(); }
+  else if(q('[data-conv]')){ active=+q('[data-conv]').dataset.conv; if(location.hash.startsWith('#/dashboard')) location.hash='#/'; else route(); }
+  else if(q('[data-ex]')){ const ex=CFG.examples[+q('[data-ex]').dataset.ex]; draftPassage=ex.passage; send({passage:ex.passage,question:ex.question,answer:ex.answer}); }
+  else if(q('#send')){ const v=inputValues(); $('#question').value=''; $('#answer').value=''; send(v); }
+  else if(q('[data-fb]')){
+    const wrap=q('.fb'), idx=+wrap.dataset.idx, m=conv().msgs[idx];
+    sendFeedback(m, idx, wrap, q('[data-fb]').dataset.fb);
+  }
+  else if(q('#themeBtn')){
+    const r=document.documentElement, dark = r.dataset.theme==='dark' || (!r.dataset.theme && matchMedia('(prefers-color-scheme: dark)').matches);
+    r.dataset.theme = dark?'light':'dark';
+  }
+  else if(q('[data-cat]')){ catFilter=q('[data-cat]').dataset.cat; $('#evalTbl').innerHTML=EvaluationTable(); }
+  else if(q('[data-row]')){ openDrawer(+q('[data-row]').dataset.row); }
+  else if(q('#closeDrawer')||q('#drawerScrim')) closeDrawer();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ closeDrawer(); document.body.classList.remove('menu-open'); }
+  if((e.target.id==='question'||e.target.id==='answer') && e.key==='Enter'){ e.preventDefault(); if(!$('#send').disabled) $('#send').click(); }
+  if(e.target.matches && e.target.matches('[data-row]') && (e.key==='Enter'||e.key===' ')){ e.preventDefault(); openDrawer(+e.target.dataset.row); }
+});
+document.addEventListener('input', e=>{
+  if(e.target.id==='passage'){ draftPassage=e.target.value; const ta=e.target; ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,200)+'px'; }
+  if(['passage','question','answer'].includes(e.target.id)) updateSend();
+  if(e.target.id==='thr'){ thrIdx=+e.target.value; updateThr(); $('#acChart').innerHTML=AccuracyCoverageChart(); }
+});
+let lastFocus=null;
+function openDrawer(i){ lastFocus=document.activeElement; $('#drawer').innerHTML=Drawer(EVAL.examples[i]); document.body.classList.add('drawer-open'); setTimeout(()=>$('#closeDrawer').focus(),50); }
+function closeDrawer(){ if(!document.body.classList.contains('drawer-open')) return; document.body.classList.remove('drawer-open'); lastFocus&&lastFocus.focus&&lastFocus.focus(); }
+window.addEventListener('hashchange', route);
+
+api('/api/config').then(c => { CFG = c; }).catch(() => {}).finally(route);
+</script>
+</body>
+</html>
