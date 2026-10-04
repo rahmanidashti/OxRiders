@@ -8,3 +8,6 @@ __pycache__/
 .DS_Store
 FigQA/
 TableQA/
+.env
+# Local eval config (contains the API key)
+eval/config.yaml
