@@ -663,3 +663,7 @@ labbench/*/*.parquet
 labbench/.cache/
 labbench/FigQA/
 labbench/TableQA/
+
+# secrets: never commit (eval/config.yaml holds the Anthropic API key)
+.env
+eval/config.yaml
