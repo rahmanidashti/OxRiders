@@ -24,7 +24,7 @@ class ModelConfig:
 
 @dataclass
 class RunConfig:
-    csv: Path = REPO_DIR / "lab-bench-adv-eval.csv"
+    csv: Path = REPO_DIR / "labbench" / "lab-bench-adv-eval.csv"
     results_dir: Path = EVAL_DIR / "results"
     workers: int = 8
     limit: int | None = None
