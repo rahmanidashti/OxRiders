@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Candor</title>
+<title>OxRiders</title>
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -49,7 +50,8 @@ h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-0.02em;line-he
 .app{display:flex;height:100%;min-height:0}
 .sidebar{width:272px;flex:none;background:var(--surface);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:18px 14px;gap:18px;z-index:30}
 .brand{display:flex;align-items:center;gap:10px;padding:2px 8px;font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-0.02em}
-.logo{width:28px;height:28px;border-radius:9px;background:var(--accent);display:grid;place-items:center}
+.logo{width:34px;height:34px;border-radius:10px;object-fit:cover;flex:none}
+.hero-logo{display:block;width:104px;height:104px;border-radius:24px;margin-bottom:18px;border:1px solid var(--line)}
 .btn-new{display:flex;align-items:center;gap:8px;justify-content:center;width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface);font-weight:600;transition:background .15s,border-color .15s}
 .btn-new:hover{background:var(--surface-2);border-color:var(--accent-line)}
 .nav{display:flex;flex-direction:column;gap:2px}
@@ -85,7 +87,7 @@ h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-0.02em;line-he
 .ex{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;transition:border-color .15s,transform .15s;display:flex;flex-direction:column;gap:6px}
 .ex:hover{border-color:var(--accent-line)}
 .ex small{color:var(--faint);font-size:12.5px}
-.ex span{font-weight:500}
+.ex span{font-weight:500;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .msg-user{display:flex;justify-content:flex-end;margin:22px 0 14px}
 .msg-user div{background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:18px 18px 4px 18px;max-width:84%;overflow-wrap:anywhere}
 .msg-agent{margin:6px 0 26px}
@@ -258,7 +260,7 @@ body.drawer-open .drawer-scrim{opacity:1;pointer-events:auto}
   <div class="main">
     <div class="topbar">
       <button class="icon-btn" id="menuBtn" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-      <strong style="font-family:var(--font-display)" id="topTitle">Candor</strong>
+      <img class="logo" src="/assets/logo-mark.png" alt="" width="34" height="34"><strong style="font-family:var(--font-display)" id="topTitle">OxRiders</strong>
     </div>
     <div id="view" style="display:flex;flex-direction:column;flex:1;min-height:0"></div>
   </div>
@@ -268,14 +270,14 @@ body.drawer-open .drawer-scrim{opacity:1;pointer-events:auto}
 
 <script>
 /* ============================================================
-   Candor: live KEV agent + evaluation dashboard.
+   OxRiders: live model agent + evaluation dashboard.
    Data comes from the backend (server.py):
      GET  /api/config    threshold, starter examples
      POST /api/agent     {passage, question, answer} -> decision
-     GET  /api/eval      evaluation built from a pulled KEV run
+     GET  /api/eval      evaluation results (data/dashboard_data.json)
      POST /api/feedback  thumbs up/down
    ============================================================ */
-let CFG = { threshold: 0.6, kev_configured: true, examples: [] };
+let CFG = { threshold: 0.6, model_configured: true, examples: [] };
 let EVAL = null; // null = not loaded yet
 
 /* ============================================================
@@ -287,7 +289,6 @@ const pct = (v, d = 1) => v == null ? '–' : (v * 100).toFixed(d) + '%';
 const num = (v, d = 3) => v == null ? '–' : v.toFixed(d);
 const thrPct = () => Math.round(CFG.threshold * 100);
 const I = {
-  logo:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
   plus:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   chat:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>',
   chart:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
@@ -319,7 +320,7 @@ let draftPassage = ''; // kept across renders so follow-up questions reuse the p
    ============================================================ */
 function Sidebar(route){
   return `
-  <div class="brand"><span class="logo">${I.logo}</span>Candor</div>
+  <div class="brand"><img class="logo" src="/assets/logo-mark.png" alt="" width="34" height="34">OxRiders</div>
   <button class="btn-new" id="newConv">${I.plus} New conversation</button>
   <nav class="nav" aria-label="Main">
     <a href="#/" ${route==='agent'?'aria-current="page"':''}>${I.chat} Agent</a>
@@ -329,7 +330,7 @@ function Sidebar(route){
   <div class="hist" id="hist">
     ${convs.slice().reverse().map(c=>`<button data-conv="${c.id}" class="${c.id===active&&route==='agent'?'active':''}">${esc(c.title)}</button>`).join('')||'<span class="hist-title">No conversations yet</span>'}
   </div>
-  <div class="side-foot"><span>KEV · live model</span><button class="theme-btn" id="themeBtn">Theme</button></div>`;
+  <div class="side-foot"><span>Live model</span><button class="theme-btn" id="themeBtn">Theme</button></div>`;
 }
 
 function DecisionBadge(res){
@@ -351,7 +352,7 @@ function ConfidenceIndicator(res){
 }
 
 function OptionsPanel(res){
-  return `<div class="sec"><h3>KEV's probabilities</h3><div class="ev">${res.options.map(o=>`
+  return `<div class="sec"><h3>Model probabilities</h3><div class="ev">${res.options.map(o=>`
     <div class="ev-row"><b>${esc(o.label)}</b>
       <span class="rel tnum"><s style="--w:${Math.round(o.p*100)}%"></s>${pct(o.p)}</span>
       <small>${o.key==='C'?'The passage lacks the information to decide':o.key==='A'?'The candidate answer is correct':'The candidate answer is wrong'}</small></div>`).join('')}</div></div>`;
@@ -403,14 +404,14 @@ function ChatMessage(m, idx, fresh){
 function ChatInput(){
   return `<div class="composer-wrap">
     <div class="composer claim">
-      <textarea id="passage" rows="2" placeholder="Passage: the text KEV checks the answer against" aria-label="Passage">${esc(draftPassage)}</textarea>
+      <textarea id="passage" rows="2" placeholder="Passage: the text the model checks the answer against" aria-label="Passage">${esc(draftPassage)}</textarea>
       <div class="claim-row">
         <input id="question" placeholder="Question" aria-label="Question" autocomplete="off">
         <input id="answer" placeholder="Candidate answer" aria-label="Candidate answer" autocomplete="off">
         <button class="send" id="send" aria-label="Send" disabled>${I.send}</button>
       </div>
     </div>
-    <div class="composer-note">Candor may say “I don’t know”. That is a deliberate, valid answer.${CFG.kev_configured?'':' <b style="color:var(--bad)">KEV_MODEL_URL is not set on the server.</b>'}</div>
+    <div class="composer-note">OxRiders may say “I don’t know”. That is a deliberate, valid answer.${CFG.model_configured?'':' <b style="color:var(--bad)">The model URL is not set on the server.</b>'}</div>
   </div>`;
 }
 
@@ -428,14 +429,15 @@ function renderAgent(){
   $('#view').innerHTML = `
     <div class="chat-scroll" id="scroll"><div class="chat-col">
       ${empty ? `<div class="hero">
+          <img class="hero-logo" src="/assets/logo-mark.png" alt="OxRiders logo: an ox riding an AI robot that says IDK" width="104" height="104">
           <h1>Ask the Agent</h1>
-          <p>Give a passage, a question and a candidate answer. KEV says whether the answer is right, or “I don’t know” when the passage can’t settle it.</p>
+          <p>Give a passage, a question and a candidate answer. The model says whether the answer is right, or “I don’t know” when the passage can’t settle it.</p>
           <div class="examples">${CFG.examples.map((e,i)=>`<button class="ex" data-ex="${i}"><small>${esc(e.label)}</small><span>${esc(e.question)}</span><small>Candidate: ${esc(e.answer)}</small></button>`).join('')}</div>
         </div>` : `<div id="msgs">${c.msgs.map((m,i)=>ChatMessage(m,i,false)).join('')}</div>`}
       <div id="pending"></div>
     </div></div>${ChatInput()}`;
   growBars($('#view'));
-  const sc=$('#scroll'); sc.scrollTop=sc.scrollHeight;
+  const sc=$('#scroll'); if(!empty) sc.scrollTop=sc.scrollHeight;
   $('#question').focus({preventScroll:true});
 }
 
@@ -454,8 +456,8 @@ async function send(input){
   renderAgent();
   $('#sidebar').innerHTML = Sidebar('agent');
   const pending = $('#pending');
-  pending.innerHTML = `<div class="typing fresh"><span class="dots"><span></span><span></span><span></span></span><span id="stepTxt">Sending to KEV…</span></div>`;
-  const steps=['Sending to KEV…','Scoring the answer against the passage…','Still working. The model may be starting up (up to a minute)…'];
+  pending.innerHTML = `<div class="typing fresh"><span class="dots"><span></span><span></span><span></span></span><span id="stepTxt">Sending to the model…</span></div>`;
+  const steps=['Sending to the model…','Scoring the answer against the passage…','Still working. The model may be starting up (up to a minute)…'];
   let s=0; const timer=setInterval(()=>{ s=Math.min(s+1,2); const t=$('#stepTxt'); if(t) t.textContent=steps[s]; },4000);
   const sc=$('#scroll'); sc.scrollTop=sc.scrollHeight;
   let msg;
@@ -484,70 +486,76 @@ async function sendFeedback(m, idx, wrap, value){
 }
 
 /* ============================================================
-   DASHBOARD COMPONENTS (data from /api/eval)
+   DASHBOARD COMPONENTS (data from /api/eval = data/dashboard_data.json)
+   Definitions used by that file: the agent answers with the model's top option (True, False or
+   Not enough information) when its confidence clears the threshold, and abstains otherwise.
+   An answer "should" be given when the model's top option is right.
    ============================================================ */
-const CATS = ['Correct answer','Wrong answer','Unsupported answer','False abstention','Correct abstention'];
-const LABEL = {A:'True', B:'False', C:'Not enough information'};
+const LETTER = {A:'True', B:'False', C:'Not enough information'};
+const TIPS = {
+  'Overall Accuracy':'Share of all questions where the agent made the right call: answered with a correct prediction, or abstained where its prediction would have been wrong.',
+  'Answer Accuracy':'Of the questions the agent answered, the share where the model’s prediction was correct.',
+  'Correct Abstention Rate':'Of the questions where the model’s top prediction would have been wrong, the share where the agent abstained.',
+  'Unsupported Answer Rate':'Share of all questions where the agent answered with a wrong prediction.',
+  'Coverage':'Share of questions the agent answered rather than abstaining.',
+  'Precision':'Of the answers given, the fraction that were correct.',
+  'Recall':'Of the questions the model gets right, the fraction the agent answered.',
+  'F1 Score':'Harmonic mean of precision and recall.',
+  'Brier Score':'Mean squared gap between the model’s probabilities and the true label. Lower is better; 0 is perfect.',
+  'Exp. Calibration Error':'Average gap between the model’s confidence and its observed accuracy across confidence bins. Lower is better.',
+  'AUROC':'How well the model’s confidence separates its correct from its incorrect predictions. 0.5 is chance, 1.0 is perfect.',
+  'False Answer Rate':'Share of all questions answered with a wrong prediction.',
+  'False Abstention Rate':'Share of all questions where the agent abstained although the model’s prediction was right.',
+  'Selective Accuracy':'Accuracy measured only on the questions the agent chose to answer.',
+};
+const tipFor = k => k.tip || TIPS[k.label] || '';
+const tipIcon = t => t ? `<span class="tip" tabindex="0" data-tip="${esc(t)}" aria-label="${esc(t)}">i</span>` : '';
+const option = v => LETTER[v] ? `${LETTER[v]} (${v})` : v;
+const total = () => { const m = EVAL.MATRIX; return m.answeredShould + m.answeredShouldNot + m.abstainedShould + m.abstainedShouldNot; };
+const hasText = e => e.q && e.q.trim().toLowerCase() !== 'question';
 
-function kpis(s){
-  return [
-    {label:'Overall Accuracy',value:pct(s.overall_accuracy),sub:'Correct decisions across all questions',tip:'Share of all questions where the agent made the right call: answered correctly or rightly said “I don’t know”.',lead:true},
-    {label:'Answer Accuracy',value:pct(s.answer_accuracy),sub:'When it answers, it is right',tip:'Of the questions the agent answered, the share answered correctly.'},
-    {label:'Correct Abstention Rate',value:pct(s.correct_abstention_rate),sub:'Abstained when it should',tip:'Of the questions whose passage lacks the information, how often the agent said “I don’t know”.'},
-    {label:'Unsupported Answer Rate',value:pct(s.unsupported_answer_rate),sub:'Answers without enough evidence',tip:'Share of answers given when the passage did not contain the information.'},
-    {label:'Coverage',value:pct(s.coverage,0),sub:'Questions the agent chose to answer',tip:'Share of questions the agent answered rather than abstaining.'},
-  ];
-}
-function minis(s){
-  return [
-    {label:'Precision',value:num(s.precision),tip:'Of the answers given, the fraction that were correct.'},
-    {label:'Recall',value:num(s.recall),tip:'Of the answerable questions, the fraction the agent answered correctly.'},
-    {label:'F1 Score',value:num(s.f1),tip:'Harmonic mean of precision and recall.'},
-    {label:'Brier Score',value:num(s.brier),tip:'Mean squared gap between KEV’s three probabilities and the true label. Lower is better; 0 is perfect.'},
-    {label:'Exp. Calibration Error',value:num(s.ece),tip:'Average gap between KEV’s top probability and its observed accuracy, over 10 confidence bins. Lower is better.'},
-    {label:'AUROC',value:num(s.auroc,2),tip:'How well KEV’s top probability separates its correct from its incorrect predictions. 0.5 is chance, 1.0 is perfect.'},
-    {label:'False Answer Rate',value:pct(s.false_answer_rate),tip:'Share of answers that were wrong or should not have been given.'},
-    {label:'False Abstention Rate',value:pct(s.false_abstention_rate),tip:'Of the answerable questions, the share where the agent said “I don’t know”.'},
-    {label:'3-way Accuracy',value:pct(s.classification_accuracy),tip:'How often KEV’s most likely option (True, False or Not enough information) matches the label, ignoring the threshold.'},
-  ];
-}
 function MetricCard(k){
-  return `<div class="kpi ${k.lead?'lead':''}"><div class="label">${k.label}<span class="tip" tabindex="0" data-tip="${esc(k.tip)}" aria-label="${esc(k.tip)}">i</span></div><div class="val tnum">${k.value}</div><div class="sub">${k.sub}</div></div>`;
+  return `<div class="kpi ${k.lead?'lead':''}"><div class="label">${esc(k.label)}${tipIcon(tipFor(k))}</div><div class="val tnum">${esc(k.value)}</div><div class="sub">${esc(k.sub||'')}</div></div>`;
 }
 function MiniMetric(k){
-  return `<div class="mini"><div class="label">${k.label}<span class="tip" tabindex="0" data-tip="${esc(k.tip)}" aria-label="${esc(k.tip)}">i</span></div><div class="val tnum">${k.value}</div></div>`;
+  return `<div class="mini"><div class="label">${esc(k.label)}${tipIcon(tipFor(k))}</div><div class="val tnum">${esc(k.value)}</div></div>`;
 }
 
-function accCov(){ return EVAL.summary.sweep.filter(p=>p.accuracy!=null).map(p=>[p.threshold,p.coverage*100,p.accuracy*100]); }
+const accCov = () => EVAL.ACC_COV;
+// With three options the model's top probability is never below 1/3, so calibration points
+// under that are placeholders for empty bins rather than measurements.
+const calib = () => EVAL.CALIB.filter(p => p[0] >= 1/3);
 
 function AccuracyCoverageChart(){
   const pts0 = accCov();
   const W=640,H=330,L=48,R=18,T=14,B=44, pw=W-L-R, ph=H-T-B;
-  const lo = Math.max(0, Math.floor(Math.min(...pts0.map(p=>p[2]))/10)*10);
-  const x=c=>L+c/100*pw, y=a=>T+(100-a)/(100-lo)*ph;
+  const xlo = Math.max(0, Math.min(80, Math.floor(Math.min(...pts0.map(p=>p[1]))/10)*10));
+  const ylo = Math.max(0, Math.min(90, Math.floor(Math.min(...pts0.map(p=>p[2]))/10)*10));
+  const x=c=>L+(c-xlo)/(100-xlo)*pw, y=a=>T+(100-ylo-(a-ylo))/(100-ylo)*ph;
   const pts = pts0.map(p=>[x(p[1]),y(p[2])]);
   const line = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
   const area = line+` L${pts[pts.length-1][0]} ${T+ph} L${pts[0][0]} ${T+ph} Z`;
   let g='';
-  const step = (100-lo) >= 40 ? 20 : 10;
-  for(let v=lo; v<=100; v+=step) g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end">${v}%</text>`;
-  [0,25,50,75,100].forEach(v=>g+=`<text x="${x(v)}" y="${T+ph+20}" text-anchor="middle">${v}%</text>`);
+  const ystep = (100-ylo) >= 40 ? 20 : (100-ylo) >= 20 ? 10 : 5;
+  for(let v=ylo; v<=100; v+=ystep) g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${L-10}" y="${y(v)+4}" text-anchor="end">${v}%</text>`;
+  const xstep = (100-xlo) >= 40 ? 25 : (100-xlo) >= 20 ? 10 : 5;
+  for(let v=xlo; v<=100; v+=xstep) g+=`<text x="${x(v)}" y="${T+ph+20}" text-anchor="middle">${v}%</text>`;
   const cur = pts0[Math.min(thrIdx, pts0.length-1)];
   return `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="Accuracy versus coverage curve">
     ${g}
     <path d="${area}" fill="var(--accent)" opacity=".08"/>
     <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
-    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.2" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"><title>Threshold ${pts0[i][0].toFixed(2)}: coverage ${pts0[i][1].toFixed(1)}%, accuracy ${pts0[i][2].toFixed(1)}%</title></circle>`).join('')}
+    ${pts.map((p,i)=>`<circle cx="${p[0]}" cy="${p[1]}" r="3.2" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"><title>Threshold ${pts0[i][0].toFixed(2)}: coverage ${pts0[i][1]}%, accuracy ${pts0[i][2]}%</title></circle>`).join('')}
     <g transform="translate(${x(cur[1])} ${y(cur[2])})">
       <line x1="0" x2="0" y1="0" y2="${T+ph-y(cur[2])}" stroke="var(--accent)" stroke-dasharray="3 3" opacity=".6"/>
       <circle r="8" fill="var(--accent)" opacity=".2"/><circle r="5" fill="var(--accent)"/>
     </g>
     <text x="${L+pw/2}" y="${H-4}" text-anchor="middle">Coverage % (questions answered)</text>
-    <text transform="translate(12 ${T+ph/2}) rotate(-90)" text-anchor="middle">Answer accuracy %</text>
+    <text transform="translate(12 ${T+ph/2}) rotate(-90)" text-anchor="middle">Accuracy %</text>
   </svg>`;
 }
 function CalibrationChart(){
-  const pts0 = EVAL.summary.calibration;
+  const pts0 = calib();
   const W=420,H=330,L=48,R=16,T=14,B=44,pw=W-L-R,ph=H-T-B;
   const x=v=>L+v*pw, y=v=>T+(1-v)*ph;
   let g='';
@@ -557,71 +565,63 @@ function CalibrationChart(){
     ${g}
     <line x1="${x(0)}" y1="${y(0)}" x2="${x(1)}" y2="${y(1)}" stroke="var(--faint)" stroke-dasharray="5 5" stroke-width="1.6"/>
     <path d="${line}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>
-    ${pts0.map(p=>`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="3.4" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"><title>Predicted ${Math.round(p[0]*100)}% → observed ${Math.round(p[1]*100)}% (${p[2]} questions)</title></circle>`).join('')}
+    ${pts0.map(p=>`<circle cx="${x(p[0])}" cy="${y(p[1])}" r="3.4" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.8"><title>Predicted ${Math.round(p[0]*100)}% → observed ${Math.round(p[1]*100)}%</title></circle>`).join('')}
     <text x="${L+pw/2}" y="${H-4}" text-anchor="middle">Predicted confidence</text>
     <text transform="translate(12 ${T+ph/2}) rotate(-90)" text-anchor="middle">Observed accuracy</text>
   </svg>
-  <div class="legend"><span><i></i>KEV</span><span><i class="ideal"></i>Ideal calibration</span></div>`;
+  <div class="legend"><span><i></i>Model</span><span><i class="ideal"></i>Ideal calibration</span></div>`;
 }
 function DecisionMatrix(){
-  const c = EVAL.summary.categories;
+  const m = EVAL.MATRIX, n = v => v.toLocaleString();
   return `<div class="matrix">
     <span></span><span class="hd">Should answer</span><span class="hd">Should abstain</span>
     <span class="rh">Agent answered</span>
-    <div class="cell good"><b class="tnum">${(c['Correct answer']+c['Wrong answer']).toLocaleString()}</b><span>Correct answer decision</span><small>Answered, and the passage had the information (${c['Wrong answer'].toLocaleString()} of these answers were wrong)</small></div>
-    <div class="cell warn"><b class="tnum">${c['Unsupported answer'].toLocaleString()}</b><span>Incorrect answer decision</span><small>Answered although the passage lacked the information</small></div>
+    <div class="cell good"><b class="tnum">${n(m.answeredShould)}</b><span>Correct answer decision</span><small>Answered, and the model’s prediction was right</small></div>
+    <div class="cell warn"><b class="tnum">${n(m.answeredShouldNot)}</b><span>Incorrect answer decision</span><small>Answered, but the model’s prediction was wrong</small></div>
     <span class="rh">Agent abstained</span>
-    <div class="cell warn"><b class="tnum" style="color:var(--ink)">${c['False abstention'].toLocaleString()}</b><span>False abstention</span><small>Said “I don’t know” but could answer</small></div>
-    <div class="cell good"><b class="tnum">${c['Correct abstention'].toLocaleString()}</b><span>Correct abstention</span><small>Declined when the information was missing</small></div>
+    <div class="cell warn"><b class="tnum" style="color:var(--ink)">${n(m.abstainedShould)}</b><span>False abstention</span><small>Said “I don’t know” although the model’s prediction was right</small></div>
+    <div class="cell good"><b class="tnum">${n(m.abstainedShouldNot)}</b><span>Correct abstention</span><small>Said “I don’t know” where the model’s prediction was wrong</small></div>
   </div>`;
 }
 function ResultDistribution(){
-  const c = EVAL.summary.categories;
-  const rows = [
-    {label:'Correct answers',value:c['Correct answer'],color:'var(--accent)'},
-    {label:'Wrong answers',value:c['Wrong answer'],color:'var(--bad)'},
-    {label:'Unsupported answers',value:c['Unsupported answer'],color:'var(--bad)'},
-    {label:'Correct abstentions',value:c['Correct abstention'],color:'var(--pause)'},
-    {label:'False abstentions',value:c['False abstention'],color:'var(--faint)'},
-  ];
-  const max = Math.max(1, ...rows.map(d=>d.value));
-  return `<div class="dist">${rows.map(d=>`<div class="dist-row"><span>${d.label}</span><div class="dist-track"><i data-w="${d.value/max*100}" style="background:${d.color}"></i></div><b class="tnum">${d.value.toLocaleString()}</b></div>`).join('')}</div>
-  <p class="desc" style="margin:14px 0 0">${EVAL.summary.n.toLocaleString()} evaluated questions.</p>`;
+  const max = Math.max(1, ...EVAL.DIST.map(d=>d.value));
+  return `<div class="dist">${EVAL.DIST.map(d=>`<div class="dist-row"><span>${esc(d.label)}</span><div class="dist-track"><i data-w="${d.value/max*100}" style="background:${esc(d.color||'var(--accent)')}"></i></div><b class="tnum">${d.value.toLocaleString()}</b></div>`).join('')}</div>
+  <p class="desc" style="margin:14px 0 0">${total().toLocaleString()} evaluated questions.</p>`;
 }
 function ModelTable(){
   return `<div class="tbl-wrap"><table><thead><tr><th>Model</th><th>Accuracy</th><th>Unsupported Answer Rate</th><th>Correct Abstention</th><th>Calibration Error</th></tr></thead><tbody>
-    ${EVAL.models.map(m=>`<tr class="${m.final?'hl':''}"><td>${esc(m.name)}${m.final?'<span class="star">Final agent</span>':''}</td><td class="tnum">${pct(m.overall_accuracy,0)}</td><td class="tnum">${pct(m.unsupported_answer_rate,0)}</td><td class="tnum">${pct(m.correct_abstention_rate,0)}</td><td class="tnum">${num(m.ece,2)}</td></tr>`).join('')}
+    ${EVAL.MODELS.map(m=>`<tr class="${m.hl?'hl':''}"><td>${esc(m.name)}${m.hl?'<span class="star">Final agent</span>':''}</td><td class="tnum">${esc(m.acc)}</td><td class="tnum">${esc(m.unsup)}</td><td class="tnum">${esc(m.abst)}</td><td class="tnum">${esc(m.cal)}</td></tr>`).join('')}
   </tbody></table></div>`;
 }
-const expected = e => e.label==='C' ? 'Abstain' : 'Answer: ' + LABEL[e.label];
-const decided = e => e.decision==='abstain' ? 'Abstained' : 'Answered: ' + LABEL[e.decision];
-const isOk = e => e.category==='Correct answer' || e.category==='Correct abstention';
-
+function categories(){ return [...new Set(EVAL.EVALS.map(e=>e.cat))]; }
+function questionCell(e){
+  return hasText(e) ? esc(e.q) : `<span style="color:var(--faint)">Item ${e.i+1} · question text not included</span>`;
+}
 function EvaluationTable(){
-  const rows = EVAL.examples.map((e,i)=>({...e,i})).filter(e=>catFilter==='All'||e.category===catFilter);
-  return `<div class="filters" role="group" aria-label="Filter by category">${['All',...CATS].map(c=>`<button class="chip" data-cat="${c}" aria-pressed="${c===catFilter}">${c}</button>`).join('')}</div>
-  <div class="tbl-wrap"><table class="clickable"><thead><tr><th>Question</th><th>Candidate answer</th><th>Expected</th><th>Agent decision</th><th>Confidence</th><th>Correct</th><th>Category</th></tr></thead><tbody>
-  ${rows.map(e=>`<tr tabindex="0" data-row="${e.i}"><td style="min-width:240px">${esc(e.question)}</td><td>${esc(e.answer)}</td>
-    <td><span class="pill ${e.label==='C'?'p':'a'}">${expected(e)}</span></td>
-    <td><span class="pill ${e.decision==='abstain'?'p':'a'}">${decided(e)}</span></td>
-    <td class="tnum">${pct(e.confidence,0)}</td><td class="${isOk(e)?'yes':'no'}">${isOk(e)?'Yes':'No'}</td><td><span class="pill">${e.category}</span></td></tr>`).join('')||'<tr><td colspan="7" style="color:var(--muted)">No questions in this category.</td></tr>'}
+  const rows = EVAL.EVALS.map((e,i)=>({...e,i})).filter(e=>catFilter==='All'||e.cat===catFilter);
+  return `<div class="filters" role="group" aria-label="Filter by category">${['All',...categories()].map(c=>`<button class="chip" data-cat="${esc(c)}" aria-pressed="${c===catFilter}">${esc(c)}</button>`).join('')}</div>
+  <div class="tbl-wrap"><table class="clickable"><thead><tr><th>Question</th><th>Expected behaviour</th><th>Agent decision</th><th>Model output</th><th>Confidence</th><th>Correct</th><th>Category</th></tr></thead><tbody>
+  ${rows.map(e=>`<tr tabindex="0" data-row="${e.i}"><td style="min-width:220px">${questionCell(e)}</td>
+    <td><span class="pill ${e.exp==='Answer'?'a':'p'}">${esc(e.exp)}</span></td>
+    <td><span class="pill ${e.dec==='Answered'?'a':'p'}">${esc(e.dec)}</span></td>
+    <td>${esc(option(e.out))}</td>
+    <td class="tnum">${e.conf}%</td><td class="${e.ok?'yes':'no'}">${e.ok?'Yes':'No'}</td><td><span class="pill">${esc(e.cat)}</span></td></tr>`).join('')||'<tr><td colspan="7" style="color:var(--muted)">No questions in this category.</td></tr>'}
   </tbody></table></div>`;
 }
 function Drawer(e){
   return `<button class="icon-btn" id="closeDrawer" aria-label="Close details"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  <h2>${esc(e.question)}</h2>
-  <span class="pill">${e.category}</span>
+  <h2>${hasText(e) ? esc(e.q) : `Item ${e.i+1}`}</h2>
+  <span class="pill">${esc(e.cat)}</span>
   <dl class="kv">
-    <dt>Candidate answer</dt><dd>${esc(e.answer)}</dd>
-    <dt>Expected</dt><dd>${expected(e)}</dd>
-    <dt>Agent decision</dt><dd>${decided(e)}</dd>
-    <dt>Confidence</dt><dd class="tnum">${pct(e.confidence)} <span style="color:var(--faint)">(threshold ${thrPct()}%)</span></dd>
-    <dt>Result</dt><dd class="${isOk(e)?'yes':'no'}">${isOk(e)?'Correct':'Incorrect'}</dd>
-    ${e.scenario?`<dt>Source</dt><dd>${esc(e.scenario)}</dd>`:''}
-    <dt>Item</dt><dd class="tnum">${esc(e.id)}</dd>
+    <dt>Expected</dt><dd>${esc(e.exp)}</dd>
+    <dt>Agent decision</dt><dd>${esc(e.dec)}</dd>
+    <dt>Confidence</dt><dd class="tnum">${e.conf}%</dd>
+    <dt>Result</dt><dd class="${e.ok?'yes':'no'}">${e.ok?'Correct':'Incorrect'}</dd>
   </dl>
-  <div class="callout"><b>KEV's probabilities</b>${['A','B','C'].map(k=>`${LABEL[k]}: ${pct(e.probs[k])}`).join(' · ')}</div>
-  <div class="callout"><b>Passage</b><div class="passage">${esc(e.passage)||'–'}</div></div>`;
+  <div class="callout"><b>Agent output</b>${esc(option(e.out))}</div>
+  <div class="callout"><b>Reference</b>${esc(option(e.ref))}</div>
+  <div class="callout"><b>Analysis</b>${esc(e.why)}</div>
+  ${hasText(e) ? '' : '<div class="callout"><b>Note</b>The question text for this item is not included in dashboard_data.json.</div>'}`;
 }
 
 /* ============================================================
@@ -642,18 +642,15 @@ async function renderDash(){
   }
   if(!EVAL.available){
     $('#view').innerHTML = DashNotice('No evaluation results yet',
-      `<p>The dashboard shows KEV's real results once a training run has been pulled from Modal and built:</p>
-      <pre>modal run skills/kev-finetune/scripts/kev_modal.py::pull --name &lt;run&gt;
-cd dashboard && python build_eval.py --run ../runs/&lt;run&gt;</pre>
-      <p>This writes <code>dashboard/data/eval.json</code>. See the dashboard README for details.</p>`);
+      `<p>Add the evaluation results as <code>dashboard/data/dashboard_data.json</code> and restart the app. See the dashboard README for the format.</p>`);
     return;
   }
-  const s = EVAL.summary, pts = accCov();
-  thrIdx = pts.reduce((best,p,i)=>Math.abs(p[0]-EVAL.threshold)<Math.abs(pts[best][0]-EVAL.threshold)?i:best,0);
+  const pts = accCov();
+  thrIdx = pts.reduce((best,p,i)=>Math.abs(p[0]-CFG.threshold)<Math.abs(pts[best][0]-CFG.threshold)?i:best,0);
   $('#view').innerHTML = `<div class="dash-scroll"><div class="dash">
-    <div class="dash-head"><div><h1>Agent Evaluation</h1><p>Measuring accuracy, uncertainty and abstention behaviour</p></div><span class="tag">KEV run ${esc(EVAL.run)} · ${s.n.toLocaleString()} development questions · threshold ${Math.round(EVAL.threshold*100)}%</span></div>
-    <div class="kpis">${kpis(s).map(MetricCard).join('')}</div>
-    <div class="minis">${minis(s).map(MiniMetric).join('')}</div>
+    <div class="dash-head"><div><h1>Agent Evaluation</h1><p>Measuring accuracy, uncertainty and abstention behaviour</p></div><span class="tag">${total().toLocaleString()} evaluated questions</span></div>
+    <div class="kpis">${EVAL.KPIS.map(MetricCard).join('')}</div>
+    <div class="minis">${EVAL.MINIS.map(MiniMetric).join('')}</div>
     <div class="grid-2">
       <section class="panel"><h2>Accuracy vs coverage</h2>
         <p class="desc">Raising the confidence threshold makes the agent answer fewer questions, and those answers become more reliable.</p>
@@ -662,16 +659,16 @@ cd dashboard && python build_eval.py --run ../runs/&lt;run&gt;</pre>
         <div class="readout" id="readout"></div>
       </section>
       <section class="panel"><h2>Confidence calibration</h2>
-        <p class="desc">When KEV says 80% sure, is it right about 80% of the time? Closer to the dashed line is better.</p>
+        <p class="desc">When the model says 80% sure, is it right about 80% of the time? Closer to the dashed line is better.</p>
         ${CalibrationChart()}
       </section>
     </div>
     <div class="grid-2" style="grid-template-columns:1fr 1fr">
-      <section class="panel"><h2>Decision matrix</h2><p class="desc">What the agent did against what it should have done.</p>${DecisionMatrix()}</section>
+      <section class="panel"><h2>Decision matrix</h2><p class="desc">What the agent did against what it should have done. An answer is the model’s top option, including “Not enough information”; the agent abstains when its confidence is below the threshold.</p>${DecisionMatrix()}</section>
       <section class="panel"><h2>Result distribution</h2><p class="desc">Every outcome, including abstentions the agent got wrong.</p>${ResultDistribution()}</section>
     </div>
-    <section class="panel" style="margin-top:12px"><h2>Model comparison</h2><p class="desc">The base model and the fine-tuned KEV, scored on the same development questions with the same answer rule.</p>${ModelTable()}</section>
-    <section class="panel" style="margin-top:12px"><h2>Evaluation examples</h2><p class="desc">Up to 25 questions per outcome, most confident first. Select a row to see the passage and KEV's probabilities.</p><div id="evalTbl">${EvaluationTable()}</div></section>
+    <section class="panel" style="margin-top:12px"><h2>Model comparison</h2><p class="desc">The baseline and the fine-tuned model, scored on the same questions.</p>${ModelTable()}</section>
+    <section class="panel" style="margin-top:12px"><h2>Evaluation examples</h2><p class="desc">Select a row to see why the agent decided as it did.</p><div id="evalTbl">${EvaluationTable()}</div></section>
   </div></div>`;
   updateThr();
   growBars($('#view'));
@@ -679,14 +676,14 @@ cd dashboard && python build_eval.py --run ../runs/&lt;run&gt;</pre>
 function updateThr(){
   const [t,c,a] = accCov()[thrIdx];
   $('#thrVal').textContent = t.toFixed(2);
-  $('#readout').innerHTML = `<span>Answers <b class="tnum">${c.toFixed(0)}%</b> of questions</span><span>At <b class="tnum">${a.toFixed(1)}%</b> accuracy</span><span style="color:var(--muted)">${t<.3?'Answers almost everything, so more mistakes.':t<.7?'Balanced: answers when reasonably sure.':'Very selective: abstains often, rarely wrong.'}</span>`;
+  $('#readout').innerHTML = `<span>Answers <b class="tnum">${c}%</b> of questions</span><span>At <b class="tnum">${a}%</b> accuracy</span><span style="color:var(--muted)">${t<.3?'Answers almost everything, so more mistakes.':t<.7?'Balanced: answers when reasonably sure.':'Very selective: abstains often, rarely wrong.'}</span>`;
 }
 
 function route(){
   document.body.classList.remove('menu-open');
   const dash = location.hash.startsWith('#/dashboard');
   $('#sidebar').innerHTML = Sidebar(dash?'dash':'agent');
-  $('#topTitle').textContent = dash?'Agent Evaluation':'Candor';
+  $('#topTitle').textContent = dash?'Agent Evaluation':'OxRiders';
   if(dash) renderDash(); else renderAgent();
 }
 
@@ -700,7 +697,7 @@ document.addEventListener('click', e=>{
   else if(q('#scrim')) document.body.classList.remove('menu-open');
   else if(q('#newConv')){ active=null; if(location.hash.startsWith('#/dashboard')) location.hash='#/'; else route(); }
   else if(q('[data-conv]')){ active=+q('[data-conv]').dataset.conv; if(location.hash.startsWith('#/dashboard')) location.hash='#/'; else route(); }
-  else if(q('[data-ex]')){ const ex=CFG.examples[+q('[data-ex]').dataset.ex]; draftPassage=ex.passage; send({passage:ex.passage,question:ex.question,answer:ex.answer}); }
+  else if(q('[data-ex]')){ const ex=CFG.examples[+q('[data-ex]').dataset.ex]; draftPassage=ex.passage; send({passage:ex.passage,question:ex.question,answer:ex.answer,example:+q('[data-ex]').dataset.ex}); }
   else if(q('#send')){ const v=inputValues(); $('#question').value=''; $('#answer').value=''; send(v); }
   else if(q('[data-fb]')){
     const wrap=q('.fb'), idx=+wrap.dataset.idx, m=conv().msgs[idx];
@@ -725,7 +722,7 @@ document.addEventListener('input', e=>{
   if(e.target.id==='thr'){ thrIdx=+e.target.value; updateThr(); $('#acChart').innerHTML=AccuracyCoverageChart(); }
 });
 let lastFocus=null;
-function openDrawer(i){ lastFocus=document.activeElement; $('#drawer').innerHTML=Drawer(EVAL.examples[i]); document.body.classList.add('drawer-open'); setTimeout(()=>$('#closeDrawer').focus(),50); }
+function openDrawer(i){ lastFocus=document.activeElement; $('#drawer').innerHTML=Drawer({...EVAL.EVALS[i], i}); document.body.classList.add('drawer-open'); setTimeout(()=>$('#closeDrawer').focus(),50); }
 function closeDrawer(){ if(!document.body.classList.contains('drawer-open')) return; document.body.classList.remove('drawer-open'); lastFocus&&lastFocus.focus&&lastFocus.focus(); }
 window.addEventListener('hashchange', route);
 

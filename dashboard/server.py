@@ -1,12 +1,12 @@
-"""Candor backend: serves the page (web/index.html) and the API it calls.
+"""OxRiders backend: serves the page (web/index.html), its images (web/assets) and the API it calls.
 
-  POST /api/agent     passage + question + candidate answer -> KEV decision (answer or "I don't know")
+  POST /api/agent     passage + question + candidate answer -> model decision (answer or "I don't know")
   GET  /api/config    threshold and starter examples
-  GET  /api/eval      evaluation data built by build_eval.py (data/eval.json)
+  GET  /api/eval      evaluation results for the dashboard (data/dashboard_data.json)
   POST /api/feedback  thumbs up/down on an agent response (appended to a JSONL file)
 
-Settings (environment or .env): KEV_MODEL_URL, DASHBOARD_PASSWORD (optional login),
-FEEDBACK_FILE (default feedback/feedback.jsonl), CANDOR_THRESHOLD (default 0.6).
+Settings (environment or .env): MODEL_URL, DASHBOARD_PASSWORD (optional login),
+FEEDBACK_FILE (default feedback/feedback.jsonl), OXRIDERS_THRESHOLD (default 0.6).
 
 Run locally:  uvicorn server:app --reload
 """
@@ -14,6 +14,7 @@ import hashlib
 import hmac
 import json
 import os
+import re
 import threading
 from datetime import datetime, timezone
 from pathlib import Path
@@ -22,7 +23,8 @@ from urllib.parse import parse_qs
 import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse, Response
+from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from decision import CRITERIA, FALSE, IDK, THRESHOLD, TRUE, build_request, decide
@@ -30,22 +32,24 @@ from decision import CRITERIA, FALSE, IDK, THRESHOLD, TRUE, build_request, decid
 load_dotenv()
 
 HERE = Path(__file__).resolve().parent
-KEV_MODEL_URL = os.getenv("KEV_MODEL_URL", "").strip()
+# MODEL_URL replaces the older name KEV_MODEL_URL, which existing secrets may still use.
+MODEL_URL = (os.getenv("MODEL_URL") or os.getenv("KEV_MODEL_URL", "")).strip()
 PASSWORD = os.getenv("DASHBOARD_PASSWORD", "")
 FEEDBACK_FILE = Path(os.getenv("FEEDBACK_FILE", HERE / "feedback" / "feedback.jsonl"))
-FEEDBACK_VOLUME = os.getenv("CANDOR_FEEDBACK_VOLUME", "")  # set by modal_dashboard.py
-EVAL_FILE = HERE / "data" / "eval.json"
-EXAMPLES_FILE = HERE / "data" / "examples.json"
-COOKIE = "candor_auth"
+FEEDBACK_VOLUME = os.getenv("OXRIDERS_FEEDBACK_VOLUME", "")  # set by modal_dashboard.py
+EVAL_FILE = HERE / "data" / "dashboard_data.json"
+EXAMPLES_FILE = HERE / "data" / "examples.jsonl"
+COOKIE = "oxriders_auth"
 
-app = FastAPI(title="Candor", docs_url=None, redoc_url=None)
+app = FastAPI(title="OxRiders", docs_url=None, redoc_url=None)
+app.mount("/assets", StaticFiles(directory=HERE / "web" / "assets"), name="assets")
 _feedback_lock = threading.Lock()
 
 
 # ---------- login ----------
 
 def _token():
-    return hmac.new(PASSWORD.encode(), b"candor-session", hashlib.sha256).hexdigest()
+    return hmac.new(PASSWORD.encode(), b"oxriders-session", hashlib.sha256).hexdigest()
 
 
 def _authorized(request):
@@ -54,7 +58,8 @@ def _authorized(request):
 
 @app.middleware("http")
 async def require_login(request: Request, call_next):
-    if request.url.path in ("/login", "/healthz", "/favicon.ico") or _authorized(request):
+    path = request.url.path
+    if path in ("/login", "/healthz", "/favicon.ico") or path.startswith("/assets/") or _authorized(request):
         return await call_next(request)
     if request.url.path.startswith("/api/"):
         return JSONResponse({"detail": "Not logged in"}, status_code=401)
@@ -62,7 +67,7 @@ async def require_login(request: Request, call_next):
 
 
 LOGIN_PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1"><title>Candor – Log in</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>OxRiders – Log in</title><link rel="icon" type="image/png" href="/assets/favicon.png">
 <style>
 :root{--bg:#F4F5F8;--surface:#fff;--ink:#161A22;--muted:#5C6575;--line:#CDD2DB;--accent:#2447D6;--bad:#B4402F}
 @media (prefers-color-scheme: dark){:root{--bg:#0E1117;--surface:#161B23;--ink:#E9ECF2;--muted:#9AA3B2;--line:#364050;--accent:#7F96FF;--bad:#F08472}}
@@ -72,8 +77,10 @@ h1{margin:0 0 4px;font-size:24px}p{margin:0;color:var(--muted)}
 input{font:inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:transparent;color:inherit}
 button{font:inherit;font-weight:600;padding:10px;border:0;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer}
 .err{color:var(--bad)}
+.logo{display:block;margin:0 auto 4px;width:200px;height:200px;border-radius:16px}
 </style></head><body><form method="post" action="/login">
-<h1>Candor</h1><p>Enter the password to continue.</p>
+<img src="/assets/logo.jpg" alt="OxRiders" width="200" height="200" class="logo">
+<p>Enter the password to continue.</p>
 <input type="password" name="password" aria-label="Password" autofocus required>
 <button type="submit">Log in</button>__ERROR__</form></body></html>"""
 
@@ -103,7 +110,7 @@ def index():
 
 @app.get("/favicon.ico")
 def favicon():
-    return Response(status_code=204)
+    return FileResponse(HERE / "web" / "assets" / "favicon.png", media_type="image/png")
 
 
 @app.get("/healthz")
@@ -111,10 +118,41 @@ def healthz():
     return {"ok": True}
 
 
+QUESTION_RE = re.compile(r'Question:\s*(.*?)\s*\nIs "(.*)"', re.S)
+
+
+def load_examples(path):
+    """Starter questions: model records (one per line, the training-data format) plus their display text."""
+    if not path.exists():
+        return []
+    examples = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        record = json.loads(line)
+        q = record["questions"]["question"]
+        header, _, passage = record["state"].partition("Context:")
+        first = header.split("\n", 1)[0]
+        m = QUESTION_RE.search(q["instructions"])
+        examples.append({
+            "label": first.split("scenario:", 1)[1].strip() if "scenario:" in first else "Example",
+            "passage": passage.strip(),
+            "question": m.group(1) if m else q["instructions"],
+            "answer": m.group(2) if m else "",
+            # sent to the model unchanged when the example is clicked
+            "request": {"state": record["state"], "instructions": q["instructions"],
+                        "criteria": q.get("criteria", CRITERIA)},
+        })
+    return examples
+
+
+EXAMPLES = load_examples(EXAMPLES_FILE)
+
+
 @app.get("/api/config")
 def config():
-    examples = json.loads(EXAMPLES_FILE.read_text()) if EXAMPLES_FILE.exists() else []
-    return {"threshold": THRESHOLD, "kev_configured": bool(KEV_MODEL_URL), "examples": examples}
+    shown = [{k: e[k] for k in ("label", "passage", "question", "answer")} for e in EXAMPLES]
+    return {"threshold": THRESHOLD, "model_configured": bool(MODEL_URL), "examples": shown}
 
 
 # ---------- agent ----------
@@ -123,6 +161,7 @@ class AgentRequest(BaseModel):
     passage: str = Field(default="", max_length=20000)
     question: str = Field(min_length=1, max_length=2000)
     answer: str = Field(min_length=1, max_length=500)
+    example: int | None = None  # index of a starter example: send its original record
 
 
 def _pct(p):
@@ -130,7 +169,7 @@ def _pct(p):
 
 
 def explain(probs, threshold=THRESHOLD):
-    """Turn KEV's probabilities into the response card the page renders."""
+    """Turn the model's probabilities into the response card the page renders."""
     choice, confidence = decide(probs[TRUE], probs[FALSE], threshold)
     top = max(probs, key=probs.get)
     options = [{"key": k, "label": CRITERIA[k], "p": probs[k]} for k in (TRUE, FALSE, IDK)]
@@ -138,7 +177,7 @@ def explain(probs, threshold=THRESHOLD):
         text = ("True. The passage supports this answer." if choice == TRUE
                 else "False. The passage does not support this answer.")
         factors = [
-            {"ok": True, "t": f"KEV judged the answer {CRITERIA[choice].lower()} with {_pct(confidence)} probability"},
+            {"ok": True, "t": f"The model judged the answer {CRITERIA[choice].lower()} with {_pct(confidence)} probability"},
             {"ok": True, "t": f"Above the {_pct(threshold)} answer threshold"},
             {"ok": True, "t": f"Chance the passage lacks the information: {_pct(probs[IDK])}"},
         ]
@@ -146,9 +185,9 @@ def explain(probs, threshold=THRESHOLD):
                 "text": text, "reason": None, "options": options, "factors": factors}
 
     if top == IDK:
-        reason = "KEV judged that the passage does not contain enough information to verify this answer."
+        reason = "The model judged that the passage does not contain enough information to verify this answer."
     else:
-        reason = (f"KEV leaned {CRITERIA[top]} ({_pct(confidence)}), "
+        reason = (f"The model leaned {CRITERIA[top]} ({_pct(confidence)}), "
                   f"but that is below the {_pct(threshold)} answer threshold.")
     factors = [
         {"ok": False, "t": f"Best answer ({CRITERIA[TRUE if probs[TRUE] >= probs[FALSE] else FALSE]}) "
@@ -162,16 +201,20 @@ def explain(probs, threshold=THRESHOLD):
 
 @app.post("/api/agent")
 def agent(req: AgentRequest):
-    if not KEV_MODEL_URL:
-        raise HTTPException(503, "KEV_MODEL_URL is not set")
+    if not MODEL_URL:
+        raise HTTPException(503, "MODEL_URL is not set")
     try:
-        r = requests.post(KEV_MODEL_URL, json=build_request(req.passage, req.question, req.answer), timeout=300)
+        if req.example is not None and 0 <= req.example < len(EXAMPLES):
+            payload = EXAMPLES[req.example]["request"]
+        else:
+            payload = build_request(req.passage, req.question, req.answer)
+        r = requests.post(MODEL_URL, json=payload, timeout=300)
         r.raise_for_status()
         data = r.json()
     except requests.RequestException as e:
-        raise HTTPException(502, f"Could not reach the KEV model: {e}")
+        raise HTTPException(502, f"Could not reach the model: {e}")
     if "error" in data or "probabilities" not in data:
-        raise HTTPException(502, f"KEV returned an error: {data.get('error', 'no probabilities')}")
+        raise HTTPException(502, f"The model returned an error: {data.get('error', 'no probabilities')}")
     probs = {k: float(data["probabilities"].get(k, 0.0)) for k in (TRUE, FALSE, IDK)}
     return explain(probs)
 
