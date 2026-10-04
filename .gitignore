@@ -14,3 +14,8 @@ TableQA/
 eval/config.yaml
 # Local backups made before filtering
 _backup_*/
+# Local working folders; the published copies live in data/
+hle-natural-science-200/
+hle-unanswerable-200/
+lab-bench-text/
+hle-science-184.zip
