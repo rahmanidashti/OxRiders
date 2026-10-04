@@ -21,7 +21,7 @@ import pyarrow.parquet as pq
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 IDK = "I don't know"
-CSVP = os.path.join(ROOT, "sciq-adversarial-manual.csv")
+CSVP = os.path.join(ROOT, "sciq-adversarial_claude.csv")
 
 EDITS = {
     30: ("category_error", "In which musical octave do angiosperms produce seeds in flowers?"),
