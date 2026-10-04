@@ -3,3 +3,4 @@ openai>=1.40
 pandas>=2.0
 plotly>=5.20
 python-dotenv>=1.0
+requests>=2.31

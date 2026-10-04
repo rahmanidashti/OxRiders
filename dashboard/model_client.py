@@ -1,12 +1,18 @@
-"""Talks to the model. Uses a fake demo model until MODEL_BASE_URL is set."""
+"""Talks to the models.
+
+Chat: OpenAI-compatible model at MODEL_BASE_URL (fake demo model until it is set).
+Verify: multiple-choice predictor at KEV_MODEL_URL.
+"""
 import os
 import time
 from typing import Iterator
 
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
+KEV_MODEL_URL = os.getenv("KEV_MODEL_URL", "").strip()
 MODEL_BASE_URL = os.getenv("MODEL_BASE_URL", "").strip()
 MODEL_API_KEY = os.getenv("MODEL_API_KEY", "not-needed")
 MODEL_NAMES = {
@@ -49,3 +55,20 @@ def stream_reply(messages: list[dict], model_label: str, temperature: float = 0.
     for chunk in stream:
         if chunk.choices and chunk.choices[0].delta.content:
             yield chunk.choices[0].delta.content
+
+
+def predict(state: str, instructions: str, criteria: dict[str, str]) -> dict:
+    """Ask the KEV model to pick one of `criteria` (e.g. {"A": "True", "B": "False"}).
+
+    Returns the endpoint's JSON: prediction, label_meaning, confidence, probabilities, ...
+    The first call after the model has been idle can take about a minute while it starts.
+    """
+    if not KEV_MODEL_URL:
+        raise RuntimeError("KEV_MODEL_URL is not set in .env")
+    response = requests.post(
+        KEV_MODEL_URL,
+        json={"state": state, "instructions": instructions, "criteria": criteria},
+        timeout=300,
+    )
+    response.raise_for_status()
+    return response.json()

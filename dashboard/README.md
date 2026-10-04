@@ -66,16 +66,50 @@ The blue "Demo mode" box is gone, and the chat now uses your model on Modal.
 Costs: Modal only charges while the model is running. It shuts down by itself after 15 minutes without use.
 The first message after that takes 1-3 minutes while it starts again.
 
-## 4. Show your real training results
+## 4. Connect the Verify page (multiple-choice model)
+The **Verify** page sends a finding (`state`), a question (`instructions`) and answer options (`criteria`)
+to a model that picks one option and returns its probabilities. Put the model's address in `.env`:
+```
+KEV_MODEL_URL=https://ili3p-ox3--kev-serving-kevmodel-predict.modal.run
+```
+Restart the app. The first request after the model has been idle takes about a minute while it starts.
+
+## 5. Show your real training results
 - **Loss curves**: add `DashboardLogger` from `metrics/hf_callback.py` to your trainer. It writes `metrics/training_log.json`.
 - **Before/after scores**: edit `metrics/eval_results.json` with your own numbers and example answers.
+
+## 6. Put the app online (reachable from anywhere)
+The app itself can also run on Modal, behind a password.
+
+1. In `.env`, choose a password:
+   ```
+   DASHBOARD_PASSWORD=pick-a-strong-password
+   ```
+   (With a password set, the app asks for it locally too. Leave it empty to skip the login screen.)
+2. Copy your `.env` settings into a Modal secret called `dashboard-secrets`:
+   ```bash
+   modal secret create dashboard-secrets --from-dotenv .env
+   ```
+   If you change `.env` later, run the same command with `--force` added, then deploy again.
+3. Deploy:
+   ```bash
+   modal deploy modal_dashboard.py
+   ```
+   It prints an address like `https://YOURNAME--my-llm-dashboard-dashboard.modal.run`. Open it and log in.
+
+Your `.env` file is never uploaded; the app reads its settings from the Modal secret.
+The app runs on a cheap CPU machine and shuts down after 15 minutes without visitors.
+The first visit after that takes a few seconds while it starts.
 
 ## Files
 | File | What it does |
 |---|---|
 | `app.py` | Starts the app and the page menu |
+| `auth.py` | Password screen (when `DASHBOARD_PASSWORD` is set) |
 | `pages/chat.py` | Chat page |
+| `pages/verify.py` | Verify page (multiple-choice model) |
 | `pages/dashboard.py` | Dashboard page |
 | `model_client.py` | Connects to the model (or the demo model) |
 | `modal_app.py` | Runs your model on Modal |
+| `modal_dashboard.py` | Runs this app on Modal (section 6) |
 | `metrics/` | Training and evaluation data shown in the dashboard |
