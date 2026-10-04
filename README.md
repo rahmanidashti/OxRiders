@@ -182,7 +182,8 @@ uv run --with sentence-transformers --with umap-learn python viz/dataset_umap/bu
 - Kexin Xu
 - Hossein A. Rahmani
 - Yuzhu Chen
-- rdom0260
+- Leila 
+- Ili
 
 <!-- TODO: add affiliations, roles and links for each team member. -->
 

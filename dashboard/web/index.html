@@ -87,7 +87,7 @@ h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-0.02em;line-he
 .ex{text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;transition:border-color .15s,transform .15s;display:flex;flex-direction:column;gap:6px}
 .ex:hover{border-color:var(--accent-line)}
 .ex small{color:var(--faint);font-size:12.5px}
-.ex span{font-weight:500;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.ex span{font-weight:500;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
 .msg-user{display:flex;justify-content:flex-end;margin:22px 0 14px}
 .msg-user div{background:var(--accent);color:var(--accent-ink);padding:10px 16px;border-radius:18px 18px 4px 18px;max-width:84%;overflow-wrap:anywhere}
 .msg-agent{margin:6px 0 26px}
@@ -364,12 +364,6 @@ function OptionsPanel(res){
       <small>${o.key==='C'?'The passage lacks the information to decide':o.key==='A'?'The candidate answer is correct':'The candidate answer is wrong'}</small></div>`).join('')}</div></div>`;
 }
 
-function Factors(res){
-  return `<div class="sec"><h3>${res.kind==='answer'?'Why the agent answered':'Why the agent abstained'}</h3>
-    ${res.reason?`<div class="reason" style="margin-bottom:12px">${esc(res.reason)}</div>`:''}
-    <ul class="factors">${res.factors.map(f=>`<li>${f.ok?I.yes:I.no}<span>${esc(f.t)}</span></li>`).join('')}</ul></div>`;
-}
-
 function FeedbackButtons(m, idx){
   const isA = m.res.kind==='answer';
   const pressed = v => m.fb && m.fb.v===v ? 'true':'false';
@@ -390,8 +384,8 @@ function FeedbackButtons(m, idx){
 function ChatMessage(m, idx, fresh){
   if(m.role==='user'){
     const q = m.input;
-    return `<div class="msg-user ${fresh?'fresh':''}"><div>${esc(q.question)}
-    </div></div>`;
+    const text = q.answer ? `${q.question} Is "${q.answer}" the correct answer to this question?` : q.question;
+    return `<div class="msg-user ${fresh?'fresh':''}"><div>${esc(text)}</div></div>`;
   }
   if(m.error) return `<div class="msg-agent ${fresh?'fresh':''}"><div class="card error"><p>⚠️ ${esc(m.error)}</p></div></div>`;
   const r = m.res;
@@ -400,7 +394,6 @@ function ChatMessage(m, idx, fresh){
     <p class="resp-text">${esc(r.text)}</p>
     ${ConfidenceIndicator(r)}
     ${OptionsPanel(r)}
-    ${Factors(r)}
     ${FeedbackButtons(m, idx)}
   </div></div>`;
 }
@@ -451,7 +444,8 @@ function inputValues(){
 function updateSend(){ const v=inputValues(); $('#send').disabled = !v.question || !v.answer || busy; }
 
 async function send(input){
-  if(!input.question || !input.answer || busy) return;
+  // a starter example only carries its index; the server holds its passage and answer
+  if(!input.question || (input.example == null && !input.answer) || busy) return;
   if(!conv()){ const c={id:nextId++,title:'',msgs:[]}; convs.push(c); active=c.id; }
   const c = conv();
   if(!c.msgs.length) c.title = input.question.length>38 ? input.question.slice(0,38)+'…' : input.question;

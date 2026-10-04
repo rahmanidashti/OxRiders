@@ -139,10 +139,12 @@ def load_examples(path):
         header, _, passage = record["state"].partition("Context:")
         first = header.split("\n", 1)[0]
         m = QUESTION_RE.search(q["instructions"])
+        # shown on the card: the question as the model reads it, candidate answer at the end
+        shown = re.sub(r"^\s*Question:\s*", "", q["instructions"]).replace("\n", " ").strip()
         examples.append({
             "label": first.split("scenario:", 1)[1].strip() if "scenario:" in first else "Example",
             "passage": passage.strip(),
-            "question": m.group(1) if m else q["instructions"],
+            "question": shown,
             "answer": m.group(2) if m else "",
             # sent to the model unchanged when the example is clicked
             "request": {"state": record["state"], "instructions": q["instructions"],
