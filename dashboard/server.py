@@ -3,10 +3,12 @@
   POST /api/agent     passage + question + candidate answer -> model decision (answer or "I don't know")
   GET  /api/config    threshold and starter examples
   GET  /api/eval      evaluation results for the dashboard (data/dashboard_data.json)
+  GET  /umap/...      dataset map: chart script and points from viz/dataset_umap
   POST /api/feedback  thumbs up/down on an agent response (appended to a JSONL file)
 
 Settings (environment or .env): MODEL_URL, DASHBOARD_PASSWORD (optional login),
-FEEDBACK_FILE (default feedback/feedback.jsonl), OXRIDERS_THRESHOLD (default 0.6).
+FEEDBACK_FILE (default feedback/feedback.jsonl), OXRIDERS_THRESHOLD (default 0.6),
+UMAP_DIR (default ../viz/dataset_umap).
 
 Run locally:  uvicorn server:app --reload
 """
@@ -23,6 +25,7 @@ from urllib.parse import parse_qs
 import requests
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, Request
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -39,10 +42,12 @@ FEEDBACK_FILE = Path(os.getenv("FEEDBACK_FILE", HERE / "feedback" / "feedback.js
 FEEDBACK_VOLUME = os.getenv("OXRIDERS_FEEDBACK_VOLUME", "")  # set by modal_dashboard.py
 EVAL_FILE = HERE / "data" / "dashboard_data.json"
 EXAMPLES_FILE = HERE / "data" / "examples.jsonl"
+UMAP_DIR = Path(os.getenv("UMAP_DIR", HERE.parent / "viz" / "dataset_umap"))
 COOKIE = "oxriders_auth"
 
 app = FastAPI(title="OxRiders", docs_url=None, redoc_url=None)
 app.mount("/assets", StaticFiles(directory=HERE / "web" / "assets"), name="assets")
+app.add_middleware(GZipMiddleware, minimum_size=1024)  # the dataset map points are ~3 MB of JSON
 _feedback_lock = threading.Lock()
 
 
@@ -151,7 +156,7 @@ EXAMPLES = load_examples(EXAMPLES_FILE)
 
 @app.get("/api/config")
 def config():
-    shown = [{k: e[k] for k in ("label", "passage", "question", "answer")} for e in EXAMPLES]
+    shown = [{k: e[k] for k in ("label", "question")} for e in EXAMPLES]  # passage and answer stay on the server
     return {"threshold": THRESHOLD, "model_configured": bool(MODEL_URL), "examples": shown}
 
 
@@ -160,7 +165,7 @@ def config():
 class AgentRequest(BaseModel):
     passage: str = Field(default="", max_length=20000)
     question: str = Field(min_length=1, max_length=2000)
-    answer: str = Field(min_length=1, max_length=500)
+    answer: str = Field(default="", max_length=500)  # required unless `example` is given
     example: int | None = None  # index of a starter example: send its original record
 
 
@@ -206,8 +211,10 @@ def agent(req: AgentRequest):
     try:
         if req.example is not None and 0 <= req.example < len(EXAMPLES):
             payload = EXAMPLES[req.example]["request"]
-        else:
+        elif req.answer.strip():
             payload = build_request(req.passage, req.question, req.answer)
+        else:
+            raise HTTPException(422, "A candidate answer is required")
         r = requests.post(MODEL_URL, json=payload, timeout=300)
         r.raise_for_status()
         data = r.json()
@@ -228,12 +235,32 @@ def evaluation():
     return {"available": True, **json.loads(EVAL_FILE.read_text())}
 
 
+# ---------- dataset map ----------
+
+def _umap_file(name, media_type):
+    path = UMAP_DIR / name
+    if not path.is_file():
+        raise HTTPException(404, f"Dataset map file not found: {name}")
+    return FileResponse(path, media_type=media_type)
+
+
+@app.get("/umap/umap-scatter.js")
+def umap_script():
+    return _umap_file("umap-scatter.js", "text/javascript")
+
+
+@app.get("/umap/points.json")
+def umap_points():
+    return _umap_file("points.json", "application/json")
+
+
 # ---------- feedback ----------
 
 class Feedback(BaseModel):
     passage: str = Field(default="", max_length=20000)
     question: str = Field(max_length=2000)
-    answer: str = Field(max_length=500)
+    answer: str = Field(default="", max_length=500)
+    example: int | None = None  # starter example the feedback is about, if any
     decision: str = Field(max_length=40)
     confidence: float
     feedback: str = Field(pattern="^(correct|incorrect|should-yes|should-no)$")

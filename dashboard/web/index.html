@@ -250,6 +250,10 @@ body.drawer-open .drawer-scrim{opacity:1;pointer-events:auto}
 .notice h2{color:var(--ink);font-size:19px;margin-bottom:6px}
 .notice code{background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:1px 6px;font-size:13px}
 .notice pre{background:var(--surface-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;overflow-x:auto;font-size:13px;color:var(--ink)}
+/* dataset map: the chart (viz/dataset_umap/umap-scatter.js) uses the dashboard's colors */
+#umapChart .uq-root,#umapChart .uq-root[data-uq-theme="dark"]{--surface-1:var(--surface);--surface-2:var(--surface-2);--text-primary:var(--ink);--text-secondary:var(--muted);--text-muted:var(--faint);--hairline:var(--line);font-family:var(--font-body)}
+#umapChart .uq-main{border-radius:12px}
+#umapChart .uq-controls input{width:min(240px,100%)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -291,6 +295,7 @@ const thrPct = () => Math.round(CFG.threshold * 100);
 const I = {
   plus:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>',
   chat:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 01-11.6 7.1L4 20l1-4.6A8 8 0 1121 12z"/></svg>',
+  map:'<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="6" cy="8" r="2"/><circle cx="11" cy="15" r="2"/><circle cx="17" cy="7" r="2"/><circle cx="18" cy="16" r="2"/><circle cx="8" cy="19" r="1.5"/><circle cx="13" cy="5" r="1.5"/></svg>',
   chart:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>',
   send:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
   check:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
@@ -325,6 +330,7 @@ function Sidebar(route){
   <nav class="nav" aria-label="Main">
     <a href="#/" ${route==='agent'?'aria-current="page"':''}>${I.chat} Agent</a>
     <a href="#/dashboard" ${route==='dash'?'aria-current="page"':''}>${I.chart} Dashboard</a>
+    <a href="#/umap" ${route==='umap'?'aria-current="page"':''}>${I.map} Dataset map</a>
   </nav>
   <div class="hist-title">Recent</div>
   <div class="hist" id="hist">
@@ -385,8 +391,6 @@ function ChatMessage(m, idx, fresh){
   if(m.role==='user'){
     const q = m.input;
     return `<div class="msg-user ${fresh?'fresh':''}"><div>${esc(q.question)}
-      <span class="meta">Candidate answer: ${esc(q.answer)}</span>
-      ${q.passage?`<span class="meta">Passage: ${esc(q.passage.length>160?q.passage.slice(0,160)+'…':q.passage)}</span>`:'<span class="meta">No passage given</span>'}
     </div></div>`;
   }
   if(m.error) return `<div class="msg-agent ${fresh?'fresh':''}"><div class="card error"><p>⚠️ ${esc(m.error)}</p></div></div>`;
@@ -432,7 +436,7 @@ function renderAgent(){
           <img class="hero-logo" src="/assets/logo-mark.png" alt="OxRiders logo: an ox riding an AI robot that says IDK" width="104" height="104">
           <h1>Ask the Agent</h1>
           <p>Give a passage, a question and a candidate answer. The model says whether the answer is right, or “I don’t know” when the passage can’t settle it.</p>
-          <div class="examples">${CFG.examples.map((e,i)=>`<button class="ex" data-ex="${i}"><small>${esc(e.label)}</small><span>${esc(e.question)}</span><small>Candidate: ${esc(e.answer)}</small></button>`).join('')}</div>
+          <div class="examples">${CFG.examples.map((e,i)=>`<button class="ex" data-ex="${i}"><small>${esc(e.label)}</small><span>${esc(e.question)}</span></button>`).join('')}</div>
         </div>` : `<div id="msgs">${c.msgs.map((m,i)=>ChatMessage(m,i,false)).join('')}</div>`}
       <div id="pending"></div>
     </div></div>${ChatInput()}`;
@@ -465,7 +469,7 @@ async function send(input){
   catch(err){ msg = {role:'agent',input,error:err.message}; }
   clearInterval(timer); busy=false;
   c.msgs.push(msg);
-  if(conv()!==c || location.hash.includes('dashboard')) return;
+  if(conv()!==c || !onAgentPage()) return;
   pending.innerHTML='';
   $('#msgs').insertAdjacentHTML('beforeend', ChatMessage(msg, c.msgs.length-1, true));
   growBars($('#msgs'));
@@ -679,12 +683,38 @@ function updateThr(){
   $('#readout').innerHTML = `<span>Answers <b class="tnum">${c}%</b> of questions</span><span>At <b class="tnum">${a}%</b> accuracy</span><span style="color:var(--muted)">${t<.3?'Answers almost everything, so more mistakes.':t<.7?'Balanced: answers when reasonably sure.':'Very selective: abstains often, rarely wrong.'}</span>`;
 }
 
+/* ============================================================
+   DATASET MAP VIEW (viz/dataset_umap, served under /umap/)
+   ============================================================ */
+let UMAP = null, umapModule = null, umapChart = null;
+
+async function renderUmap(){
+  $('#view').innerHTML = `<div class="dash-scroll"><div class="dash">
+    <div class="dash-head"><div><h1>Dataset map</h1><p id="umapSub">Loading the question embeddings…</p></div><span class="tag" id="umapTag" hidden></span></div>
+    <section class="panel" style="margin-top:26px"><div id="umapChart"></div></section>
+  </div></div>`;
+  try {
+    [umapModule, UMAP] = await Promise.all([umapModule || import('/umap/umap-scatter.js'), UMAP || api('/umap/points.json')]);
+  } catch(err){ $('#umapSub').textContent = 'Could not load the dataset map: ' + err.message; return; }
+  if(!location.hash.startsWith('#/umap') || umapChart) return;
+  const m = UMAP.meta;
+  $('#umapSub').textContent = `Every training question, embedded with ${m.model} and projected to 2D with UMAP `
+    + `(n_neighbors=${m.umap.n_neighbors}, min_dist=${m.umap.min_dist}, ${m.umap.metric}). Similar questions sit close together. `
+    + `Hover a point to read the question; click a legend item or panel to isolate a category.`;
+  const tag = $('#umapTag'); tag.textContent = `${m.n_points.toLocaleString()} questions · ${m.inputs.join(', ')}`; tag.hidden = false;
+  umapChart = umapModule.createUmapScatter($('#umapChart'), UMAP, {
+    colorBy: 'domain', height: Math.max(420, Math.min(680, window.innerHeight - 300)) });
+}
+
+const onAgentPage = () => !/^#\/(dashboard|umap)/.test(location.hash);
+
 function route(){
   document.body.classList.remove('menu-open');
-  const dash = location.hash.startsWith('#/dashboard');
-  $('#sidebar').innerHTML = Sidebar(dash?'dash':'agent');
-  $('#topTitle').textContent = dash?'Agent Evaluation':'OxRiders';
-  if(dash) renderDash(); else renderAgent();
+  if(umapChart){ umapChart.destroy(); umapChart = null; }
+  const page = location.hash.startsWith('#/dashboard') ? 'dash' : location.hash.startsWith('#/umap') ? 'umap' : 'agent';
+  $('#sidebar').innerHTML = Sidebar(page);
+  $('#topTitle').textContent = {dash:'Agent Evaluation', umap:'Dataset map', agent:'OxRiders'}[page];
+  if(page==='dash') renderDash(); else if(page==='umap') renderUmap(); else renderAgent();
 }
 
 /* ============================================================
@@ -695,9 +725,9 @@ document.addEventListener('click', e=>{
   const q = (s)=>t.closest(s);
   if(q('#menuBtn')) document.body.classList.add('menu-open');
   else if(q('#scrim')) document.body.classList.remove('menu-open');
-  else if(q('#newConv')){ active=null; if(location.hash.startsWith('#/dashboard')) location.hash='#/'; else route(); }
-  else if(q('[data-conv]')){ active=+q('[data-conv]').dataset.conv; if(location.hash.startsWith('#/dashboard')) location.hash='#/'; else route(); }
-  else if(q('[data-ex]')){ const ex=CFG.examples[+q('[data-ex]').dataset.ex]; draftPassage=ex.passage; send({passage:ex.passage,question:ex.question,answer:ex.answer,example:+q('[data-ex]').dataset.ex}); }
+  else if(q('#newConv')){ active=null; if(!onAgentPage()) location.hash='#/'; else route(); }
+  else if(q('[data-conv]')){ active=+q('[data-conv]').dataset.conv; if(!onAgentPage()) location.hash='#/'; else route(); }
+  else if(q('[data-ex]')){ const i=+q('[data-ex]').dataset.ex; send({question:CFG.examples[i].question, example:i}); }
   else if(q('#send')){ const v=inputValues(); $('#question').value=''; $('#answer').value=''; send(v); }
   else if(q('[data-fb]')){
     const wrap=q('.fb'), idx=+wrap.dataset.idx, m=conv().msgs[idx];

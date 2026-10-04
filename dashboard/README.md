@@ -5,6 +5,8 @@ A web app with two pages:
   right, or "I don't know" when the passage can't settle it.
 - **Dashboard**: the model's evaluation results from `data/dashboard_data.json`: accuracy, abstention, calibration,
   accuracy vs coverage, baseline vs fine-tuned, and example questions.
+- **Dataset map**: every training question as a point on a UMAP of its embedding, coloured by domain or source
+  dataset, with search, zoom and hover to read the question. It comes from `viz/dataset_umap/`.
 
 ## 1. Run it on your computer
 Install Python 3.10 or newer, then in this folder:
@@ -40,6 +42,10 @@ Both live in `data/`:
 
 Replace either file and restart the app (or redeploy, section 4) to update the page.
 
+The **Dataset map** page reads `umap-scatter.js` and `points.json` straight from `../viz/dataset_umap/`
+(no copies here; `UMAP_DIR` overrides the folder). Rebuild them with that folder's `build_question_umap.py`,
+then restart or redeploy. The deploy uploads that folder alongside the dashboard.
+
 ## 4. Put it online (Modal)
 The app runs on Modal behind the password, at `https://<workspace>--my-llm-dashboard-dashboard.modal.run`.
 
@@ -57,7 +63,7 @@ Your `.env` file is never uploaded. Feedback (👍/👎 on agent answers) is sav
 ## Files
 | File | What it does |
 |---|---|
-| `server.py` | Backend: login, page, `/api/agent`, `/api/eval`, `/api/feedback` |
+| `server.py` | Backend: login, page, `/api/agent`, `/api/eval`, `/api/feedback`, `/umap/*` (dataset map files) |
 | `web/index.html` | The OxRiders page (design from `candor-prototype.html`, wired to the backend) |
 | `web/assets/` | Logo images made from `logo.jpeg` (sidebar, Agent page, login, browser tab) |
 | `decision.py` | When to answer and when to say "I don't know" |
