@@ -91,7 +91,7 @@ def probe(rows, name):
     return lauc, bauc
 
 
-rows = list(csv.DictReader(open(os.path.join(ROOT, "sciq-adversarial-manual.csv"),
+rows = list(csv.DictReader(open(os.path.join(ROOT, "sciq-adversarial_claude.csv"),
                                 encoding="utf-8")))
 by = defaultdict(list)
 for r in rows:

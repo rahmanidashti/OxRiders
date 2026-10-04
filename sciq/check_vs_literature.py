@@ -33,7 +33,7 @@ import re
 import pyarrow.parquet as pq
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-CSVP = os.path.join(ROOT, "sciq-adversarial-manual.csv")
+CSVP = os.path.join(ROOT, "sciq-adversarial_claude.csv")
 
 STOP = set("""a an the of in to and for with on at by is are was were from that this it as be been
 their its which what when where how why who whom some many most more less other such than then

@@ -5,9 +5,12 @@
 .cache/
 */.cache/
 __pycache__/
+*.pyc
 .DS_Store
 FigQA/
 TableQA/
 .env
 # Local eval config (contains the API key)
 eval/config.yaml
+# Local backups made before filtering
+_backup_*/

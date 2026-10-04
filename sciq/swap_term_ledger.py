@@ -19,7 +19,7 @@ import sys
 from collections import Counter
 
 csv.field_size_limit(10 ** 9)
-PATH = "sciq-adversarial-manual.csv"
+PATH = "sciq-adversarial_claude.csv"
 W = re.compile(r"[a-z0-9']+")
 STOP = set("a an the of in to and for is are was what which how many does do "
            "you we it that this with by on at from or as be".split())
