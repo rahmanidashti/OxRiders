@@ -4,7 +4,7 @@ Causal LM + LoRA run prefill-only with a block-causal mask (shared state prefix,
 pointer readout over option boundary tokens, trained with log loss on public datasets plus generated policy and rule
 records. No text generation. The released family is Qwen3.5 (0.8B / 4B / 9B) plus Kev-27B on the post-trained Qwen3.8-27B; `kev-0.5b` (Qwen2.5-0.5B, the prototype
 this started as) and the Qwen3 generation are superseded but still published.
-See README.md (deep dive), PLAN.md (where the research stands, what we have learned, the standing rules and what is next;
+See KEV.md (the upstream Kev deep dive; README.md is the OxRiders project overview), PLAN.md (where the research stands, what we have learned, the standing rules and what is next;
 the full dated record of rounds 4-18 and everything before is frozen at git tag `research-archive-2026-09-24`),
 docs/autoresearch.md (the operating program for an unattended research session) and docs/model-cards/ (one card per
 checkpoint: recipe + metrics). README follows the Vercel Labs house style (tagline, for-the-badge badges, Highlights,
