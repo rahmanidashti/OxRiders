@@ -4,7 +4,7 @@ import csv
 import os
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-CSVP = os.path.join(ROOT, "sciq-adversarial-manual.csv")
+CSVP = os.path.join(ROOT, "sciq-adversarial_claude.csv")
 M = "false_presupposition"
 
 EDITS = {
